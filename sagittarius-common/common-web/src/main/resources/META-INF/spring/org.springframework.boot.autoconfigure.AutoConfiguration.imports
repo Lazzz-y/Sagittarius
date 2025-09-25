@@ -1,0 +1,4 @@
+  io.github.lazzz.common.web.config.WebMvcConfig
+  io.github.lazzz.common.web.config.FeignConfig
+  io.github.lazzz.common.web.exception.GlobalExceptionHandler
+  io.github.lazzz.common.web.aspect.DuplicateSubmitAspect

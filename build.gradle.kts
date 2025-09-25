@@ -1,0 +1,119 @@
+plugins {
+    // 根项目插件
+    id("java-library")
+    id("java")
+    id("org.springframework.boot") version "3.2.5" apply false
+    id("io.spring.dependency-management") version "1.1.4"
+}
+
+// 根项目基本配置
+group = "io.github.lazzz"
+version = "1.0-SNAPSHOT"
+
+// 应用于所有项目的配置
+allprojects {
+    group = "io.github.lazzz"
+    version = "1.0-SNAPSHOT"
+    apply(plugin = "idea")
+    apply(plugin = "io.spring.dependency-management")
+
+    // 仓库配置
+    repositories {
+        maven { url = uri("https://maven.aliyun.com/repository/public/") }
+        maven { url = uri("https://maven.aliyun.com/repository/google/") }
+        maven { url = uri("https://maven.aliyun.com/repository/jcenter/") }
+        maven { url = uri("https://mvn.getui.com/nexus/content/repositories/releases/") }
+        maven {
+            url = uri("http://mirrors.huaweicloud.com/repository/maven/")
+            isAllowInsecureProtocol = true
+        }
+        mavenCentral()
+    }
+
+    // 编码设置
+    tasks.withType<JavaCompile> {
+        options.encoding = "UTF-8"
+    }
+    tasks.withType<Javadoc> {
+        options.encoding = "UTF-8"
+    }
+
+    // 依赖管理配置
+    dependencyManagement {
+        imports {
+            mavenBom("org.springframework.boot:spring-boot-dependencies:3.2.5")
+            mavenBom("org.springframework.cloud:spring-cloud-dependencies:2023.0.1")
+            mavenBom("com.alibaba.cloud:spring-cloud-alibaba-dependencies:2023.0.3.3")
+            mavenBom("de.codecentric:spring-boot-admin-dependencies:3.5.5")
+        }
+        dependencies{
+            dependency("io.swagger.core.v3:swagger-annotations:2.2.15")
+            dependency("com.github.xiaoymin:knife4j-openapi3-jakarta-spring-boot-starter:4.5.0")
+            dependency("com.github.xiaoymin:knife4j-gateway-spring-boot-starter:4.5.0")
+            dependency("com.mybatis-flex:mybatis-flex-spring-boot3-starter:1.11.1")
+            dependency("com.mysql:mysql-connector-j:8.0.33")
+            dependency("cn.hutool:hutool-all:5.8.22")
+            dependency("com.alibaba:fastjson:2.0.41")
+            dependency("com.alibaba:easyexcel:3.3.2")
+            dependency("org.apache.commons:commons-lang3:3.14.0")
+            dependency("jakarta.servlet:jakarta.servlet-api:6.0.0")
+            dependency("org.elasticsearch.client:elasticsearch-rest-high-level-client:7.17.13")
+            dependency("org.mapstruct:mapstruct:1.5.5.Final")
+            dependency("org.mapstruct:mapstruct-processor:1.5.5.Final")
+            dependency("org.redisson:redisson-spring-boot-starter:3.51.0")
+            dependency("org.hibernate:hibernate-validator:8.0.2.Final")
+        }
+    }
+}
+
+// 仅应用于子项目的配置
+subprojects {
+    apply(plugin = "java")
+    apply(plugin = "java-library")
+    apply(plugin = "org.springframework.boot")
+
+    val openFeignClientsProp: String? by project
+    val openFeignClients: List<String> = openFeignClientsProp?.split(",")?.map { it.trim() } ?: emptyList()
+    if (project.name in openFeignClients){
+        dependencies {
+            implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
+            implementation("io.github.openfeign:feign-okhttp")
+        }
+    }
+
+    dependencies{
+        // lombok
+        compileOnly("org.projectlombok:lombok")
+        annotationProcessor("org.projectlombok:lombok")
+
+        // swagger3
+        implementation("io.swagger.core.v3:swagger-annotations")
+
+        // Spring Cloud Alibaba Nacos Discovery
+        implementation("com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-discovery")
+
+        // Spring Cloud Alibaba Sentinel
+        implementation("com.alibaba.cloud:spring-cloud-starter-alibaba-sentinel")
+        implementation("com.alibaba.csp:sentinel-datasource-nacos")
+
+        // Spring Cloud Alibaba Nacos Config
+        implementation("com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-config")
+
+        // Spring Cloud LoadBalancer
+        implementation("org.springframework.cloud:spring-cloud-starter-loadbalancer")
+
+        // Spring Boot Test
+        testImplementation("org.springframework.boot:spring-boot-starter-test")
+    }
+}
+
+// 根项目的依赖
+dependencies {
+    testImplementation(platform("org.junit:junit-bom:5.10.0"))
+    testImplementation("org.junit.jupiter:junit-jupiter")
+}
+
+// 根项目的测试任务配置
+tasks.test {
+    useJUnitPlatform()
+}

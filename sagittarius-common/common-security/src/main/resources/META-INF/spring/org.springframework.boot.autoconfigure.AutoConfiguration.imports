@@ -1,0 +1,4 @@
+io.github.lazzz.common.security.service.PermissionService
+io.github.lazzz.common.security.config.ResourceServerConfig
+io.github.lazzz.common.security.handler.CustomAccessDeniedHandler
+io.github.lazzz.common.security.handler.CustomAuthenticationEntryPoint

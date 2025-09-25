@@ -1,0 +1,23 @@
+server:
+  port: 8806
+spring:
+  application:
+    name: sagittarius-notification
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+        username: nacos
+        password: nacos
+        namespace: sagittarius
+        group: sagittarius
+      config:
+        server-addr: localhost:8848
+        username: nacos
+        password: nacos
+        namespace: sagittarius
+        file-extension: yaml
+        group: sagittarius
+  config:
+    import:
+      - nacos:sagittarius-notification?refreshEnabled=true

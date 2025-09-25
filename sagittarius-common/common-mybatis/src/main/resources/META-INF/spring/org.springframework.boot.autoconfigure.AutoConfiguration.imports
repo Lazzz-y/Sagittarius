@@ -1,0 +1,2 @@
+io.github.lazzz.sagittarius.common.mybatis.config.MybatisFlexConfig
+io.github.lazzz.sagittarius.common.mybatis.handler.CustomPermissionHandler
