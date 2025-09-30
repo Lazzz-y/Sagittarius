@@ -15,7 +15,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-oauth2-authorization-server")
 
     // Redis
-    implementation("org.springframework.boot:spring-boot-starter-data-redis")
+//    implementation("org.springframework.boot:spring-boot-starter-data-redis")
     
     // MySQL
     implementation("org.springframework.boot:spring-boot-starter-jdbc")
@@ -26,6 +26,9 @@ dependencies {
 
     // MyBatis-Flex
     implementation("com.mybatis-flex:mybatis-flex-spring-boot3-starter")
+
+    // Captcha
+    implementation("cloud.tianai.captcha:tianai-captcha-springboot-starter")
 
     // common
     api(project(":sagittarius-common:common-core"))

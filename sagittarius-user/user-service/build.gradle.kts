@@ -1,9 +1,3 @@
-plugins {
-    id("java")
-    id("org.springframework.boot")
-    id("io.spring.dependency-management")
-}
-
 dependencies {
     // Spring Boot Web
     implementation("org.springframework.boot:spring-boot-starter-web")
@@ -11,10 +5,15 @@ dependencies {
     // Sentinel
     implementation("com.alibaba.cloud:spring-cloud-starter-alibaba-sentinel")
 
+    // hutool
+    implementation("cn.hutool:hutool-all")
+
     //api
-    implementation(project(":sagittarius-user:user-api"))
+    api(project(":sagittarius-user:user-api"))
 
     // common
     implementation(project(":sagittarius-common:common-core"))
     implementation(project(":sagittarius-common:common-mybatis"))
+    implementation(project(":sagittarius-common:common-security"))
+    
 }

@@ -24,3 +24,17 @@ spring:
     import:
       - nacos:sagittarius-common?refreshEnabled=true
       - nacos:sagittarius-gateway?refreshEnabled=true
+
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    # nacosdiscovery endpoint
+    nacosdiscovery:
+      enabled: true
+    # health endpoint
+    health:
+      show-details: always

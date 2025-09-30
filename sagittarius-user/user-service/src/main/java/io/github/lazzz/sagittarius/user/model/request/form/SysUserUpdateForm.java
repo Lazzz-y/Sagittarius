@@ -1,0 +1,102 @@
+package io.github.lazzz.sagittarius.user.model.request.form;
+
+
+import io.github.lazzz.sagittarius.user.model.entity.SysUser;
+import io.github.linpeilie.annotations.AutoMapper;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import lombok.Data;
+
+/**
+ * 用户更新表单
+ * 
+ * @author Lazzz 
+ * @date 2025/09/30 16:40
+**/
+@Data
+@AutoMapper(target = SysUser.class)
+public class SysUserUpdateForm {
+
+    /**
+     * ID
+     */
+    @Schema(description = "ID")
+    private Long id;
+
+    /**
+     * 用户名
+     */
+    @NotBlank(message = "用户名不能为空")
+    private String username;
+
+    /**
+     * 昵称
+     */
+    @Schema(description = "昵称")
+    private String nickname;
+
+    /**
+     * 邮箱
+     */
+    @Schema(description = "邮箱")
+    @Pattern(regexp = "^$|^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\\.[a-zA-Z0-9_-]+)+$", message = "邮箱格式不正确")
+    private String email;
+
+    /**
+     * 手机号
+     */
+    @Schema(description = "手机号")
+    @Pattern(regexp = "^$|^1(3\\d|4[5-9]|5[0-35-9]|6[2567]|7[0-8]|8\\d|9[0-35-9])\\d{8}$", message = "手机号码格式不正确")
+    private String phone;
+
+    /**
+     * 头像
+     */
+    @Schema(description = "头像")
+    private String avatar;
+
+    /**
+     * 状态（0-禁用，1-启用）
+     */
+    @Schema(description = "状态（0-禁用，1-启用）")
+    private Integer status;
+
+    /**
+     * 用户类型（0-普通用户，1-博客作者，2-内容管理员）
+     */
+    @Schema(description = "用户类型（0-普通用户，1-博客作者，2-内容管理员）")
+    private Integer userType;
+
+    /**
+     * 个人简介
+     */
+    @Schema(description = "个人简介")
+    private String bio;
+
+    /**
+     * 个人网站
+     */
+    @Schema(description = "个人网站")
+    private String website;
+
+    /**
+     * 文章数量
+     */
+    @Schema(description = "文章数量")
+    private Integer articleCount;
+
+    /**
+     * 评论数量
+     */
+    @Schema(description = "评论数量")
+    private Integer commentCount;
+
+    /**
+     * 被访问次数
+     */
+    @Schema(description = "被访问次数")
+    private Integer viewCount;
+
+}
+

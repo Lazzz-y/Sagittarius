@@ -419,19 +419,27 @@ public class AuthorizationServerConfig {
                 .clientId(AuthConstants.KNIFE4J_CLIENT_ID)
                 .clientSecret(passwordEncoder().encode(AuthConstants.KNIFE4J_CLIENT_SECRET))
                 .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
+                .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
+                .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
+                .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
                 .authorizationGrantType(AuthorizationGrantType.PASSWORD)
                 .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
-                .redirectUri("http://127.0.0.1:8080/callback")
-                .scope("read")
-                .scope("write")
+                .redirectUri("http://127.0.0.1:8080/authorized")
+                .postLogoutRedirectUri("http://127.0.0.1:8080/logged-out")
+                .scope(OidcScopes.OPENID)
+                .scope(OidcScopes.PROFILE)
                 .tokenSettings(
                         TokenSettings.builder()
-                                .accessTokenTimeToLive(Duration.ofHours(1))
-                                .refreshTokenTimeToLive(Duration.ofDays(30))
+                                .accessTokenTimeToLive(Duration.ofDays(1))
+//                                .refreshTokenTimeToLive(Duration.ofDays(30))
+                                .build()
+                )
+                .clientSettings(
+                        ClientSettings.builder()
+                                .requireAuthorizationConsent(true)
                                 .build()
                 )
                 .build();
-
         registeredClientRepository.save(client);
     }
 

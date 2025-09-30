@@ -1,0 +1,167 @@
+# 创建一个名为 "sagittarius" 的桥接网络
+networks:
+  sagittarius:
+    driver: bridge
+
+services:
+  # mysql
+  mysql:
+    image: mysql:8.0.39
+    mem_limit: 256m # 限制内存使用
+    container_name: sagittarius-mysql
+    restart: unless-stopped # 重启策略：除非手动停止容器，否则自动重启
+    environment:
+      - TZ=Asia/Shanghai
+      - LANG= en_US.UTF-8
+      - MYSQL_ROOT_PASSWORD=root #设置 root 用户的密码
+    volumes:
+      - ./mysql/conf:/etc/mysql # 挂载配置目录
+      - ./mysql/data:/var/lib/mysql # 挂载数据目录
+      - ../db:/docker-entrypoint-initdb.d # 初始化 SQL 脚本目录
+    ports:
+      - "3306:3306" # 暴露 3306 端口
+    networks:
+      - sagittarius # 加入 "sagittarius" 网络
+
+  # nacos
+  nacos:
+    image: nacos/nacos-server:v3.0.3
+    container_name: sagittarius-nacos
+    restart: unless-stopped # 重启策略：除非手动停止容器，否则自动重启
+    mem_limit: 512m # 限制内存使用
+    environment:
+      - PREFER_HOST_MODE=hostname # 使用主机名模式
+      - MODE=standalone # 单机模式
+      - NACOS_AUTH_ENABLE=true # 启用认证
+      - NACOS_AUTH_IDENTITY_KEY=nacos # nacos 用户名
+      - NACOS_AUTH_IDENTITY_VALUE=nacos # nacos 密码
+      - NACOS_AUTH_TOKEN=SecretKey012345678901234567890123456789012345678901234567890123456789 # nacos 密钥
+      - MYSQL_SERVICE_HOST=mysql # mysql 服务器地址
+      - MYSQL_SERVICE_PORT=3306 # mysql 服务器端口
+      - MYSQL_SERVICE_DB_NAME=nacos_config # mysql 数据库名
+      - MYSQL_SERVICE_USER=root # mysql 用户名
+      - MYSQL_SERVICE_PASSWORD=root # mysql 密码
+      - JVM_XMS=256m # JVM 初始内存
+      - JVM_XMX=256m # JVM 最大内存
+      - JVM_XMN=256m # JVM 中间内存
+    ports:
+      - "8080:8080"  # Nacos Console默认端口
+      - "8848:8848"  # Nacos API端口
+      - "9848:9848"  # gRPC通信端口
+      - "9849:9849"  # 客户端gRPC端口
+    volumes:
+      - ./nacos/data:/home/nacos/data
+      - ./nacos/logs:/home/nacos/logs
+      - ./nacos/init.d:/home/nacos/init.d
+    networks:
+      - sagittarius
+    depends_on:
+      - mysql # 依赖 mysql 服务，确保 mysql 先启动
+
+  # sentinel
+  sentinel:
+    image: bladex/sentinel-dashboard:1.8.8
+    container_name: sagittarius-sentinel
+    restart: unless-stopped # 重启策略：除非手动停止容器，否则自动重启
+    mem_limit: 256m # 限制内存使用
+    ports:
+      - "8858:8858"
+    volumes:
+      - "./sentinel/logs:/root/logs/csp"  # 挂载日志目录
+    networks:
+      - sagittarius
+
+  # redis
+  redis:
+    image: redis:8.2.1
+    container_name: sagittarius-redis
+    restart: unless-stopped # 重启策略：除非手动停止容器，否则自动重启
+    mem_limit: 256m # 限制内存使用
+    command: redis-server /etc/redis/redis.conf --requirepass 123456 --appendonly no # 启动 Redis 服务并添加密码为：123456，默认不开启 Redis AOF 方式持久化配置
+    environment:
+      - TZ=Asia/Shanghai
+    volumes:
+      - ./redis/data:/data
+      - ./redis/config/redis.conf:/etc/redis/redis.conf
+    ports:
+      - "6379:6379"
+    networks:
+      - sagittarius
+
+  # minio
+  minio:
+    image: minio/minio
+    container_name: sagittarius-minio
+    restart: unless-stopped # 重启策略：除非手动停止容器，否则自动重启
+    mem_limit: 256m # 限制内存使用
+    command: server /data --console-address ':9001'
+    environment:
+      - TZ=Asia/Shanghai
+      - LANG=en_US.UTF-8
+      - MINIO_ROOT_USER=minioadmin # 设置 root 用户名
+      - MINIO_ROOT_PASSWORD=minioadmin # 设置 root 密码
+    volumes:
+      - "./minio/config:/root/.minio"
+      - "./minio/data:/data"
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    networks:
+     - sagittarius
+
+  # rabbitmq
+  rabbitmq:
+    image: rabbitmq:management
+    container_name: sagittarius-rabbitmq
+    restart: unless-stopped # 重启策略：除非手动停止容器，否则自动重启
+    mem_limit: 256m # 限制内存使用
+    environment:
+      - TZ=Asia/Shanghai
+      - RABBITMQ_DEFAULT_USER=root
+      - RABBITMQ_DEFAULT_PASS=root
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - ./rabbitmq/data:/var/lib/rabbitmq
+      - ./rabbitmq/config:/etc/rabbitmq
+      - ./rabbitmq/logs:/var/log/rabbitmq
+    networks:
+      - sagittarius
+
+  # elasticsearch
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.9.0
+    container_name: sagittarius-es
+    restart: unless-stopped
+    mem_limit: 256m # 限制内存使用
+    environment:
+      - TZ=Asia/Shanghai
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - ES_JAVA_OPTS=-Xms128m -Xmx128m
+      - ELASTIC_PASSWORD=elastic
+    volumes:
+      - ./elasticsearch/data/:/usr/share/elasticsearch/data
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    networks:
+      - sagittarius
+
+  xxl-job-admin:
+    image: xuxueli/xxl-job-admin:3.2.0
+    platform: linux/amd64
+    container_name: sagittarius-xxl-job-admin
+    restart: unless-stopped #  指定了容器的重启策略，除了手动停止容器，其他情况都自动重启容器
+    mem_limit: 256m # 限制内存使用
+    environment:
+      PARAMS: '--spring.datasource.url=jdbc:mysql://mysql:3306/xxl_job?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&serverTimezone=Asia/Shanghai --spring.datasource.username=root --spring.datasource.password=root --spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver'
+    volumes:
+      - ./xxljob/logs:/data/applogs
+    ports:
+      - "8181:8080"
+    networks:
+      - sagittarius
+    depends_on:
+      - mysql # 依赖 mysql 服务，确保 mysql 先启动

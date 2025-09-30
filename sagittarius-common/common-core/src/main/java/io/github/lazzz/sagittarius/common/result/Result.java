@@ -1,5 +1,7 @@
 package io.github.lazzz.sagittarius.common.result;
 
+import io.github.lazzz.sagittarius.common.utils.condition.IfFlattener;
+import io.github.lazzz.sagittarius.common.utils.condition.ReturningIfFlattener;
 import lombok.Data;
 
 import java.io.Serial;
@@ -41,11 +43,14 @@ public class Result<T> implements Serializable {
     }
 
     public static <T> Result<T> judge(boolean status) {
-        if (status) {
-            return success();
-        } else {
-            return failed();
-        }
+        return judge(status, null);
+    }
+
+    public static <T> Result<T> judge(boolean status, String msg) {
+        return ReturningIfFlattener.<Boolean, Result<T>>of(status)
+                .when(status, Result::success)
+                .otherwise(() -> Result.failed(msg))
+                .get();
     }
 
     public static <T> Result<T> failed(IResultCode resultCode) {

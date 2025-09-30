@@ -58,10 +58,13 @@ allprojects {
             dependency("org.apache.commons:commons-lang3:3.14.0")
             dependency("jakarta.servlet:jakarta.servlet-api:6.0.0")
             dependency("org.elasticsearch.client:elasticsearch-rest-high-level-client:7.17.13")
-            dependency("org.mapstruct:mapstruct:1.5.5.Final")
-            dependency("org.mapstruct:mapstruct-processor:1.5.5.Final")
             dependency("org.redisson:redisson-spring-boot-starter:3.51.0")
             dependency("org.hibernate:hibernate-validator:8.0.2.Final")
+            dependency("io.minio:minio:8.5.14")
+            dependency("io.github.linpeilie:mapstruct-plus-spring-boot-starter:1.5.0")
+            dependency("io.github.linpeilie:mapstruct-plus-processor:1.5.0")
+            dependency("org.springdoc:springdoc-openapi-starter-common:2.3.0")
+            dependency("cloud.tianai.captcha:tianai-captcha-springboot-starter:1.5.2")
         }
     }
 }
@@ -71,6 +74,7 @@ subprojects {
     apply(plugin = "java")
     apply(plugin = "java-library")
     apply(plugin = "org.springframework.boot")
+    apply(plugin = "io.spring.dependency-management")
 
     val openFeignClientsProp: String? by project
     val openFeignClients: List<String> = openFeignClientsProp?.split(",")?.map { it.trim() } ?: emptyList()
@@ -81,10 +85,20 @@ subprojects {
         }
     }
 
+    if(!project.name.contains("common")){
+        dependencies{
+            implementation("org.springdoc:springdoc-openapi-starter-common")
+        }
+    }
+
     dependencies{
         // lombok
         compileOnly("org.projectlombok:lombok")
         annotationProcessor("org.projectlombok:lombok")
+
+        // mapstruct
+        implementation("io.github.linpeilie:mapstruct-plus-spring-boot-starter")
+        annotationProcessor("io.github.linpeilie:mapstruct-plus-processor")
 
         // swagger3
         implementation("io.swagger.core.v3:swagger-annotations")
@@ -102,18 +116,21 @@ subprojects {
         // Spring Cloud LoadBalancer
         implementation("org.springframework.cloud:spring-cloud-starter-loadbalancer")
 
+        // Spring Boot Admin
+        implementation("de.codecentric:spring-boot-admin-starter-server")
+        // Spring Boot Actuator
+        implementation("org.springframework.boot:spring-boot-starter-actuator")
+
         // Spring Boot Test
         testImplementation("org.springframework.boot:spring-boot-starter-test")
+        testImplementation("org.mockito:mockito-core")
+        testImplementation("org.mockito:mockito-junit-jupiter")
+        testImplementation("org.junit.jupiter:junit-jupiter-api")
+        testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
+        testImplementation("org.junit.jupiter:junit-jupiter-params")
     }
-}
-
-// 根项目的依赖
-dependencies {
-    testImplementation(platform("org.junit:junit-bom:5.10.0"))
-    testImplementation("org.junit.jupiter:junit-jupiter")
-}
-
-// 根项目的测试任务配置
-tasks.test {
-    useJUnitPlatform()
+    // 根项目的测试任务配置
+    tasks.test {
+        useJUnitPlatform()
+    }
 }

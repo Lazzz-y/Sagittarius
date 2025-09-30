@@ -6,6 +6,7 @@ import io.github.lazzz.user.dto.UserAuthDTO;
 import lombok.Data;
 import org.springframework.security.core.CredentialsContainer;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.util.Assert;
 
@@ -13,6 +14,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @author Lazzz
@@ -38,8 +40,11 @@ public class SysUserDetails implements UserDetails {
         this.setUsername(user.getUsername());
         this.setPassword("{bcrypt}" + user.getPassword());
         this.setEnabled(user.getStatus() == 1);
-        // todo 获取权限
-
+        if (CollectionUtil.isNotEmpty(user.getRoles())){
+            authorities = user.getRoles().stream()
+                    .map(SimpleGrantedAuthority::new)
+                    .collect(Collectors.toSet());
+        }
     }
 
     public SysUserDetails(
@@ -66,7 +71,7 @@ public class SysUserDetails implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of();
+        return this.authorities;
     }
 
     @Override

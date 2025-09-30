@@ -2,7 +2,6 @@ package io.github.lazzz.common.web.config;
 
 
 import feign.RequestInterceptor;
-import jakarta.servlet.ServletRegistration;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
@@ -13,6 +12,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.servlet.DispatcherServlet;
 
 import java.util.Enumeration;
+import java.util.Set;
 
 /**
  * Feign相关配置类
@@ -47,16 +47,16 @@ public class FeignConfig {
             if (requestAttributes != null) {
                 ServletRequestAttributes attributes = (ServletRequestAttributes) requestAttributes;
                 HttpServletRequest request = attributes.getRequest();
-                // 获取请求头
+
                 Enumeration<String> headerNames = request.getHeaderNames();
                 if (headerNames != null) {
                     while (headerNames.hasMoreElements()) {
                         String name = headerNames.nextElement();
-                        // 忽略content-length。因为在复制请求头到新请求时，原始的content-length可能不再准确。
-                        if (!"content-length".equalsIgnoreCase(name)) {
-                            String values = request.getHeader(name);
-                            // 将请求头保存到模板中，除了 Content-Length
-                            template.header(name, values);
+                        String value = request.getHeader(name);
+
+                        // 过滤不需要传递的请求头
+                        if (shouldForwardHeader(name)) {
+                            template.header(name, value);
                         }
                     }
                 }
@@ -64,6 +64,23 @@ public class FeignConfig {
         };
     }
 
+    private boolean shouldForwardHeader(String headerName) {
+        // 忽略 content-length
+        if ("content-length".equalsIgnoreCase(headerName)) {
+            return false;
+        }
 
+        // 忽略可能引起路由问题的头信息
+        String lowerHeader = headerName.toLowerCase();
+        Set<String> ignoredHeaders = Set.of(
+                "host",
+                "content-length",
+                "connection",
+                "accept-encoding",
+                "user-agent"
+        );
+
+        return !ignoredHeaders.contains(lowerHeader);
+    }
 }
 

@@ -5,12 +5,12 @@ subprojects {
     }
 }
 
-allprojects{
-    springBoot {
-        mainClass.set("none")
-    }
+dependencies{
+    implementation(project(":sagittarius-user:user-service"))
+    api(project(":sagittarius-user:user-api"))
+}
 
-    tasks.bootJar {
-        enabled = false
-    }
+tasks.bootJar {
+    enabled = true
+    mainClass.set("io.github.lazzz.sagittarius.user.UserApplication")
 }

@@ -6,9 +6,8 @@ dependencies{
     compileOnly("org.springframework.cloud:spring-cloud-starter-openfeign")
     compileOnly("org.springframework.boot:spring-boot-starter-aop")
 
-    implementation("org.mapstruct:mapstruct")
-    implementation("org.mapstruct:mapstruct-processor")
     implementation("cn.hutool:hutool-all")
+    implementation("org.apache.commons:commons-lang3")
 //    api("io.github.openfeign:feign-core")
 //    api("io.github.openfeign:feign-httpclient")
 

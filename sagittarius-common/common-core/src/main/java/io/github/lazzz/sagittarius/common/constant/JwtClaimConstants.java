@@ -10,9 +10,24 @@ package io.github.lazzz.sagittarius.common.constant;
 **/
 public interface JwtClaimConstants {
 
+    /**
+     * 用户id
+     */
     String USER_ID = "userId";
+
+    /**
+     * 用户名
+     */
     String USERNAME = "username";
+
+    /**
+     * 权限
+     */
     String AUTHORITIES = "authorities";
-    String AUTHORITY_PREFIX = "ROLE_";
+
+    /**
+     * 认证类型
+     */
+    String BEARER_PREFIX = "Bearer ";
 }
 

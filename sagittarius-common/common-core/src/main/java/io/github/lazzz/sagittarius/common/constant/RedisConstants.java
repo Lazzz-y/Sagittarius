@@ -25,5 +25,15 @@ public interface RedisConstants {
      */
     String ROLE_PERMS_PREFIX = "role_perms:";
 
+    /**
+     * 黑名单TOKEN Key前缀
+     */
+    String TOKEN_BLACKLIST_PREFIX = "token:blacklist:";
+
+    /**
+     * 注册短信验证码key前缀
+     */
+    String REGISTER_SMS_CODE_PREFIX = "sms_code:register";
+
 }
 

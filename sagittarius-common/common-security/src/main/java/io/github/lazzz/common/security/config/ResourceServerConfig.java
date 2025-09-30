@@ -1,12 +1,12 @@
 package io.github.lazzz.common.security.config;
 
-
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.json.JSONUtil;
 import io.github.lazzz.sagittarius.common.constant.JwtClaimConstants;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,20 +20,18 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
-import org.springframework.security.oauth2.server.resource.authentication.ReactiveJwtAuthenticationConverterAdapter;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.servlet.util.matcher.MvcRequestMatcher;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
-import reactor.core.publisher.Mono;
 
 import java.util.List;
 
 /**
  * 资源服务器 Security 配置
- * @author Lazzz 
+ * @author Lazzz
  * @date 2025/09/22 19:51
 **/
 @Slf4j
@@ -41,6 +39,7 @@ import java.util.List;
 @EnableWebSecurity
 @EnableMethodSecurity
 @RequiredArgsConstructor
+
 @ConfigurationProperties(prefix = "security")
 public class ResourceServerConfig {
 
@@ -109,8 +108,8 @@ public class ResourceServerConfig {
     public Converter<Jwt, ? extends AbstractAuthenticationToken> jwtAuthenticationConverter() {
         // 创建 JWT 权限转换器，用于提取 JWT 中的权限信息
         var converter = new JwtGrantedAuthoritiesConverter();
-        // 设置权限前缀，如ROLE_USER, ROLE_ADMIN等，与AuthorizationManager中的权限校验保持一致
-        converter.setAuthorityPrefix(JwtClaimConstants.AUTHORITY_PREFIX);
+        // 设置权限空前缀
+        converter.setAuthorityPrefix(Strings.EMPTY);
         // 设置JWT中权限信息的声明名称，即从JWT的哪个字段获取权限列表
         converter.setAuthoritiesClaimName(JwtClaimConstants.AUTHORITIES);
         // 创建 JWT 认证转换器，用于将 JWT 转换为 AbstractAuthenticationToken 对象

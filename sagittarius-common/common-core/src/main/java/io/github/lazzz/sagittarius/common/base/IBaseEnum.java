@@ -17,6 +17,38 @@ public interface IBaseEnum<T> {
 
     String getLabel();
 
+    static <E extends Enum<E> & IBaseEnum> E getEnumByName(String name, Class<E> clazz) {
+        if (name == null) {
+            return null;
+        }
+        return EnumSet.allOf(clazz).stream()
+                .filter(e -> ObjectUtil.equal(e.name(), name))
+                .findFirst()
+                .orElse(null);
+    }
+
+    /**
+     * 根据文本标签获取枚举
+     *
+     * @param label
+     * @param clazz
+     * @param <E>   枚举
+     * @return
+     */
+    static <E extends Enum<E> & IBaseEnum> E getEnumByLabel(String label, Class<E> clazz) {
+
+        if (label == null) {
+            return null;
+        }
+
+        // 获取类型下的所有枚举
+        EnumSet<E> allEnums = EnumSet.allOf(clazz);
+        return allEnums.stream()
+                .filter(e -> ObjectUtil.equal(e.getLabel(), label))
+                .findFirst()
+                .orElse(null);
+    }
+
     /**
      * 根据值获取枚举
      *
@@ -33,11 +65,10 @@ public interface IBaseEnum<T> {
 
         // 获取类型下的所有枚举
         EnumSet<E> allEnums = EnumSet.allOf(clazz);
-        E matchEnum = allEnums.stream()
+        return allEnums.stream()
                 .filter(e -> ObjectUtil.equal(e.getValue(), value))
                 .findFirst()
                 .orElse(null);
-        return matchEnum;
     }
 
     /**

@@ -1,16 +1,16 @@
-plugins {
-    id("java")
-    id("org.springframework.boot")
-    id("io.spring.dependency-management")
+subprojects {
+    dependencies{
+        api(project(":sagittarius-common:common-apidoc"))
+        implementation(project(":sagittarius-common:common-web"))
+    }
 }
 
-dependencies {
-    // Spring Boot Admin Server
-    implementation("de.codecentric:spring-boot-admin-starter-server")
-    
-    // Spring Boot Web
-    implementation("org.springframework.boot:spring-boot-starter-web")
-    
-    // Spring Boot Security
-    implementation("org.springframework.boot:spring-boot-starter-security")
+dependencies{
+    implementation(project(":sagittarius-monitor:monitor-service"))
+    api(project(":sagittarius-monitor:monitor-api"))
+}
+
+tasks.bootJar {
+    enabled = true
+    mainClass.set("io.github.lazzz.sagittarius.monitor.MonitorApplication")
 }

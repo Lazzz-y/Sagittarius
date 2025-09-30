@@ -1,10 +1,8 @@
 package io.github.lazzz.user.dto;
 
-
-import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
-import java.util.Date;
+import java.util.Set;
 
 /**
  * 用户认证信息传输层对象
@@ -35,6 +33,11 @@ public class UserAuthDTO {
     private String password;
 
     /**
+     * 性别（0-未知，1-男，2-女）
+     */
+    private Integer sex;
+
+    /**
      * 邮箱
      */
     private String email;
@@ -60,28 +63,17 @@ public class UserAuthDTO {
     private Integer userType;
 
     /**
-     * 个人简介
+     * 角色列表
      */
-    private String bio;
-
-    /**
-     * 个人网站
-     */
-    private String website;
-
-    /**
-     * 文章数量
-     */
-    private Integer articleCount;
-
-    /**
-     * 评论数量
-     */
-    private Integer commentCount;
-
-    /**
-     * 被访问次数
-     */
-    private Integer viewCount;
+//    @RelationOneToMany(
+//            selfField = "id",
+//            targetField = "id",
+//            targetTable = "sys_role",
+//            valueField = "roleCode",
+//            joinTable = "sys_user_role",
+//            joinSelfColumn = "user_id",
+//            joinTargetColumn = "role_id"
+//    )
+    private Set<String> roles;
 }
 

@@ -1,5 +1,8 @@
 package io.github.lazzz.sagittarius.auth.config;
 
+import cn.hutool.core.collection.CollectionUtil;
+import lombok.Setter;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -18,6 +21,8 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.MediaTypeRequestMatcher;
 import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 
+import java.util.List;
+
 /**
  * @author Lazzz
  * @className SecurityConfig
@@ -26,23 +31,32 @@ import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
  **/
 @EnableWebSecurity
 @Configuration(proxyBeanMethods = false)
+@ConfigurationProperties(prefix = "security")
 public class SecurityConfig {
+
+    /**
+     * 白名单路径列表
+     */
+    @Setter
+    private List<String> whitelistPaths;
 
     /**
      * 应用安全配置
      * 处理除 OAuth2 端点外的其他请求
      */
     @Bean
-    @Order(1)
+    @Order(0)
     public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http, HandlerMappingIntrospector introspector) throws Exception {
         MvcRequestMatcher.Builder mvcMatcherBuilder = new MvcRequestMatcher.Builder(introspector);
         http.authorizeHttpRequests(requests ->
-                        requests
-                                .requestMatchers("/test/**").permitAll()
-                                // 放行错误页面
-                                .requestMatchers(mvcMatcherBuilder.pattern("/error/**")).permitAll()
-                                // 其他请求根据需要配置，这里暂时全部放行
-                                .anyRequest().permitAll()
+                        {
+                            if (CollectionUtil.isNotEmpty(whitelistPaths)) {
+                                for (String path : whitelistPaths) {
+                                    requests.requestMatchers(mvcMatcherBuilder.pattern(path)).permitAll();
+                                }
+                            }
+                            requests.anyRequest().authenticated();
+                        }
                 )
                 .csrf(AbstractHttpConfigurer::disable)
                 .formLogin(Customizer.withDefaults());

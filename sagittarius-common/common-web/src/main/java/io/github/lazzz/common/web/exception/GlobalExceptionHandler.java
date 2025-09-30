@@ -7,6 +7,7 @@ import feign.FeignException;
 import io.github.lazzz.sagittarius.common.result.Result;
 import io.github.lazzz.sagittarius.common.result.ResultCode;
 import jakarta.servlet.ServletException;
+import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.TypeMismatchException;
@@ -46,7 +47,7 @@ public class GlobalExceptionHandler {
         String msg = e.getAllErrors().stream().map(
                 DefaultMessageSourceResolvable::getDefaultMessage
         ).collect(Collectors.joining("; "));
-        return Result.failed(ResultCode.PARAM_ERROR);
+        return Result.failed(ResultCode.PARAM_ERROR, msg);
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -54,19 +55,19 @@ public class GlobalExceptionHandler {
     public <T> Result<T> processException(ConstraintViolationException e) {
         log.error("ConstraintViolationException: {}", e.getMessage());
         String msg = e.getConstraintViolations().stream().map(
-                violation -> violation.getMessage()
+                ConstraintViolation::getMessage
         ).collect(Collectors.joining("; "));
-        return Result.failed(ResultCode.PARAM_ERROR);
+        return Result.failed(ResultCode.PARAM_ERROR, msg);
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public <T> Result<T> processException(MethodArgumentNotValidException e) {
         log.error("MethodArgumentNotValidException: {}", e.getMessage());
-        String msg = e.getBindingResult().getAllErrors().stream().map(
+        String msg = e.getBindingResult().getFieldErrors().stream().map(
                 DefaultMessageSourceResolvable::getDefaultMessage
         ).collect(Collectors.joining("; "));
-        return Result.failed(ResultCode.PARAM_ERROR);
+        return Result.failed(ResultCode.PARAM_ERROR, msg);
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)

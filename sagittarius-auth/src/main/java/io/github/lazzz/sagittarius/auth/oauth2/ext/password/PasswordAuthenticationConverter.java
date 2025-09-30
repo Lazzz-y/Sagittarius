@@ -1,6 +1,5 @@
 package io.github.lazzz.sagittarius.auth.oauth2.ext.password;
 
-
 import cn.hutool.core.util.StrUtil;
 import io.github.lazzz.sagittarius.auth.util.OAuth2EndpointUtils;
 import jakarta.servlet.http.HttpServletRequest;
@@ -30,14 +29,9 @@ public class PasswordAuthenticationConverter implements AuthenticationConverter 
 
     @Override
     public Authentication convert(HttpServletRequest request) {
-        System.out.println("PasswordAuthenticationConverter - Request URL: " + request.getRequestURL());
-        System.out.println("PasswordAuthenticationConverter - Method: " + request.getMethod());
-
         // 授权类型 (必须)
         String grantType = request.getParameter(OAuth2ParameterNames.GRANT_TYPE);
-        System.out.println("PasswordAuthenticationConverter - Grant Type: " + grantType);
         if(!AuthorizationGrantType.PASSWORD.getValue().equals(grantType)) {
-            System.out.println("PasswordAuthenticationConverter - Not PASSWORD grant type, returning null");
             return null;
         }
 

@@ -20,6 +20,7 @@ public enum ResultCode implements IResultCode, Serializable {
 
     // User + Code (U0000)
     TOKEN_INVALID("U0230", "token无效或已过期"),
+    TOKEN_ACCESS_FORBIDDEN("U0231", "token已被禁止访问"),
 
     ACCESS_UNAUTHORIZED("U0301", "访问未授权"),
     REPEAT_SUBMIT_ERROR("U0303", "您的请求已提交，请不要重复提交或等待片刻再尝试。"),

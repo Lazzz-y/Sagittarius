@@ -1,21 +1,16 @@
-plugins {
-    id("java")
-    id("org.springframework.boot")
-    id("io.spring.dependency-management")
+subprojects {
+    dependencies{
+        api(project(":sagittarius-common:common-apidoc"))
+        implementation(project(":sagittarius-common:common-web"))
+    }
 }
 
-dependencies {
-    // Spring Boot Web
-    implementation("org.springframework.boot:spring-boot-starter-web")
-    
-    // Spring Cloud OpenFeign
-    implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
-    
-    // Elasticsearch
-    implementation("org.springframework.boot:spring-boot-starter-data-elasticsearch")
-    implementation("org.elasticsearch.client:elasticsearch-rest-high-level-client")
-    
-    // RabbitMQ
-    implementation("org.springframework.boot:spring-boot-starter-amqp")
+dependencies{
+    implementation(project(":sagittarius-search:search-service"))
+    api(project(":sagittarius-search:search-api"))
+}
 
+tasks.bootJar {
+    enabled = true
+    mainClass.set("io.github.lazzz.sagittarius.search.SearchApplication")
 }

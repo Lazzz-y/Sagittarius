@@ -1,17 +1,16 @@
-plugins {
-    id("java")
-    id("org.springframework.boot")
-    id("io.spring.dependency-management")
+subprojects {
+    dependencies{
+        api(project(":sagittarius-common:common-apidoc"))
+        implementation(project(":sagittarius-common:common-web"))
+    }
 }
 
-dependencies {
-    // Spring Boot Web
-    implementation("org.springframework.boot:spring-boot-starter-web")
+dependencies{
+    implementation(project(":sagittarius-category:category-service"))
+    api(project(":sagittarius-category:category-api"))
+}
 
-    // MySQL
-    implementation("org.springframework.boot:spring-boot-starter-jdbc")
-    implementation("com.mysql:mysql-connector-j")
-    
-    // MyBatis-Flex
-    implementation("com.mybatis-flex:mybatis-flex-spring-boot3-starter")
+tasks.bootJar {
+    enabled = true
+    mainClass.set("io.github.lazzz.sagittarius.category.CategoryApplication")
 }

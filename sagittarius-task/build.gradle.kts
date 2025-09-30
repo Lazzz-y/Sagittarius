@@ -1,26 +1,16 @@
-plugins {
-    id("java")
-    id("org.springframework.boot")
-    id("io.spring.dependency-management")
+subprojects {
+    dependencies{
+        api(project(":sagittarius-common:common-apidoc"))
+        implementation(project(":sagittarius-common:common-web"))
+    }
 }
 
-dependencies {
-    // Spring Boot Web
-    implementation("org.springframework.boot:spring-boot-starter-web")
-    
-    // Spring Cloud OpenFeign
-    implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
-    
-    // MySQL
-    implementation("org.springframework.boot:spring-boot-starter-jdbc")
-    implementation("com.mysql:mysql-connector-j")
+dependencies{
+    implementation(project(":sagittarius-task:task-service"))
+    api(project(":sagittarius-task:task-api"))
+}
 
-    // MyBatis-Flex
-    implementation("com.mybatis-flex:mybatis-flex-spring-boot3-starter")
-
-    // Redis
-    implementation("org.springframework.boot:spring-boot-starter-data-redis")
-    
-    // RabbitMQ
-    implementation("org.springframework.boot:spring-boot-starter-amqp")
+tasks.bootJar {
+    enabled = true
+    mainClass.set("io.github.lazzz.sagittarius.task.TaskApplication")
 }

@@ -3,6 +3,8 @@ server:
 spring:
   application:
     name: sagittarius-auth
+  main:
+    allow-bean-definition-overriding: true
   cloud:
     nacos:
       discovery:
@@ -13,8 +15,8 @@ spring:
         group: sagittarius
       config:
         server-addr: ${spring.cloud.nacos.discovery.server-addr}
-        username: nacos
-        password: nacos
+        username: ${spring.cloud.nacos.discovery.username}
+        password: ${spring.cloud.nacos.discovery.password}
         namespace: sagittarius
         file-extension: yaml
         group: sagittarius
@@ -22,3 +24,16 @@ spring:
     import:
       - nacos:sagittarius-common?refreshEnabled=true
       - nacos:sagittarius-auth?refreshEnabled=true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    # nacosdiscovery endpoint
+    nacosdiscovery:
+      enabled: true
+    # health endpoint
+    health:
+      show-details: always

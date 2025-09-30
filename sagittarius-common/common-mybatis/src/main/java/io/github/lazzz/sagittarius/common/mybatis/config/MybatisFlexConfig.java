@@ -15,6 +15,7 @@ import io.github.lazzz.sagittarius.common.mybatis.handler.StringObjectJsonTypeHa
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.type.TypeHandlerRegistry;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
@@ -32,15 +33,18 @@ public class MybatisFlexConfig implements MyBatisFlexCustomizer {
 
     private final CustomPermissionHandler customPermissionHandler;
 
-    public MybatisFlexConfig(CustomPermissionHandler customPermissionHandler) {
+    private final ApplicationContext applicationContext;
+
+    public MybatisFlexConfig(CustomPermissionHandler customPermissionHandler, ApplicationContext applicationContext) {
         this.customPermissionHandler = customPermissionHandler;
+        this.applicationContext = applicationContext;
     }
 
     @Override
     public void customize(FlexGlobalConfig config) {
         AuditManager.setAuditEnable(true);
         AuditManager.setMessageCollector(msg ->
-                log.info("{}, {}ms", msg.getFullSql(), msg.getElapsedTime())
+                log.info("当前SQL: {},\n总耗时: {}ms", msg.getFullSql(), msg.getElapsedTime())
                 );
     }
 

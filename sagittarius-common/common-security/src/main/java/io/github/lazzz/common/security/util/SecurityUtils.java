@@ -2,6 +2,7 @@ package io.github.lazzz.common.security.util;
 
 
 import cn.hutool.core.convert.Convert;
+import io.github.lazzz.sagittarius.common.constant.SystemConstants;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -93,7 +94,7 @@ public class SecurityUtils {
      */
     public static boolean isRoot() {
         Set<String> roles = getRoles();
-        return roles != null && roles.contains("ROLE_ROOT");
+        return roles != null && roles.contains(SystemConstants.ROOT_ROLE_CODE);
     }
 
     /**

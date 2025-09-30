@@ -1,4 +1,4 @@
-<h1 align="center">Sagittarius</h1>
+<h1 align="center">Sagittarius(施工中)</h1>
 <p align="center"><img src="images/background.png"></p>
 
 
@@ -62,7 +62,6 @@ Sagittarius是一个基于Spring Cloud的微服务架构博客系统，提供完
 | sagittarius-report | 报表服务 | 8807 | 数据统计、报表生成、趋势分析 |
 | sagittarius-file | 文件服务 | 8808 | 文件上传、下载、存储、管理 |
 | sagittarius-monitor | 监控服务 | 8809 | 系统监控、健康检查、性能分析 |
-| sagittarius-mq | 消息队列服务 | 8810 | 消息的发布、订阅、路由等功能 |
 | sagittarius-common | 公共模块 | - | 共享工具类、常量、配置、实体类 |
 
 ## 快速开始

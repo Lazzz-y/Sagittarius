@@ -8,9 +8,11 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.cloud.gateway.filter.ratelimit.KeyResolver;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.web.server.SecurityWebFilterChain;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
@@ -63,5 +65,15 @@ public class SecurityConfig {
         return exchange -> Mono.justOrEmpty(exchange.getRequest().getHeaders().getFirst("User-Id"))
                 .defaultIfEmpty("anonymous");
     }
+
+//    @Bean
+//    public WebSecurityCustomizer webSecurityCustomizer() {
+//        return (web) -> web.ignoring().requestMatchers(
+//                AntPathRequestMatcher.antMatcher("/actuator/**"),
+//                AntPathRequestMatcher.antMatcher("/admin/monitor/**"),
+//                AntPathRequestMatcher.antMatcher("/admin/monitor/assets/**"),
+//                AntPathRequestMatcher.antMatcher("/admin/monitor/actuator/health"),
+//                AntPathRequestMatcher.antMatcher("/admin/monitor/actuator/info"));
+//    }
 
 }

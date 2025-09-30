@@ -4,11 +4,10 @@ dependencies {
     
     // Jakarta Servlet API (Spring Boot 3 使用 jakarta 包名)
     compileOnly("jakarta.servlet:jakarta.servlet-api")
-    
-    // JWT
-    implementation("io.jsonwebtoken:jjwt-api:0.11.5")
-    runtimeOnly("io.jsonwebtoken:jjwt-impl:0.11.5")
-    runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.11.5")
+
+    // Spring Security
+    compileOnly("org.springframework.boot:spring-boot-starter-security")
+    compileOnly("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
 
     // MyBatis-Flex
     implementation("com.mybatis-flex:mybatis-flex-spring-boot3-starter")
