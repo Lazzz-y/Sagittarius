@@ -19,5 +19,7 @@ public interface SystemConstants {
      * 超级管理员角色代码
      */
     String ROOT_ROLE_CODE = "SUPER_ADMIN_back";
+
+    String TENANT_HEADER = "X-Tenant-Id";
 }
 
