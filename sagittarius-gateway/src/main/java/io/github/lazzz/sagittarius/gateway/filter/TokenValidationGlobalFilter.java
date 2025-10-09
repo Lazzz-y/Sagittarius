@@ -7,6 +7,7 @@ import com.nimbusds.jose.JWSObject;
 import io.github.lazzz.sagittarius.common.constant.JwtClaimConstants;
 import io.github.lazzz.sagittarius.common.constant.RedisConstants;
 import io.github.lazzz.sagittarius.common.result.ResultCode;
+import io.github.lazzz.sagittarius.common.utils.TenantHeaderUtil;
 import io.github.lazzz.sagittarius.gateway.util.WebFluxUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,9 +25,9 @@ import java.text.ParseException;
 /**
  * Token 验证全局过滤器
  *
- * @author Lazzz 
+ * @author Lazzz
  * @date 2025/09/25 18:56
-**/
+ **/
 @Slf4j
 @Component
 @RequiredArgsConstructor
@@ -44,7 +45,7 @@ public class TokenValidationGlobalFilter implements GlobalFilter, Ordered {
         String authorization = request.getHeaders().getFirst(HttpHeaders.AUTHORIZATION);
 
         // 如果请求头中没有授权信息，则直接返回
-        if (StrUtil.isBlank(authorization) || !StrUtil.startWithIgnoreCase(authorization, JwtClaimConstants.BEARER_PREFIX)){
+        if (StrUtil.isBlank(authorization) || !StrUtil.startWithIgnoreCase(authorization, JwtClaimConstants.BEARER_PREFIX)) {
             return chain.filter(exchange);
         }
 
@@ -56,7 +57,13 @@ public class TokenValidationGlobalFilter implements GlobalFilter, Ordered {
             // 获取令牌ID
             String jti = (String) jwsObject.getPayload().toJSONObject().get(JWTPayload.JWT_ID);
             // 检查令牌是否在黑名单中
-            Boolean isBlackToken = redisTemplate.hasKey(RedisConstants.TOKEN_BLACKLIST_PREFIX);
+            Boolean isBlackToken;
+            try {
+                isBlackToken = redisTemplate.hasKey(RedisConstants.TOKEN_BLACKLIST_PREFIX);
+            } catch (TenantHeaderUtil.TenantNotFoundException e) {
+                log.error(e.getMessage());
+                return chain.filter(exchange);
+            }
             // 如果在黑名单中，则返回错误信息
             if (isBlackToken) {
                 return WebFluxUtils.writeErrorResponse(response, ResultCode.TOKEN_ACCESS_FORBIDDEN);

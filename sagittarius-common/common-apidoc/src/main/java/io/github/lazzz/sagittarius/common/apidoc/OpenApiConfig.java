@@ -5,11 +5,14 @@ import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.License;
+import io.swagger.v3.oas.models.media.Schema;
+import io.swagger.v3.oas.models.parameters.Parameter;
 import io.swagger.v3.oas.models.security.OAuthFlow;
 import io.swagger.v3.oas.models.security.OAuthFlows;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
 import lombok.RequiredArgsConstructor;
+import org.springdoc.core.customizers.OperationCustomizer;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -61,9 +64,18 @@ public class OpenApiConfig {
                                         .scheme("Bearer")
                                         .bearerFormat("JWT")
                         )
+//                        .addParameters("X-Tenant-Id",
+//                                new Parameter()
+//                                        .in("header")
+//                                        .name("X-Tenant-Id")
+//                                        .description("多租户标识ID")
+//                                        .required(true)
+//                                        .schema(new Schema<>().type("string").example("1"))
+//                        )
                 )
                 // 接口全局添加 Authorization 参数
                 .addSecurityItem(new SecurityRequirement().addList(HttpHeaders.AUTHORIZATION))
+                .addSecurityItem(new SecurityRequirement().addList("X-Tenant-Id"))
                 // 接口文档信息(不重要)
                 .info(new Info()
                         .title(apiDocInfoProperties.getTitle())
@@ -78,5 +90,22 @@ public class OpenApiConfig {
                                 .url(apiDocInfoProperties.getLicense().getUrl())
                         ));
     }
+
+    // 新增：为所有接口自动注入租户头参数（确保每个接口都显示该参数）
+//    @Bean
+//    public OperationCustomizer tenantOperationCustomizer() {
+//        return (operation, handlerMethod) -> {
+//            // 给单个接口添加租户头参数
+//            operation.addParametersItem(
+//                    new Parameter()
+//                            .in("header")
+//                            .name("X-Tenant-Id")
+//                            .description("多租户标识ID")
+//                            .required(true)
+//                            .schema(new Schema().type("string").example("1"))
+//            );
+//            return operation;
+//        };
+//    }
 
 }

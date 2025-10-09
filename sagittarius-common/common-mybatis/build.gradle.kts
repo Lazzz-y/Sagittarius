@@ -18,6 +18,9 @@ dependencies{
     // hibernate-validator
     implementation("org.hibernate:hibernate-validator")
 
+    // seata
+    api("com.alibaba.cloud:spring-cloud-starter-alibaba-seata")
+
     compileOnly(project(":sagittarius-common:common-web"))
     compileOnly(project(":sagittarius-common:common-security"))
 }

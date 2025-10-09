@@ -17,6 +17,7 @@ import io.github.lazzz.sagittarius.user.model.request.form.SysUserUpdateForm;
 import io.github.lazzz.sagittarius.user.model.request.query.SysUserPageQuery;
 import io.github.lazzz.sagittarius.user.model.vo.SysUserProfileVO;
 import io.github.lazzz.sagittarius.user.model.vo.SysUserVO;
+import io.github.lazzz.sagittarius.user.service.ISysRolePermissionService;
 import io.github.lazzz.user.dto.UserAuthDTO;
 import io.github.linpeilie.Converter;
 import lombok.RequiredArgsConstructor;
@@ -49,11 +50,14 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 
     private final StringRedisTemplate redisTemplate;
 
+    private final ISysRolePermissionService sysRolePermissionService;
+
     @Override
     public UserAuthDTO getUserAuthDTO(String username) {
+        sysRolePermissionService.lazyLoadRole();
         return queryChain()
                 .select("u.id", "username", "nickname", "password", "email",
-                        "sex", "phone", "avatar", "status", "user_type")
+                        "sex", "phone", "avatar", "status", "user_type", "u.tenant_id")
                 .select("role_code as roles")
                 .from(SysUser.class).as("u")
                 .innerJoin(SysUserRole.class)

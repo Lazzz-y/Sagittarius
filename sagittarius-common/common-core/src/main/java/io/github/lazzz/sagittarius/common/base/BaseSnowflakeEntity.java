@@ -29,6 +29,12 @@ public class BaseSnowflakeEntity implements Serializable {
     private Long id;
 
     /**
+     * 租户ID
+     */
+    @Column(tenantId = true)
+    private Long tenantId;
+
+    /**
      * 创建时间
      */
     @Column(value = "create_time")

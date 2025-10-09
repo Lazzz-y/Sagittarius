@@ -14,7 +14,7 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 import java.util.Map;
 
 /**
- * TODO
+ * 监听器基类
  * 
  * @author Lazzz 
  * @date 2025/09/30 14:53

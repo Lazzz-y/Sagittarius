@@ -19,8 +19,7 @@ spring:
   config:
     import:
       - nacos:sagittarius-common?refreshEnabled=true
-      - nacos:sagittarius-gateway?refreshEnabled=true
-
+      - nacos:sagittarius-auth?refreshEnabled=true
 
 management:
   endpoints:
@@ -34,4 +33,3 @@ management:
     # health endpoint
     health:
       show-details: always
-logging.pattern.level: "%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]"

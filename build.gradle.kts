@@ -65,6 +65,7 @@ allprojects {
             dependency("io.github.linpeilie:mapstruct-plus-processor:1.5.0")
             dependency("org.springdoc:springdoc-openapi-starter-common:2.3.0")
             dependency("cloud.tianai.captcha:tianai-captcha-springboot-starter:1.5.2")
+            dependency("io.micrometer:micrometer-tracing-bom:1.5.4")
         }
     }
 }
@@ -88,10 +89,21 @@ subprojects {
     if(!project.name.contains("common")){
         dependencies{
             implementation("org.springdoc:springdoc-openapi-starter-common")
+            // Micrometer 整合 Brave 追踪器
+            implementation("io.micrometer:micrometer-tracing-bridge-brave")
+            // Micrometer 指标追踪
+            implementation("io.micrometer:micrometer-tracing")
+            // Micrometer 观察者
+            implementation("io.micrometer:micrometer-observation")
+            // Micrometer 整合 Openfeign
+            implementation("io.github.openfeign:feign-micrometer")
+            // 将追踪器添加到zipkin
+            implementation("io.zipkin.reporter2:zipkin-reporter-brave")
         }
     }
 
     dependencies{
+
         // lombok
         compileOnly("org.projectlombok:lombok")
         annotationProcessor("org.projectlombok:lombok")

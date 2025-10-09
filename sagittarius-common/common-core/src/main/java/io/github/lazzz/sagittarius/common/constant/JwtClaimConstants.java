@@ -3,8 +3,8 @@ package io.github.lazzz.sagittarius.common.constant;
 
 
 /**
- * @interfaceName JwtClaimConstants 
- * @description TODO 
+ * Jwt 常量
+ *
  * @author Lazzz 
  * @date 2025/09/21 17:25
 **/

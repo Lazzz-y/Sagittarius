@@ -7,6 +7,7 @@ import com.mybatisflex.core.audit.ConsoleMessageCollector;
 import com.mybatisflex.core.audit.MessageCollector;
 import com.mybatisflex.core.dialect.DbType;
 import com.mybatisflex.core.dialect.DialectFactory;
+import com.mybatisflex.core.tenant.TenantFactory;
 import com.mybatisflex.spring.boot.MyBatisFlexCustomizer;
 import io.github.lazzz.sagittarius.common.mybatis.handler.CustomPermissionHandler;
 import io.github.lazzz.sagittarius.common.mybatis.handler.IntegerArrayJsonTypeHandler;
@@ -72,6 +73,11 @@ public class MybatisFlexConfig implements MyBatisFlexCustomizer {
         // 设置 SQL 审计收集器
         MessageCollector collector = new ConsoleMessageCollector();
         AuditManager.setMessageCollector(collector);
+    }
+
+    @Bean
+    public TenantFactory tenantFactory() {
+        return new CustomTenantFactory();
     }
 }
 

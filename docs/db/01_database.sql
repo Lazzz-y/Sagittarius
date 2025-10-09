@@ -22,3 +22,8 @@ CREATE DATABASE IF NOT EXISTS sagittarius_oauth2 DEFAULT CHARACTER SET utf8mb4 D
 -- Sagittarius 业务数据库
 -- ----------------------------
 CREATE DATABASE IF NOT EXISTS sagittarius DEFAULT CHARACTER SET utf8mb4 DEFAULT COLLATE utf8mb4_general_ci;
+
+-- ----------------------------
+-- Seata 数据库
+-- ----------------------------
+CREATE DATABASE seata DEFAULT CHARACTER SET utf8mb4 DEFAULT COLLATE utf8mb4_general_ci;

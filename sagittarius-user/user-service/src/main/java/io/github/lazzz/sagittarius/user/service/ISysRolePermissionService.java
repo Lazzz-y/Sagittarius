@@ -12,6 +12,8 @@ import com.mybatisflex.core.service.IService;
  */
 public interface ISysRolePermissionService extends IService<SysRolePermission> {
 
+    void lazyLoadRole();
+
     /**
      * 刷新角色权限缓存
      */

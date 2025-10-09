@@ -7,6 +7,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 /**
  * 从请求头获取租户ID的工具类
+ * @author Lazzz
  */
 public class TenantHeaderUtil {
 
@@ -24,10 +25,13 @@ public class TenantHeaderUtil {
         }
         HttpServletRequest request = requestAttributes.getRequest();
 
-        // 2. 从请求头获取租户ID字符串
-        String tenantIdStr = request.getHeader(SystemConstants.TENANT_HEADER);
+        // 2. 从上下文或请求头获取租户ID字符串
+        String tenantIdStr = request.getAttribute(SystemConstants.TENANT_HEADER) != null ?
+                request.getAttribute(SystemConstants.TENANT_HEADER).toString() :
+                request.getHeader(SystemConstants.TENANT_HEADER);
         if (tenantIdStr == null || tenantIdStr.trim().isEmpty()) {
-            throw new TenantNotFoundException("请求头中未包含租户ID，请添加" + SystemConstants.TENANT_HEADER + "头信息");
+            tenantIdStr = "1";
+//            throw new TenantNotFoundException("请求头中未包含租户ID，请添加" + SystemConstants.TENANT_HEADER + "头信息");
         }
 
         // 3. 转换为Long类型并校验

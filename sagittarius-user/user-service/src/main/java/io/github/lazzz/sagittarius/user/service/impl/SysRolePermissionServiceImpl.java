@@ -36,9 +36,11 @@ public class SysRolePermissionServiceImpl extends ServiceImpl<SysRolePermissionM
 
     private final RedisTemplate<String, Object> redisTemplate;
 
-    @PostConstruct
-    public void init() {
-        refreshRolePermsCache();
+    @Override
+    public void lazyLoadRole() {
+        if (!redisTemplate.hasKey(RedisConstants.ROLE_PERMS_PREFIX)){
+            refreshRolePermsCache();
+        }
     }
 
     @Override

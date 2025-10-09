@@ -7,15 +7,15 @@ spring:
         server-addr: localhost:8848
         username: nacos
         password: nacos
-        namespace: sagittarius-dev
-        group: DEFAULT_GROUP
+        namespace: sagittarius
+        group: sagittarius
       config:
         server-addr: ${spring.cloud.nacos.discovery.server-addr}
         username: ${spring.cloud.nacos.discovery.username}
         password: ${spring.cloud.nacos.discovery.password}
-        namespace: sagittarius-dev
-        group: DEFAULT_GROUP
+        namespace: sagittarius
         file-extension: yaml
+        group: sagittarius
   config:
     import:
       - nacos:sagittarius-common?refreshEnabled=true

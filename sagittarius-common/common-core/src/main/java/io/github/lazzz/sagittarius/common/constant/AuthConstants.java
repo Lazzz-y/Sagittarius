@@ -3,8 +3,7 @@ package io.github.lazzz.sagittarius.common.constant;
 
 
 /**
- * @className SecurityConstant 
- * @description TODO 
+ * 权限常量
  * @author Lazzz 
  * @date 2025/09/19 23:34
 **/
