@@ -2,7 +2,6 @@ package io.github.lazzz.sagittarius.common.constant;
 
 
 import io.github.lazzz.sagittarius.common.utils.TenantContext;
-import io.github.lazzz.sagittarius.common.utils.TenantHeaderUtil;
 
 /**
  * Redis常量

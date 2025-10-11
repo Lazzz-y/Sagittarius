@@ -16,6 +16,7 @@ import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
+import reactor.util.context.Context;
 
 /**
  * 租户全局过滤器
@@ -32,29 +33,40 @@ public class TenantGlobalFilter implements GlobalFilter, Ordered {
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         ServerHttpRequest request = exchange.getRequest();
         String tenantIdStr = request.getHeaders().getFirst(SystemConstants.TENANT_HEADER);
+        Long tenantId = SystemConstants.DEFAULT_TENANT_ID;
         if (StrUtil.isNotBlank(tenantIdStr)){
             try {
-                Long tenantId = Long.parseLong(tenantIdStr);
-                if (tenantId > 0) {
-                    // 设置租户ID到上下文
-                    TenantContext.setTenantId(tenantId);
-                    // 传递给下游服务
-                    ServerHttpRequest mutatedRequest = request.mutate()
-                            .header(SystemConstants.TENANT_HEADER, tenantIdStr)
-                            .build();
-                    ServerWebExchange mutatedExchange = exchange.mutate()
-                            .request(mutatedRequest)
-                            .build();
-                    return chain.filter(mutatedExchange);
-                }
-            } catch (NumberFormatException e) {
+                tenantId = Long.parseLong(tenantIdStr);
+            } catch (NumberFormatException e){
                 throw new IllegalArgumentException("Invalid tenant ID: " + tenantIdStr);
             }
         }
-
-        // 设置默认租户ID(开发环境)
-        TenantContext.setTenantId(1L);
-        return chain.filter(exchange);
+//        if (StrUtil.isNotBlank(tenantIdStr)){
+//            try {
+//                long tenantId = Long.parseLong(tenantIdStr);
+//                if (tenantId > 0) {
+//                    // 传递给下游服务
+//                    ServerHttpRequest mutatedRequest = request.mutate()
+//                            .header(SystemConstants.TENANT_HEADER, tenantIdStr)
+//                            .build();
+//                    ServerWebExchange mutatedExchange = exchange.mutate()
+//                            .request(mutatedRequest)
+//                            .build();
+//                    return chain.filter(mutatedExchange);
+//                }
+//            } catch (NumberFormatException e) {
+//                throw new IllegalArgumentException("Invalid tenant ID: " + tenantIdStr);
+//            }
+//        }
+        // 传递给下游服务
+        ServerHttpRequest mutatedRequest = request.mutate()
+                .header(SystemConstants.TENANT_HEADER, SystemConstants.DEFAULT_TENANT_ID_STR)
+                .build();
+        ServerWebExchange mutatedExchange = exchange.mutate()
+                .request(mutatedRequest)
+                .build();
+        return chain.filter(mutatedExchange)
+                .contextWrite(Context.of("tenantId", tenantId));
     }
 
     @Override

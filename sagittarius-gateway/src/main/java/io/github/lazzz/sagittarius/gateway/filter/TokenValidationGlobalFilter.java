@@ -7,7 +7,6 @@ import com.nimbusds.jose.JWSObject;
 import io.github.lazzz.sagittarius.common.constant.JwtClaimConstants;
 import io.github.lazzz.sagittarius.common.constant.RedisConstants;
 import io.github.lazzz.sagittarius.common.result.ResultCode;
-import io.github.lazzz.sagittarius.common.utils.TenantHeaderUtil;
 import io.github.lazzz.sagittarius.gateway.util.WebFluxUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

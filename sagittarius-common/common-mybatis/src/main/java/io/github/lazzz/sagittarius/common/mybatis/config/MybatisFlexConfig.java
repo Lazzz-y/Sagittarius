@@ -34,19 +34,20 @@ public class MybatisFlexConfig implements MyBatisFlexCustomizer {
 
     private final CustomPermissionHandler customPermissionHandler;
 
-    private final ApplicationContext applicationContext;
-
     public MybatisFlexConfig(CustomPermissionHandler customPermissionHandler, ApplicationContext applicationContext) {
         this.customPermissionHandler = customPermissionHandler;
-        this.applicationContext = applicationContext;
     }
 
     @Override
     public void customize(FlexGlobalConfig config) {
+//        AuditManager.setMessageCollector(msg ->
+//                log.info("当前SQL: {},\n总耗时: {}ms", msg.getFullSql(), msg.getElapsedTime())
+//                );
+        // 开启审计功能
         AuditManager.setAuditEnable(true);
-        AuditManager.setMessageCollector(msg ->
-                log.info("当前SQL: {},\n总耗时: {}ms", msg.getFullSql(), msg.getElapsedTime())
-                );
+        // 设置 SQL 审计收集器
+        MessageCollector collector = new ConsoleMessageCollector();
+        AuditManager.setMessageCollector(collector);
     }
 
     @PostConstruct
@@ -61,18 +62,6 @@ public class MybatisFlexConfig implements MyBatisFlexCustomizer {
         registry.register(String[].class, new StringObjectJsonTypeHandler());
         registry.register(Integer[].class, new IntegerArrayJsonTypeHandler());
         registry.register(Long[].class, new LongObjectJsonTypeHandler());
-    }
-
-    /**
-     * 配置审计功能
-     */
-    @PostConstruct
-    public void configureAudit() {
-        // 开启审计功能
-        AuditManager.setAuditEnable(true);
-        // 设置 SQL 审计收集器
-        MessageCollector collector = new ConsoleMessageCollector();
-        AuditManager.setMessageCollector(collector);
     }
 
     @Bean

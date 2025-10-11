@@ -2,8 +2,7 @@ package io.github.lazzz.sagittarius.common.mybatis.config;
 
 
 import com.mybatisflex.core.tenant.TenantFactory;
-import org.springframework.web.context.request.RequestAttributes;
-import org.springframework.web.context.request.RequestContextHolder;
+import io.github.lazzz.sagittarius.common.utils.TenantContext;
 
 import java.util.Set;
 
@@ -20,9 +19,7 @@ public class CustomTenantFactory implements TenantFactory {
 
     @Override
     public Object[] getTenantIds() {
-        RequestAttributes attributes = RequestContextHolder.getRequestAttributes();
-        Long tenantId = (Long) attributes.getAttribute("tenantId", RequestAttributes.SCOPE_REQUEST);
-        return new Object[]{tenantId};
+        return new Object[]{TenantContext.getTenantId()};
     }
 
     @Override

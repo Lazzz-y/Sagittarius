@@ -1,8 +1,9 @@
 package io.github.lazzz.common.web.interceptor;
 
 
+import cn.hutool.core.util.StrUtil;
+import io.github.lazzz.sagittarius.common.constant.SystemConstants;
 import io.github.lazzz.sagittarius.common.utils.TenantContext;
-import io.github.lazzz.sagittarius.common.utils.TenantHeaderUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Component;
@@ -40,9 +41,15 @@ public class TenantInterceptor implements HandlerInterceptor {
             return true;
         }
 
-        Long tenantId = request.getAttribute("tenantId") != null ? (Long) request.getAttribute("tenantId") : TenantHeaderUtil.getTenantIdFromHeader();
-        // 设置到上下文（自动校验合法性，抛出异常则请求终止）
-        request.setAttribute("tenantId", tenantId);
+        String tenantIdStr = request.getHeader(SystemConstants.TENANT_HEADER);
+        long tenantId = 1L;
+        if (StrUtil.isNotBlank(tenantIdStr)){
+            try {
+                tenantId = Long.parseLong(tenantIdStr);
+            } catch (NumberFormatException e){
+                throw new IllegalArgumentException("Invalid tenant ID: " + tenantIdStr);
+            }
+        }
         TenantContext.setTenantId(tenantId);
         return true;
     }

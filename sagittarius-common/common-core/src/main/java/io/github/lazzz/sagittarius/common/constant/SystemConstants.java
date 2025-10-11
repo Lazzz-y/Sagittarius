@@ -28,5 +28,15 @@ public interface SystemConstants {
      * 默认用户角色ID
      */
     Long DEFAULT_USER_ROLE_ID = 231351564713857027L;
+
+    /**
+     * 默认租户ID
+     */
+    Long DEFAULT_TENANT_ID = 1L;
+
+    /**
+     * 默认租户ID字符串
+     */
+    String DEFAULT_TENANT_ID_STR = "1";
 }
 
