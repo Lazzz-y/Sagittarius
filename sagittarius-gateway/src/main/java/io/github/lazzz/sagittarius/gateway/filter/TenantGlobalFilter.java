@@ -3,10 +3,6 @@ package io.github.lazzz.sagittarius.gateway.filter;
 
 import cn.hutool.core.util.StrUtil;
 import io.github.lazzz.sagittarius.common.constant.SystemConstants;
-import io.github.lazzz.sagittarius.common.utils.TenantContext;
-import io.github.lazzz.sagittarius.common.utils.TenantHeaderUtil;
-import io.github.lazzz.sagittarius.common.utils.condition.If;
-import io.github.lazzz.sagittarius.common.utils.condition.IfFlattener;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
