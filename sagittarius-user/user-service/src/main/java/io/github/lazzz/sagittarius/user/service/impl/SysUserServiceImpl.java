@@ -87,7 +87,8 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         // 当前时间 秒
         long currentTimeSeconds = System.currentTimeMillis() / 1000;
         expireTimeOpt.ifPresent(expireTime -> {
-            if (expireTime > currentTimeSeconds) {
+            expireTime = expireTime / 1000;
+            if (expireTime> currentTimeSeconds) {
                 // token 未过期，添加至缓存作为黑名单，缓存时间为 token 剩余的有效时间
                 long remainingTimeInSeconds = expireTime - currentTimeSeconds;
                 redisTemplate.opsForValue().set(RedisConstants.TOKEN_BLACKLIST_PREFIX + jti, "", remainingTimeInSeconds, TimeUnit.SECONDS);

@@ -427,8 +427,7 @@ public class AuthorizationServerConfig {
                 .postLogoutRedirectUri("http://127.0.0.1:8080/logged-out")
                 .scope(OidcScopes.OPENID)
                 .scope(OidcScopes.PROFILE)
-                .tokenSettings(
-                        TokenSettings.builder()
+                .tokenSettings(TokenSettings.builder()
                                 .accessTokenTimeToLive(Duration.ofDays(1))
 //                                .refreshTokenTimeToLive(Duration.ofDays(30))
                                 .build()

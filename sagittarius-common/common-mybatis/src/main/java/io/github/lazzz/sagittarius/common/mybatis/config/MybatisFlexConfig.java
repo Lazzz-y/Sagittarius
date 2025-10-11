@@ -40,9 +40,6 @@ public class MybatisFlexConfig implements MyBatisFlexCustomizer {
 
     @Override
     public void customize(FlexGlobalConfig config) {
-//        AuditManager.setMessageCollector(msg ->
-//                log.info("当前SQL: {},\n总耗时: {}ms", msg.getFullSql(), msg.getElapsedTime())
-//                );
         // 开启审计功能
         AuditManager.setAuditEnable(true);
         // 设置 SQL 审计收集器
