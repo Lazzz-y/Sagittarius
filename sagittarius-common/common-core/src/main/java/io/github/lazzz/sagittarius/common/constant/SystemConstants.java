@@ -19,6 +19,14 @@ public interface SystemConstants {
      */
     String ROOT_ROLE_CODE = "SUPER_ADMIN";
 
+    /**
+     * 租户ID请求头
+     */
     String TENANT_HEADER = "X-Tenant-Id";
+
+    /**
+     * 默认用户角色ID
+     */
+    Long DEFAULT_USER_ROLE_ID = 231351564713857027L;
 }
 

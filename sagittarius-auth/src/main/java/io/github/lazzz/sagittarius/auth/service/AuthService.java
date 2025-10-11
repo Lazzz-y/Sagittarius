@@ -1,13 +1,11 @@
 package io.github.lazzz.sagittarius.auth.service;
 
 
-import cloud.tianai.captcha.application.CaptchaImageType;
 import cloud.tianai.captcha.application.ImageCaptchaApplication;
 import cloud.tianai.captcha.application.vo.CaptchaResponse;
 import cloud.tianai.captcha.application.vo.ImageCaptchaVO;
 import cloud.tianai.captcha.common.response.ApiResponse;
 import io.github.lazzz.sagittarius.auth.model.CaptchaData;
-import io.github.lazzz.sagittarius.common.result.Result;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -30,7 +28,6 @@ public class AuthService {
     private String captchaType;
 
     public CaptchaResponse<ImageCaptchaVO> generateCaptcha() {
-        System.out.println("验证码类型: " + captchaType);
         return application.generateCaptcha(captchaType);
     }
 

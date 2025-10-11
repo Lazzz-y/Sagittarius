@@ -5,8 +5,6 @@ plugins {
 }
 
 dependencies {
-    // Spring Boot Web
-    implementation("org.springframework.boot:spring-boot-starter-web")
 
     // Sentinel
     implementation("com.alibaba.cloud:spring-cloud-starter-alibaba-sentinel")
@@ -31,8 +29,10 @@ dependencies {
     implementation("cloud.tianai.captcha:tianai-captcha-springboot-starter")
 
     // common
+    api(project(":sagittarius-common:common-web"))
     api(project(":sagittarius-common:common-core"))
     api(project(":sagittarius-common:common-redis"))
     api(project(":sagittarius-common:common-apidoc"))
+
     api(project(":sagittarius-user:user-api"))
 }

@@ -5,8 +5,6 @@ import cloud.tianai.captcha.application.vo.ImageCaptchaVO;
 import cloud.tianai.captcha.common.response.ApiResponse;
 import io.github.lazzz.sagittarius.auth.model.CaptchaData;
 import io.github.lazzz.sagittarius.auth.service.AuthService;
-import io.github.lazzz.sagittarius.common.result.Result;
-import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
@@ -35,7 +33,6 @@ public class AuthController {
 
     @PostMapping("/captcha")
     public CaptchaResponse<ImageCaptchaVO> generateCaptcha() {
-        System.out.println("生成验证码...");
         return authService.generateCaptcha();
     }
 

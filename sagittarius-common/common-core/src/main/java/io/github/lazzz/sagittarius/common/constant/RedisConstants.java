@@ -1,6 +1,7 @@
 package io.github.lazzz.sagittarius.common.constant;
 
 
+import io.github.lazzz.sagittarius.common.utils.TenantContext;
 import io.github.lazzz.sagittarius.common.utils.TenantHeaderUtil;
 
 /**
@@ -19,23 +20,23 @@ public interface RedisConstants {
     /**
      * 防重复提交锁前缀
      */
-    String RESUBMIT_LOCK_PREFIX = "LOCK:RESUBMIT:" + TenantHeaderUtil.getTenantIdFromHeader();
+    String RESUBMIT_LOCK_PREFIX = "LOCK:RESUBMIT:" + TenantContext.getTenantId();
 
     /**
      * 角色和权限缓存前缀
      */
-    String ROLE_PERMS_PREFIX = "role_perms:" + TenantHeaderUtil.getTenantIdFromHeader();
+    String ROLE_PERMS_PREFIX = "role_perms:" + TenantContext.getTenantId();
 
     /**
      * 黑名单TOKEN Key前缀
      * 租户ID在全局过滤器中拼接
      */
-    String TOKEN_BLACKLIST_PREFIX = "token:blacklist:";
+    String TOKEN_BLACKLIST_PREFIX = "token:blacklist:" + TenantContext.getTenantId() + ":";
 
     /**
      * 注册短信验证码key前缀
      */
-    String REGISTER_SMS_CODE_PREFIX = "sms_code:register" + TenantHeaderUtil.getTenantIdFromHeader();
+    String REGISTER_SMS_CODE_PREFIX = "sms_code:register:" + TenantContext.getTenantId();
 
 }
 

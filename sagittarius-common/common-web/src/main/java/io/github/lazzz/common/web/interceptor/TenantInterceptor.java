@@ -1,17 +1,20 @@
 package io.github.lazzz.common.web.interceptor;
 
 
+import io.github.lazzz.sagittarius.common.utils.TenantContext;
 import io.github.lazzz.sagittarius.common.utils.TenantHeaderUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 /**
- *  TODO
- * 
- * @author Lazzz 
+ * 租户识别拦截器
+ *
+ * @author Lazzz
  * @date 2025/10/03 16:06
 **/
+@Component
 public class TenantInterceptor implements HandlerInterceptor {
 
     // 定义需要排除的Knife4j路径
@@ -40,7 +43,13 @@ public class TenantInterceptor implements HandlerInterceptor {
         Long tenantId = request.getAttribute("tenantId") != null ? (Long) request.getAttribute("tenantId") : TenantHeaderUtil.getTenantIdFromHeader();
         // 设置到上下文（自动校验合法性，抛出异常则请求终止）
         request.setAttribute("tenantId", tenantId);
+        TenantContext.setTenantId(tenantId);
         return true;
+    }
+
+    @Override
+    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
+        TenantContext.clear();
     }
 
     private boolean isExcludePath(String path) {

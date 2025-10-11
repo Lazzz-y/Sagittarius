@@ -22,6 +22,7 @@ import java.util.Base64;
  **/
 @Data
 @AutoMapper(target = SysUser.class)
+@Schema(description = "用户插入表单对象")
 public class SysUserSaveForm {
 
     /**

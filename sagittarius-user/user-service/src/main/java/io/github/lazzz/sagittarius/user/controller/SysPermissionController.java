@@ -1,6 +1,8 @@
 package io.github.lazzz.sagittarius.user.controller;
 
 import com.mybatisflex.core.paginate.Page;
+import io.github.lazzz.sagittarius.common.annotation.RefreshableController;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -11,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.beans.factory.annotation.Autowired;
 import io.github.lazzz.sagittarius.user.service.ISysPermissionService;
 import io.github.lazzz.sagittarius.user.model.entity.SysPermission;
-import org.springframework.web.bind.annotation.RestController;
 
 import java.io.Serializable;
 import java.util.List;
@@ -27,13 +28,13 @@ import io.swagger.v3.oas.annotations.tags.Tag;
  * @author Lazzz
  * @since 1.0
  */
-@RestController
+@RefreshableController
 @RequestMapping("/sysPermission")
 @Tag(name = "系统权限表控制层")
+@RequiredArgsConstructor
 public class SysPermissionController {
 
-    @Autowired
-    private ISysPermissionService sysPermissionService;
+    private final ISysPermissionService sysPermissionService;
 
     /**
      * 添加 系统权限表

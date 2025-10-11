@@ -2,6 +2,7 @@ package io.github.lazzz.sagittarius.user.service;
 
 
 import com.mybatisflex.core.paginate.Page;
+import io.github.lazzz.sagittarius.user.model.entity.SysRole;
 import io.github.lazzz.sagittarius.user.model.entity.SysUser;
 import com.mybatisflex.core.service.IService;
 import io.github.lazzz.sagittarius.user.model.request.form.SysUserSaveForm;
@@ -29,7 +30,7 @@ public interface ISysUserService extends IService<SysUser> {
      * @author Lazzz
      * @date 2025/9/27
      * @param username 用户名
-     * @return io.github.lazzz.user.dto.UserAuthDTO
+     * @return {@link UserAuthDTO}
      */
     UserAuthDTO getUserAuthDTO(String username);
 
@@ -38,7 +39,7 @@ public interface ISysUserService extends IService<SysUser> {
      *
      * @author Lazzz
      * @date 2025/9/29
-     * @return java.lang.Boolean
+     * @return {@link Boolean}
      */
     Boolean logout();
 
@@ -47,21 +48,21 @@ public interface ISysUserService extends IService<SysUser> {
      *
      * @author Lazzz
      * @date 2025/9/29
-     * @return java.lang.Boolean
+     * @return {@link Boolean}
      */
     Boolean updatePassword(Long id, String password);
 
     /**
      * 增加用户
      * @param form 用户表单
-     * @return java.lang.Boolean
+     * @return {@link Boolean}
      */
     Boolean saveUser(SysUserSaveForm form);
 
     /**
      * 修改用户
      * @param form 用户表单
-     * @return java.lang.Boolean
+     * @return {@link Boolean}
      */
     Boolean updateUser(SysUserUpdateForm form);
 
@@ -71,7 +72,7 @@ public interface ISysUserService extends IService<SysUser> {
      * @author Lazzz
      * @date 2025/9/27
      * @param id 用户id
-     * @return io.github.lazzz.sagittarius.user.model.vo.SysUserVO
+     * @return {@link SysUserVO}
      */
     SysUserVO getUserInfo(Serializable id);
 
@@ -80,7 +81,7 @@ public interface ISysUserService extends IService<SysUser> {
      *
      * @author Lazzz
      * @date 2025/9/27
-     * @return io.github.lazzz.sagittarius.user.model.vo.SysUserVO
+     * @return {@link List<SysUserVO>}
      */
     List<SysUserVO> getUserList();
 
@@ -90,7 +91,7 @@ public interface ISysUserService extends IService<SysUser> {
      * @author Lazzz
      * @date 2025/9/27
      * @param query 分页查询参数
-     * @return com.mybatisflex.core.paginate.Page<io.github.lazzz.sagittarius.user.model.vo.SysUserVO>
+     * @return {@link Page<SysUserVO>}
      */
     Page<SysUserVO> getUserPage(SysUserPageQuery query);
 

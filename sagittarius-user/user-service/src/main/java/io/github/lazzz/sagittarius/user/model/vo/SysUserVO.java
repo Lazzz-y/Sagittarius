@@ -11,15 +11,15 @@ import lombok.*;
 import java.util.Date;
 
 /**
+ * 用户视图对象
  * @author Lazzz
- * @className SysUserVO
- * @description TODO
  * @date 2025/09/26 21:06
  **/
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Schema(description = "用户视图对象")
 @EqualsAndHashCode(callSuper = true)
 @AutoMappers(value = {@AutoMapper(target = SysUser.class)})
 public class SysUserVO extends BaseVO {
@@ -133,11 +133,6 @@ public class SysUserVO extends BaseVO {
      */
     @Schema(description = "更新人ID")
     private Long updateBy;
-
-    /**
-     * 逻辑删除标识(0:未删除;1:已删除)
-     */
-    private Integer deleted;
 
 }
 

@@ -10,10 +10,10 @@ import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
 import io.github.lazzz.sagittarius.auth.model.SysUserDetails;
-import io.github.lazzz.sagittarius.auth.oauth2.handler.CustomAuthenticationFailureHandler;
-import io.github.lazzz.sagittarius.auth.oauth2.handler.CustomAuthenticationSuccessHandler;
 import io.github.lazzz.sagittarius.auth.oauth2.ext.password.PasswordAuthenticationConverter;
 import io.github.lazzz.sagittarius.auth.oauth2.ext.password.PasswordAuthenticationProvider;
+import io.github.lazzz.sagittarius.auth.oauth2.handler.CustomAuthenticationFailureHandler;
+import io.github.lazzz.sagittarius.auth.oauth2.handler.CustomAuthenticationSuccessHandler;
 import io.github.lazzz.sagittarius.auth.oauth2.jackson.SysUserMixin;
 import io.github.lazzz.sagittarius.common.constant.AuthConstants;
 import io.github.lazzz.sagittarius.common.constant.RedisConstants;
@@ -69,7 +69,6 @@ import java.security.interfaces.RSAPublicKey;
 import java.time.Duration;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 /**
  * @author Lazzz

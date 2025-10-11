@@ -1,5 +1,9 @@
 package io.github.lazzz.sagittarius.common.utils.condition;
 
+import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
+
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -62,28 +66,28 @@ public class IfFlattener<T> {
      * 空值检查
      */
     public IfFlattener<T> whenNull(Consumer<T> action) {
-        return when(Objects::isNull, action);
+        return when(ObjectUtil::isNull, action);
     }
     
     /**
      * 非空检查
      */
     public IfFlattener<T> whenNotNull(Consumer<T> action) {
-        return when(Objects::nonNull, action);
+        return when(ObjectUtil::isNotEmpty, action);
     }
     
     /**
      * 相等性检查
      */
     public IfFlattener<T> whenEquals(T expected, Consumer<T> action) {
-        return when(obj -> Objects.equals(obj, expected), action);
+        return when(obj -> ObjectUtil.equals(obj, expected), action);
     }
     
     /**
      * 字符串非空检查
      */
     public IfFlattener<T> whenNotBlank(Consumer<T> action) {
-        return when(obj -> obj instanceof String && !((String) obj).trim().isEmpty(), action);
+        return when(obj -> obj instanceof String str && StrUtil.isNotBlank(str), action);
     }
     
     /**
@@ -91,11 +95,11 @@ public class IfFlattener<T> {
      */
     public IfFlattener<T> whenNotEmpty(Consumer<T> action) {
         return when(obj -> {
-            if (obj instanceof java.util.Collection) {
-                return !((java.util.Collection<?>) obj).isEmpty();
+            if (obj instanceof java.util.Collection<?> col) {
+                return CollectionUtil.isNotEmpty(col);
             }
-            if (obj instanceof java.util.Map) {
-                return !((java.util.Map<?, ?>) obj).isEmpty();
+            if (obj instanceof java.util.Map<?, ?> map) {
+                return CollectionUtil.isNotEmpty(map);
             }
             return false;
         }, action);

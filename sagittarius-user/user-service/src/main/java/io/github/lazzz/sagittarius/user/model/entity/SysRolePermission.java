@@ -1,5 +1,6 @@
 package io.github.lazzz.sagittarius.user.model.entity;
 
+import io.github.lazzz.sagittarius.common.base.BaseMiddleEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import com.mybatisflex.annotation.Column;
 import com.mybatisflex.annotation.Table;
@@ -22,7 +23,7 @@ import lombok.*;
 @Schema(name = "角色权限关联表")
 @EqualsAndHashCode(callSuper = true)
 @Table(value = "sys_role_permission")
-public class SysRolePermission extends BaseSnowflakeEntity {
+public class SysRolePermission extends BaseMiddleEntity {
 
     /**
      * 角色ID

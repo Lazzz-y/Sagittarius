@@ -1,6 +1,8 @@
 package io.github.lazzz.sagittarius.user.controller;
 
 import com.mybatisflex.core.paginate.Page;
+import io.github.lazzz.common.security.util.SecurityUtils;
+import io.github.lazzz.sagittarius.common.annotation.RefreshableController;
 import io.github.lazzz.sagittarius.common.result.Result;
 import io.github.lazzz.sagittarius.user.model.request.form.SysUserSaveForm;
 import io.github.lazzz.sagittarius.user.model.request.form.SysUserUpdateForm;
@@ -8,23 +10,22 @@ import io.github.lazzz.sagittarius.user.model.request.query.SysUserPageQuery;
 import io.github.lazzz.sagittarius.user.model.vo.SysUserProfileVO;
 import io.github.lazzz.sagittarius.user.model.vo.SysUserVO;
 import io.github.lazzz.sagittarius.user.service.ISysRolePermissionService;
+import io.github.lazzz.sagittarius.user.service.ISysUserService;
 import io.github.lazzz.user.dto.UserAuthDTO;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import io.github.lazzz.sagittarius.user.service.ISysUserService;
-import io.github.lazzz.sagittarius.user.model.entity.SysUser;
 
 import java.io.Serializable;
 import java.util.List;
-
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.Parameters;
-import io.swagger.v3.oas.annotations.tags.Tag;
 
 /**
  * 用户表 控制层。
@@ -33,7 +34,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
  * @since 1.0
  */
 @Slf4j
-@RestController
+@RefreshableController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/users")
 @Tag(name = "01.用户接口")
@@ -51,20 +52,30 @@ public class SysUserController {
         return Result.success(userAuthDTO);
     }
 
-    @Operation(summary = "修改密码")
-    @PatchMapping("/{id}/password")
-    @PreAuthorize("@ss.hasHigherRole('USER')")
-    public Result<Boolean> updatePassword(
-            @PathVariable Long id,
-            @RequestParam String password){
-        return Result.judge(sysUserService.updatePassword(id, password));
-    }
-
     @Operation(summary = "注销登出")
     @DeleteMapping("/logout")
     public Result<Boolean> logout() {
         return Result.judge(sysUserService.logout());
     }
+
+    @Operation(summary = "修改密码(用户)")
+    @PatchMapping("/update/password")
+    @PreAuthorize("@ss.hasPerm('sys:user:password:user')")
+    public Result<Boolean> updatePassword(@RequestParam @NotBlank(message = "密码不能为空") String password){
+        // 从上下文中获取用户ID
+        Long userId = SecurityUtils.getUserId();
+        return Result.judge(sysUserService.updatePassword(userId, password));
+    }
+
+    @Operation(summary = "修改密码(管理员)")
+    @PatchMapping("/{id}/password")
+    @PreAuthorize("@ss.hasPerm('sys:user:password:admin')")
+    public Result<Boolean> updatePassword(
+            @PathVariable @NotNull(message = "用户ID不能为空") Long id,
+            @RequestParam @NotBlank(message = "密码不能为空") String password){
+        return Result.judge(sysUserService.updatePassword(id, password));
+    }
+
 
     /**
      * 添加用户
@@ -74,7 +85,7 @@ public class SysUserController {
      */
     @PostMapping("/save")
     @Operation(summary = "添加用户")
-    @PreAuthorize("@ss.hasPerm('sys:user:save') or @ss.hasRole('ADMIN')")
+    @PreAuthorize("@ss.hasPerm('sys:user:save')")
     public Result<Boolean> save(@ParameterObject@Validated SysUserSaveForm form) {
         return Result.judge(sysUserService.saveUser(form));
     }
@@ -114,7 +125,7 @@ public class SysUserController {
      */
     @GetMapping("/list")
     @Operation(summary = "查询所有用户")
-    @PreAuthorize("@ss.hasPerm('sys:user:read')")
+    @PreAuthorize("@ss.hasPerm('sys:user:query')")
     public Result<List<SysUserVO>> list() {
         return Result.success(sysUserService.getUserList());
     }
@@ -127,16 +138,16 @@ public class SysUserController {
      */
     @GetMapping("/page")
     @Operation(summary = "分页查询用户表")
-    @PreAuthorize("@ss.hasRole('ADMIN')")
+    @PreAuthorize("@ss.hasPerm('sys:user:query')")
     public Result<Page<SysUserVO>> page(@ParameterObject @Validated SysUserPageQuery query) {
+        log.info("分页查询用户表: {}", query);
         Page<SysUserVO> pageResult = sysUserService.getUserPage(query);
-        sysRolePermissionService.refreshRolePermsCache();
         return Result.success(pageResult);
     }
 
     @GetMapping("/profile")
     @Operation(summary = "获取用户个人信息")
-    @PreAuthorize("@ss.hasRole('USER')")
+    @PreAuthorize("@ss.hasPerm('sys:user:profile')")
     public Result<SysUserProfileVO> getUserProfile() {
         SysUserProfileVO profile = sysUserService.getUserProfile();
         return Result.success(profile);

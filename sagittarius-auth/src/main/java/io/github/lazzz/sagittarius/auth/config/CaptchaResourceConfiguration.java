@@ -4,20 +4,14 @@ package io.github.lazzz.sagittarius.auth.config;
 import cloud.tianai.captcha.common.constant.CaptchaTypeConstant;
 import cloud.tianai.captcha.resource.ResourceStore;
 import cloud.tianai.captcha.resource.common.model.dto.Resource;
-import cloud.tianai.captcha.resource.common.model.dto.ResourceMap;
-import cloud.tianai.captcha.resource.impl.provider.ClassPathResourceProvider;
-import io.github.lazzz.sagittarius.common.constant.SystemConstants;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternResolver;
-import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
-
-import static cloud.tianai.captcha.common.constant.CommonConstant.DEFAULT_SLIDER_IMAGE_TEMPLATE_PATH;
 
 /**
  * 验证码资源配置

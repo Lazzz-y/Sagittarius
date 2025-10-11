@@ -16,6 +16,7 @@ import lombok.Data;
 **/
 @Data
 @AutoMapper(target = SysUser.class)
+@Schema(name = "用户更新表单对象")
 public class SysUserUpdateForm {
 
     /**

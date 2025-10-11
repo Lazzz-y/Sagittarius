@@ -18,9 +18,11 @@ Sagittarius是一个基于Spring Cloud的微服务架构博客系统，提供完
 - Spring Cloud Alibaba
 
 ### 服务治理
-- Nacos 3.0.x (服务注册与发现、配置中心)
+- Nacos (服务注册与发现、配置中心)
 - Spring Cloud Gateway (API网关)
 - Spring Cloud LoadBalancer (负载均衡)
+- Seata (分布式事务)
+- Sentinel (流量控制)
 
 ### 数据存储
 - MySQL 8.0 (关系型数据库)
@@ -36,11 +38,12 @@ Sagittarius是一个基于Spring Cloud的微服务架构博客系统，提供完
 - JWT (JSON Web Token)
 
 ### 任务调度
-- Spring Task
+- xxl-job-admin
 
 ### 监控与日志
 - Spring Boot Admin (监控)
 - SLF4J + Logback (日志框架)
+- Micrometer + Zipkin (分布式链路追踪)
 
 ### 构建工具
 - Gradle 9.0
@@ -70,11 +73,15 @@ Sagittarius是一个基于Spring Cloud的微服务架构博客系统，提供完
 - JDK 17+ 
 - Gradle 9.0+ 
 - Docker (用于运行依赖服务)
-- MySQL 8.0
-- Redis 7.0
-- Nacos 2.3.x
-- RabbitMQ 3.12+
-- Elasticsearch 8.x
+- MySQL 8.0+
+- Redis 7.0+
+- Nacos 3.0+
+- sentinel 1.8+
+- zipkin 3+
+- seata-server 2.0.0+
+- RabbitMQ 4.1.4+
+- Elasticsearch 8.0+
+- xxl-job-admin 3.2.0+
 - MinIO
 
 ### 前置条件

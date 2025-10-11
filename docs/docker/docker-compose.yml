@@ -78,7 +78,7 @@ services:
     restart: unless-stopped # 重启策略：除非手动停止容器，否则自动重启
     environment:
       STORE_MODE: db
-      SEATA_IP: 192.168.10.100
+      SEATA_IP: 192.168.5.47
       SEATA_PORT: 8091
       # 存储配置
       STORE_DB_DATASOURCE: druid

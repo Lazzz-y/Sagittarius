@@ -3,12 +3,8 @@ package io.github.lazzz.common.security.service;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
-import io.github.lazzz.common.security.enums.RoleScopeEnum;
 import io.github.lazzz.common.security.util.SecurityUtils;
-import io.github.lazzz.sagittarius.common.base.IBaseEnum;
 import io.github.lazzz.sagittarius.common.constant.RedisConstants;
-import io.github.lazzz.sagittarius.common.utils.condition.If;
-import io.github.lazzz.sagittarius.common.utils.condition.IfFlattener;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -64,6 +60,10 @@ public class PermissionService {
         return hasPerm;
     }
 
+    public boolean hasAnyPerm(String... requiredPerms) {
+        return Arrays.stream(requiredPerms).anyMatch(this::hasPerm);
+    }
+
     /**
      * 角色权限校验
      *
@@ -98,26 +98,6 @@ public class PermissionService {
      */
     public boolean hasAnyRole(String... roleCodes) {
         return Arrays.stream(roleCodes).anyMatch(this::hasRole);
-    }
-
-    public boolean hasHigherRole(String roleCode) {
-        if (StrUtil.isEmpty(roleCode)) {
-            return false;
-        }
-        if (SecurityUtils.isRoot()) {
-            return true;
-        }
-        var target = IBaseEnum.getEnumByName(roleCode, RoleScopeEnum.class);
-        var roles = SecurityUtils.getRoles();
-        var bool = roles.stream().anyMatch(role ->
-                IBaseEnum
-                        .getEnumByName(role, RoleScopeEnum.class)
-                        .isHigherThan(target)
-        );
-        if (!bool){
-            log.error("用户无操作权限");
-        }
-        return bool;
     }
 
     public Set<String> getRolesPermsFormCache(Set<String> roleCodes) {

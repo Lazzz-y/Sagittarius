@@ -1,6 +1,8 @@
 package io.github.lazzz.sagittarius.user.model.entity;
 
 import io.github.lazzz.sagittarius.common.base.BaseSnowflakeEntity;
+import io.github.lazzz.sagittarius.user.model.vo.SysRoleVO;
+import io.github.linpeilie.annotations.AutoMapper;
 import lombok.*;
 import io.swagger.v3.oas.annotations.media.Schema;
 import com.mybatisflex.annotation.Column;
@@ -22,12 +24,13 @@ import java.lang.Integer;
 @Schema(name = "$table.comment")
 @EqualsAndHashCode(callSuper = true)
 @Table(value = "sys_role")
+@AutoMapper(target = SysRoleVO.class)
 public class SysRole extends BaseSnowflakeEntity {
 
     /**
-     * 角色编码: ROLE_ADMIN, ROLE_EDITOR, ROLE_USER
+     * 角色编码
      */
-    @Schema(description = "角色编码: ADMIN, EDITOR, USER")
+    @Schema(description = "角色编码")
     @Column(value = "role_code")
     private String roleCode;
 
@@ -46,10 +49,10 @@ public class SysRole extends BaseSnowflakeEntity {
     private String description;
 
     /**
-     * 是否系统角色: 1-是, 0-否
+     * 显示顺序
      */
-    @Schema(description = "是否系统角色: 1-是, 0-否")
-    @Column(value = "is_system")
-    private Integer isSystem;
+    @Schema(description = "显示顺序")
+    @Column(value = "sort")
+    private Integer sort;
 
 }

@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
+import java.nio.file.AccessDeniedException;
 import java.sql.SQLSyntaxErrorException;
 import java.util.concurrent.CompletionException;
 import java.util.regex.Matcher;
@@ -181,6 +182,13 @@ public class GlobalExceptionHandler {
             return Result.failed(e.getResultCode());
         }
         return Result.failed(e.getMessage());
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(AccessDeniedException.class)
+    public <T> Result<T> handleAccessDeniedException(AccessDeniedException e) {
+        log.error("AccessDeniedException: {}", e.getMessage());
+        return Result.failed(ResultCode.AUTHORIZED_ERROR);
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)

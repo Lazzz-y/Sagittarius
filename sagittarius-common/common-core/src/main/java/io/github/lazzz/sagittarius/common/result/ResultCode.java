@@ -31,6 +31,7 @@ public enum ResultCode implements IResultCode, Serializable {
     SYSTEM_EXECUTION_ERROR("S0211", "系统执行出错"),
     SYSTEM_EXECUTION_TIMEOUT("S0212", "系统执行超时"),
 
+    AUTHORIZED_ERROR("S0300", "访问权限异常"),
     FORBIDDEN_OPERATION("S0302", "演示环境禁止新增、修改和删除重要数据，请本地部署后测试"),
 
     PARAM_ERROR("S0400", "用户请求参数错误"),

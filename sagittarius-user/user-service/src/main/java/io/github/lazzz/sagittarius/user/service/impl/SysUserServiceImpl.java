@@ -5,8 +5,11 @@ import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.StrUtil;
 import com.mybatisflex.core.paginate.Page;
 import com.mybatisflex.core.query.QueryWrapper;
+import com.mybatisflex.core.row.Db;
 import io.github.lazzz.common.security.util.SecurityUtils;
 import io.github.lazzz.sagittarius.common.constant.RedisConstants;
+import io.github.lazzz.sagittarius.common.constant.SystemConstants;
+import io.github.lazzz.sagittarius.common.utils.TenantHeaderUtil;
 import io.github.lazzz.sagittarius.common.utils.condition.If;
 import io.github.lazzz.sagittarius.common.utils.condition.IfFlattener;
 import io.github.lazzz.sagittarius.user.model.bo.SysUserProfileBO;
@@ -18,6 +21,7 @@ import io.github.lazzz.sagittarius.user.model.request.query.SysUserPageQuery;
 import io.github.lazzz.sagittarius.user.model.vo.SysUserProfileVO;
 import io.github.lazzz.sagittarius.user.model.vo.SysUserVO;
 import io.github.lazzz.sagittarius.user.service.ISysRolePermissionService;
+import io.github.lazzz.sagittarius.user.service.ISysUserRoleService;
 import io.github.lazzz.user.dto.UserAuthDTO;
 import io.github.linpeilie.Converter;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +32,7 @@ import io.github.lazzz.sagittarius.user.service.ISysUserService;
 import io.github.lazzz.sagittarius.user.model.entity.SysUser;
 import io.github.lazzz.sagittarius.user.mapper.SysUserMapper;
 import com.mybatisflex.spring.service.impl.ServiceImpl;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
 import java.util.List;
@@ -49,6 +54,8 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     private final PasswordEncoder passwordEncoder;
 
     private final StringRedisTemplate redisTemplate;
+
+    private final ISysUserRoleService sysUserRoleService;
 
     private final ISysRolePermissionService sysRolePermissionService;
 
@@ -86,8 +93,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
             if (expireTime > currentTimeSeconds) {
                 // token 未过期，添加至缓存作为黑名单，缓存时间为 token 剩余的有效时间
                 long remainingTimeInSeconds = expireTime - currentTimeSeconds;
-                redisTemplate.opsForValue()
-                        .set(RedisConstants.TOKEN_BLACKLIST_PREFIX + jti, "", remainingTimeInSeconds, TimeUnit.SECONDS);
+                redisTemplate.opsForValue().set(RedisConstants.TOKEN_BLACKLIST_PREFIX + jti, "", remainingTimeInSeconds, TimeUnit.SECONDS);
             }
         });
         if (expireTimeOpt.isEmpty()) {
@@ -107,6 +113,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
      * @date 2025/9/29
      */
     @Override
+    @Transactional
     public Boolean updatePassword(Long id, String password) {
         SysUser user = new SysUser();
         user.setId(id);
@@ -115,6 +122,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     }
 
     @Override
+    @Transactional
     public Boolean saveUser(SysUserSaveForm form) {
         form.init();
         Assert.isTrue(this.mapper.selectCountByQuery(
@@ -135,10 +143,14 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         });
         // 密码加密
         form.setPassword(passwordEncoder.encode(form.getPassword()));
-        return this.mapper.insert(converter.convert(form, SysUser.class)) > 0;
+        var user = converter.convert(form, SysUser.class);
+        boolean userResult = this.save(user);
+        boolean roleResult = this.sysUserRoleService.saveUserRole(null, SystemConstants.DEFAULT_USER_ROLE_ID);
+        return userResult && roleResult;
     }
 
     @Override
+    @Transactional
     public Boolean updateUser(SysUserUpdateForm form) {
         Assert.isTrue(this.mapper.selectCountByQuery(
                 queryChain()
@@ -172,17 +184,13 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     @Override
     public Page<SysUserVO> getUserPage(SysUserPageQuery query) {
         QueryWrapper wrapper = QueryWrapper.create().from(SysUser.class);
-        IfFlattener.of(query)
-                .when(q -> StrUtil.isNotBlank(q.getUsername()),
-                        a -> wrapper.where(SysUser::getUsername).like(a.getUsername()))
-                .when(q -> StrUtil.isNotBlank(q.getNickname()),
-                        a -> wrapper.where(SysUser::getNickname).like(a.getNickname()))
-                .when(q -> StrUtil.isNotBlank(q.getPhone()),
-                        a -> wrapper.where(SysUser::getPhone).like(a.getPhone()))
-                .when(q -> StrUtil.isNotBlank(q.getEmail()),
-                        a -> wrapper.where(SysUser::getEmail).like(a.getEmail()))
-                .when(q -> q.getStatus() != null,
-                        a -> wrapper.where(SysUser::getStatus).eq(a.getStatus()));
+
+        If.ifThen(StrUtil.isNotBlank(query.getUsername()), () -> wrapper.where(SysUser::getUsername).like(query.getUsername()));
+        If.ifThen(StrUtil.isNotBlank(query.getNickname()), () -> wrapper.where(SysUser::getNickname).like(query.getNickname()));
+        If.ifThen(StrUtil.isNotBlank(query.getPhone()), () -> wrapper.where(SysUser::getPhone).like(query.getPhone()));
+        If.ifThen(StrUtil.isNotBlank(query.getEmail()), () -> wrapper.where(SysUser::getEmail).like(query.getEmail()));
+        If.ifThen(query.getStatus() != null, () -> wrapper.where(SysUser::getStatus).eq(query.getStatus()));
+
         Page<SysUser> page = this.mapper.paginate(query.toPage(), wrapper);
         return page.map(m -> converter.convert(m, SysUserVO.class));
     }
@@ -205,8 +213,6 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
                 .from(SysUser.class).as("u")
                 .where(SysUser::getId).eq(userId)
                 .oneAs(SysUserProfileBO.class);
-        var sysUserProfileVO = converter.convert(sysUserProfileBO, SysUserProfileVO.class);
-        System.out.println(sysUserProfileVO);
-        return sysUserProfileVO;
+        return converter.convert(sysUserProfileBO, SysUserProfileVO.class);
     }
 }

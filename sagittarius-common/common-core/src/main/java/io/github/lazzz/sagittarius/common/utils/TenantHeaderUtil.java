@@ -30,6 +30,7 @@ public class TenantHeaderUtil {
                 request.getAttribute(SystemConstants.TENANT_HEADER).toString() :
                 request.getHeader(SystemConstants.TENANT_HEADER);
         if (tenantIdStr == null || tenantIdStr.trim().isEmpty()) {
+            // FIXME 开发环境临时处理，开发环境默认租户ID为1
             tenantIdStr = "1";
 //            throw new TenantNotFoundException("请求头中未包含租户ID，请添加" + SystemConstants.TENANT_HEADER + "头信息");
         }
