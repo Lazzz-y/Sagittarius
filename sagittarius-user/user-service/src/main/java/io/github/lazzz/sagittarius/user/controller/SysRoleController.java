@@ -65,7 +65,7 @@ public class SysRoleController {
 
     @Operation(summary = "角色分配权限")
     @PutMapping("/{roleId}/permissions")
-    @PreAuthorize("@ss.hasPerm('sys:role:assign:perm')")
+    @PreAuthorize("@ss.hasPerm('sys:role:perm:assign')")
     @PreventDuplicateResubmit
     public Result<Boolean> assignPermToRole(@PathVariable Long roleId, @RequestBody List<Long> permIds) {
         boolean result = sysRoleService.assignPermToRole(roleId, permIds);

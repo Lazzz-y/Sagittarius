@@ -2,6 +2,7 @@ package io.github.lazzz.sagittarius.user.controller;
 
 import com.mybatisflex.core.paginate.Page;
 import io.github.lazzz.common.security.util.SecurityUtils;
+import io.github.lazzz.common.web.annotation.PreventDuplicateResubmit;
 import io.github.lazzz.sagittarius.common.annotation.RefreshableController;
 import io.github.lazzz.sagittarius.common.result.Result;
 import io.github.lazzz.sagittarius.user.model.request.form.SysUserSaveForm;
@@ -10,6 +11,7 @@ import io.github.lazzz.sagittarius.user.model.request.query.SysUserPageQuery;
 import io.github.lazzz.sagittarius.user.model.vo.SysUserProfileVO;
 import io.github.lazzz.sagittarius.user.model.vo.SysUserVO;
 import io.github.lazzz.sagittarius.user.service.ISysRolePermissionService;
+import io.github.lazzz.sagittarius.user.service.ISysUserRoleService;
 import io.github.lazzz.sagittarius.user.service.ISysUserService;
 import io.github.lazzz.user.dto.UserAuthDTO;
 import io.swagger.v3.oas.annotations.Operation;
@@ -42,7 +44,7 @@ public class SysUserController {
 
     private final ISysUserService sysUserService;
 
-    private final ISysRolePermissionService sysRolePermissionService;
+    private final ISysUserRoleService sysUserRoleService;
 
     @Operation(summary = "获取用户认证信息", hidden = true)
     @RequestMapping("/{username}/auth")
@@ -119,18 +121,6 @@ public class SysUserController {
     }
 
     /**
-     * 查询所有用户
-     *
-     * @return 所有数据
-     */
-    @GetMapping("/list")
-    @Operation(summary = "查询所有用户")
-    @PreAuthorize("@ss.hasPerm('sys:user:query')")
-    public Result<List<SysUserVO>> list() {
-        return Result.success(sysUserService.getUserList());
-    }
-
-    /**
      * 分页查询用户表
      *
      * @param query 分页对象
@@ -151,5 +141,17 @@ public class SysUserController {
     public Result<SysUserProfileVO> getUserProfile() {
         SysUserProfileVO profile = sysUserService.getUserProfile();
         return Result.success(profile);
+    }
+
+    @PutMapping("/{userId}/role")
+    @Operation(summary = "用户分配角色")
+    @PreAuthorize("@ss.hasPerm('sys:user:role:assign')")
+    @PreventDuplicateResubmit
+    public Result<Boolean> assignRole(
+            @Parameter(name = "userId", description = "用户Id", required = true)
+            @PathVariable Long userId,
+            @Parameter(name = "roleIds", description = "角色Id列表", required = true)
+            @RequestBody List<Long> roleIds) {
+        return Result.judge(sysUserRoleService.assignRoleToUser(userId, roleIds));
     }
 }

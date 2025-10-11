@@ -143,7 +143,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         form.setPassword(passwordEncoder.encode(form.getPassword()));
         var user = converter.convert(form, SysUser.class);
         boolean userResult = this.save(user);
-        boolean roleResult = this.sysUserRoleService.saveUserRole(user.getId(), SystemConstants.DEFAULT_USER_ROLE_ID);
+        boolean roleResult = this.sysUserRoleService.assignRoleToUser(user.getId(), List.of(SystemConstants.DEFAULT_USER_ROLE_ID));
         return userResult && roleResult;
     }
 
