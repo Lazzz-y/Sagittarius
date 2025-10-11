@@ -46,10 +46,10 @@ public interface ISysRoleService extends IService<SysRole> {
      * 分配权限
      *
      * @param roleId    角色ID
-     * @param menusIds  权限ID
+     * @param permIds  权限ID
      * @return {@link Boolean}
      */
-    boolean assignPermToRole(Long roleId, List<Long> menusIds);
+    boolean assignPermToRole(Long roleId, List<Long> permIds);
 
 
 

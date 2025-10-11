@@ -5,6 +5,8 @@ import io.github.lazzz.common.web.annotation.PreventDuplicateResubmit;
 import io.github.lazzz.sagittarius.common.annotation.RefreshableController;
 import io.github.lazzz.sagittarius.user.model.entity.SysRole;
 import io.github.lazzz.sagittarius.user.model.request.form.SysRoleForm;
+import io.github.lazzz.sagittarius.user.model.request.query.SysRolePageQuery;
+import io.github.lazzz.sagittarius.user.model.vo.SysRoleVO;
 import io.github.lazzz.sagittarius.user.service.ISysRoleService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -50,6 +52,23 @@ public class SysRoleController {
     @PreventDuplicateResubmit
     public Result<Boolean> deleteRoles(@PathVariable String ids) {
         boolean result = sysRoleService.deleteRoles(ids);
+        return Result.judge(result);
+    }
+
+    @Operation(summary = "分页查询角色")
+    @GetMapping("/page")
+    @PreAuthorize("@ss.hasPerm('sys:role:query')")
+    public Result<Page<SysRoleVO>> getRolePage(@ParameterObject SysRolePageQuery query) {
+        Page<SysRoleVO> page = sysRoleService.getRolePage(query);
+        return Result.success(page);
+    }
+
+    @Operation(summary = "角色分配权限")
+    @PutMapping("/{roleId}/permissions")
+    @PreAuthorize("@ss.hasPerm('sys:role:assign:perm')")
+    @PreventDuplicateResubmit
+    public Result<Boolean> assignPermToRole(@PathVariable Long roleId, @RequestBody List<Long> permIds) {
+        boolean result = sysRoleService.assignPermToRole(roleId, permIds);
         return Result.judge(result);
     }
 }

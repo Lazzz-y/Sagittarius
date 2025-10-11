@@ -2,6 +2,7 @@ package io.github.lazzz.sagittarius.common.listener;
 
 
 import com.mybatisflex.annotation.UpdateListener;
+import io.github.lazzz.sagittarius.common.base.BaseEntity;
 import io.github.lazzz.sagittarius.common.base.BaseSnowflakeEntity;
 
 import java.time.LocalDateTime;
@@ -15,7 +16,7 @@ import java.time.LocalDateTime;
 public class BaseEntityUpdateListener extends BaseListener implements UpdateListener {
     @Override
     public void onUpdate(Object entity) {
-        BaseSnowflakeEntity base = (BaseSnowflakeEntity) entity;
+        BaseEntity base = (BaseEntity) entity;
         var userId = getUserId();
         var now = LocalDateTime.now();
 

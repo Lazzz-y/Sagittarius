@@ -2,7 +2,7 @@ package io.github.lazzz.sagittarius.common.config;
 
 
 import com.mybatisflex.core.FlexGlobalConfig;
-import io.github.lazzz.sagittarius.common.base.BaseSnowflakeEntity;
+import io.github.lazzz.sagittarius.common.base.BaseEntity;
 import io.github.lazzz.sagittarius.common.listener.BaseEntityInsertListener;
 import io.github.lazzz.sagittarius.common.listener.BaseEntityUpdateListener;
 import org.springframework.context.annotation.Configuration;
@@ -24,9 +24,8 @@ public class MyBatisFlexListenerRegistry {
         FlexGlobalConfig config = FlexGlobalConfig.getDefaultConfig();
 
         // 设置 BaseEntity 类注册监听器
-        config.registerInsertListener(insertListener, BaseSnowflakeEntity.class);
-        config.registerUpdateListener(updateListener, BaseSnowflakeEntity.class);
-
+        config.registerInsertListener(insertListener, BaseEntity.class);
+        config.registerUpdateListener(updateListener, BaseEntity.class);
     }
 
 }

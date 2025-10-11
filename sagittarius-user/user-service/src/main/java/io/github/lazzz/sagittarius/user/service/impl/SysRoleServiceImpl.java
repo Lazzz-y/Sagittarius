@@ -5,7 +5,12 @@ import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.mybatisflex.core.paginate.Page;
+import com.mybatisflex.core.query.QueryChain;
 import com.mybatisflex.core.query.QueryWrapper;
+import io.github.lazzz.sagittarius.common.utils.condition.If;
+import io.github.lazzz.sagittarius.common.utils.condition.IfFlattener;
+import io.github.lazzz.sagittarius.user.model.entity.SysRolePermission;
+import io.github.lazzz.sagittarius.user.model.entity.SysUserRole;
 import io.github.lazzz.sagittarius.user.model.request.form.SysRoleForm;
 import io.github.lazzz.sagittarius.user.model.request.query.SysRolePageQuery;
 import io.github.lazzz.sagittarius.user.model.vo.SysRoleVO;
@@ -13,6 +18,7 @@ import io.github.lazzz.sagittarius.user.service.ISysRolePermissionService;
 import io.github.lazzz.sagittarius.user.service.ISysUserRoleService;
 import io.github.linpeilie.Converter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import io.github.lazzz.sagittarius.user.service.ISysRoleService;
 import io.github.lazzz.sagittarius.user.model.entity.SysRole;
@@ -22,6 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 服务层实现。
@@ -91,11 +98,37 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
 
     @Override
     public Page<SysRoleVO> getRolePage(SysRolePageQuery query) {
-        return null;
+        QueryWrapper wrapper = QueryWrapper.create().from(SysRole.class);
+        If.withNotBlank(query.getRoleCode(), str -> wrapper.where(SysRole::getRoleCode).like(str));
+        If.withNotBlank(query.getRoleName(), str -> wrapper.where(SysRole::getRoleName).like(str));
+        Page<SysRole> page = this.mapper.paginate(query.toPage(), wrapper);
+        return page.map(m -> converter.convert(m, SysRoleVO.class));
     }
 
     @Override
-    public boolean assignPermToRole(Long roleId, List<Long> menusIds) {
-        return false;
+    @Transactional
+    public boolean assignPermToRole(Long roleId, List<Long> permIds) {
+        SysRole role = this.getById(roleId);
+        Assert.isTrue(role != null, "角色不存在");
+
+        // 删除角色权限关系
+        sysRolePermissionService.remove(
+                QueryChain.of(SysRolePermission.class)
+                        .from(SysRolePermission.class)
+                        .eq(SysRolePermission::getRoleId, roleId)
+        );
+
+        // 新增角色权限关系
+        IfFlattener.of(permIds).whenNotEmpty(ids -> {
+            List<SysRolePermission> rps = ids.stream()
+                    .map(permId -> new SysRolePermission(roleId, permId))
+                    .toList();
+            sysRolePermissionService.saveBatch(rps);
+        });
+
+        // 刷新角色权限缓存
+        sysRolePermissionService.refreshRolePermsCache(role.getRoleCode());
+
+        return true;
     }
 }
