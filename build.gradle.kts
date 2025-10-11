@@ -133,6 +133,11 @@ subprojects {
         // Spring Boot Actuator
         implementation("org.springframework.boot:spring-boot-starter-actuator")
 
+        // 为 Apple Silicon Mac 添加 Netty DNS 解析器原生库支持
+        if (System.getProperty("os.arch") == "aarch64" || System.getProperty("os.name").contains("Mac")) {
+            runtimeOnly("io.netty:netty-resolver-dns-native-macos:4.2.6.Final:osx-aarch_64")
+        }
+
         // Spring Boot Test
         testImplementation("org.springframework.boot:spring-boot-starter-test")
         testImplementation("org.mockito:mockito-core")
