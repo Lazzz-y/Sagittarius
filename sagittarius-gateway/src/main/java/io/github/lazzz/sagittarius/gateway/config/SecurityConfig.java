@@ -18,9 +18,9 @@ import reactor.core.publisher.Mono;
 import java.util.List;
 
 /**
+ * Spring Security 配置
+ *
  * @author Lazzz
- * @className SecurityConfig
- * @description TODO
  * @date 2025/09/19 13:09
  **/
 @EnableWebFluxSecurity

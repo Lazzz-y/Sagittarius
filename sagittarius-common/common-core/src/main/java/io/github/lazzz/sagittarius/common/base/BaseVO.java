@@ -7,8 +7,8 @@ import lombok.ToString;
 import java.io.Serializable;
 
 /**
- * @className BaseVO 
- * @description TODO 
+ * 视图基类
+ *
  * @author Lazzz 
  * @date 2025/09/25 15:51
 **/

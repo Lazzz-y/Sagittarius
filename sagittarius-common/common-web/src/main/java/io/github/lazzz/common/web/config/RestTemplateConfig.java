@@ -8,8 +8,8 @@ import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
 
 /**
- * @className RestTemplateConfig 
- * @description TODO 
+ * RestTemplate 配置类
+ *
  * @author Lazzz 
  * @date 2025/09/23 21:03
 **/

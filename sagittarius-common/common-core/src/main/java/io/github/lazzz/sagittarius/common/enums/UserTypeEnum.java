@@ -6,7 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
- * TODO
+ * 用户类型枚举
  *
  * @author Lazzz
  * @date 2025/09/29 21:09

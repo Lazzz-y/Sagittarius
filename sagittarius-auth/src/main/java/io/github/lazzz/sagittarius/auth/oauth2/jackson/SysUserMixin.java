@@ -7,8 +7,8 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 /**
- * @className SysUserMixin 
- * @description TODO 
+ * SysUser 序列化配置
+ *
  * @author Lazzz 
  * @date 2025/09/21 22:20
 **/

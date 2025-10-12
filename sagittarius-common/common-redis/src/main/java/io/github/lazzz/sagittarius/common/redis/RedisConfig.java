@@ -8,8 +8,8 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.RedisSerializer;
 
 /**
- * @className RedisConfig 
- * @description TODO 
+ * redis 配置
+ *
  * @author Lazzz 
  * @date 2025/09/19 23:40
 **/

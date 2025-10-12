@@ -19,9 +19,9 @@ import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 import java.util.List;
 
 /**
+ * Spring Security 配置
+ *
  * @author Lazzz
- * @className SecurityConfig
- * @description TODO
  * @date 2025/09/21 21:39
  **/
 @EnableWebSecurity

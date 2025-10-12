@@ -14,8 +14,8 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 
 /**
- * @className CustomAuthenticationEntryPoint 
- * @description TODO 
+ * 自定义认证失败处理
+ *
  * @author Lazzz 
  * @date 2025/09/22 19:56
 **/

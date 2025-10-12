@@ -14,6 +14,12 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import java.io.IOException;
 import java.util.Set;
 
+/**
+ * 序列化配置
+ *
+ * @author Lazzz
+ * @date 2025/10/12 16:01
+ **/
 public class SysUserDeserializer extends JsonDeserializer<SysUserDetails> {
 
     private static final TypeReference<Set<SimpleGrantedAuthority>> SIMPLE_GRANTED_AUTHORITY_SET = new TypeReference<Set<SimpleGrantedAuthority>>() {

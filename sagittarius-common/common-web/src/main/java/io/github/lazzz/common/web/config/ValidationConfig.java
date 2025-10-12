@@ -11,8 +11,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.validation.beanvalidation.SpringConstraintValidatorFactory;
 
 /**
- * @className ValidationConfig 
- * @description TODO 
+ * 校验配置 快速失败
+ *
  * @author Lazzz 
  * @date 2025/09/23 21:10
 **/

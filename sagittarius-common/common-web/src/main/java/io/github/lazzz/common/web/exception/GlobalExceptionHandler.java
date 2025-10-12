@@ -32,9 +32,9 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
+ * 全局异常处理
+ *
  * @author Lazzz
- * @className GlobExceptionHandler
- * @description TODO
  * @date 2025/09/25 15:28
  **/
 @Slf4j

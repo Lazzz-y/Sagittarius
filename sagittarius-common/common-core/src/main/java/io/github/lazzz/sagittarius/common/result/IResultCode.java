@@ -3,8 +3,8 @@ package io.github.lazzz.sagittarius.common.result;
 
 
 /**
- * @interfaceName IResultCode 
- * @description TODO 
+ * 统一返回结果状态码接口
+ *
  * @author Lazzz 
  * @date 2025/09/19 16:35
 **/

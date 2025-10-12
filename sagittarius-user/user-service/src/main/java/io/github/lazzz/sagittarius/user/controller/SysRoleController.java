@@ -10,6 +10,8 @@ import io.github.lazzz.sagittarius.user.model.vo.SysRoleVO;
 import io.github.lazzz.sagittarius.user.service.ISysRoleService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.MDC;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -29,6 +31,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
  * @author Lazzz
  * @since 1.0
  */
+@Slf4j
 @RefreshableController
 @RequestMapping("/api/v1/roles")
 @Tag(name = "02.角色接口")
@@ -70,5 +73,13 @@ public class SysRoleController {
     public Result<Boolean> assignPermToRole(@PathVariable Long roleId, @RequestBody List<Long> permIds) {
         boolean result = sysRoleService.assignPermToRole(roleId, permIds);
         return Result.judge(result);
+    }
+
+    @GetMapping("/test")
+    public String test() {
+        // 打印 MDC 中的追踪信息
+        log.info("MDC traceId: {}", MDC.get("traceId"));
+        log.info("MDC spanId: {}", MDC.get("spanId"));
+        return "ok";
     }
 }

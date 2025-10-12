@@ -13,8 +13,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
 /**
- * @className SysUserDetailsService
- * @description TODO
+ * 系统用户详情服务
+ *
  * @author Lazzz
  * @date 2025/09/21 13:48
 **/

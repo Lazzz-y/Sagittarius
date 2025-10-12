@@ -68,7 +68,7 @@ public class TenantGlobalFilter implements GlobalFilter, Ordered {
     @Override
     public int getOrder() {
         // 确保在其他过滤器之前执行
-        return Integer.MIN_VALUE;
+        return -1;
     }
 }
 

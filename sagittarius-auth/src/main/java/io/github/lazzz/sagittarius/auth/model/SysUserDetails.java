@@ -15,9 +15,9 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
+ * 登录用户信息
+ *
  * @author Lazzz
- * @className SysUserDetails
- * @description TODO
  * @date 2025/09/20 20:55
  **/
 @Data

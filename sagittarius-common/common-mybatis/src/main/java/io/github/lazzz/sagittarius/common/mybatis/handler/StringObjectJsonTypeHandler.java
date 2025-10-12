@@ -8,9 +8,9 @@ import org.apache.ibatis.type.MappedTypes;
 import org.springframework.stereotype.Component;
 
 /**
+ * String类型转换json
+ *
  * @author Lazzz
- * @className StringObjectJsonTypeHandler
- * @description TODO
  * @date 2025/09/23 20:52
  **/
 @Slf4j

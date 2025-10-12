@@ -14,8 +14,8 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 
 /**
- * @className CustomAccessDeniedHandler 
- * @description TODO 
+ * 自定义权限不足处理器
+ *
  * @author Lazzz 
  * @date 2025/09/22 19:55
 **/

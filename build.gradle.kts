@@ -88,6 +88,7 @@ subprojects {
 
     if(!project.name.contains("common")){
         dependencies{
+
             implementation("org.springdoc:springdoc-openapi-starter-common")
             // Micrometer 整合 Brave 追踪器
             implementation("io.micrometer:micrometer-tracing-bridge-brave")

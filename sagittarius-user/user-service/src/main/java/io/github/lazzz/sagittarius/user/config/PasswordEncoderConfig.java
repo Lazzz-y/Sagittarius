@@ -7,8 +7,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 /**
- * @className PasswordEncoderConfig 
- * @description TODO 
+ * 密码加密
+ *
  * @author Lazzz 
  * @date 2025/09/27 18:06
 **/

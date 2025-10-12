@@ -8,7 +8,7 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 /**
  * 用户服务启动类
  * 负责用户信息管理（CRUD）、个人设置功能等
- * @author Lazzz (<a href="https://github.com/Lazzz-y">...</a>)
+ * @author Lazzz (<a href="https://github.com/Lazzz-y">Github</a>)
  */
 @SpringBootApplication
 @EnableDiscoveryClient
