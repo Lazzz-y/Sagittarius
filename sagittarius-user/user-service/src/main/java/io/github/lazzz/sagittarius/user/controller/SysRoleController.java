@@ -40,11 +40,23 @@ public class SysRoleController {
 
     private final ISysRoleService sysRoleService;
 
-    @Operation(summary = "新增或修改角色")
+    @Operation(summary = "新增角色")
     @PostMapping
     @PreAuthorize("@ss.hasPerm('sys:role:add')")
     @PreventDuplicateResubmit
-    public Result<Boolean> saveOrUpdateRole(@ParameterObject @Valid SysRoleForm form) {
+    public Result<Boolean> saveRole(@RequestBody @Valid SysRoleForm form) {
+        boolean result = sysRoleService.saveOrUpdateRole(form);
+        return Result.judge(result);
+    }
+
+    @Operation(summary = "修改角色")
+    @PutMapping(value = "/{roleId}")
+    @PreAuthorize("@ss.hasPerm('sys:role:edit')")
+    @PreventDuplicateResubmit
+    public Result<Boolean> updateRole(
+            @Parameter(description = "角色ID") @PathVariable Long roleId,
+            @Valid @RequestBody SysRoleForm form) {
+        form.setId(roleId);
         boolean result = sysRoleService.saveOrUpdateRole(form);
         return Result.judge(result);
     }
@@ -53,7 +65,10 @@ public class SysRoleController {
     @DeleteMapping("/{ids}")
     @PreAuthorize("@ss.hasPerm('sys:role:delete')")
     @PreventDuplicateResubmit
-    public Result<Boolean> deleteRoles(@PathVariable String ids) {
+    public Result<Boolean> deleteRoles(
+            @Parameter(description ="删除角色，多个以英文逗号(,)分割")
+            @PathVariable String ids
+    ) {
         boolean result = sysRoleService.deleteRoles(ids);
         return Result.judge(result);
     }
@@ -73,13 +88,5 @@ public class SysRoleController {
     public Result<Boolean> assignPermToRole(@PathVariable Long roleId, @RequestBody List<Long> permIds) {
         boolean result = sysRoleService.assignPermToRole(roleId, permIds);
         return Result.judge(result);
-    }
-
-    @GetMapping("/test")
-    public String test() {
-        // 打印 MDC 中的追踪信息
-        log.info("MDC traceId: {}", MDC.get("traceId"));
-        log.info("MDC spanId: {}", MDC.get("spanId"));
-        return "ok";
     }
 }

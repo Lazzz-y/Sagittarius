@@ -24,16 +24,16 @@ public abstract class BaseEntity implements Serializable {
     /**
      * 创建时间
      */
-    @Column(value = "create_time")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime createTime;
+    @Column(value = "create_at")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS")
+    private LocalDateTime createAt;
 
     /**
      * 更新时间
      */
-    @Column(value = "update_time")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime updateTime;
+    @Column(value = "update_at")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS")
+    private LocalDateTime updateAt;
 
     /**
      * 创建人ID

@@ -1,16 +1,17 @@
 package io.github.lazzz.sagittarius.user.controller;
 
 import com.mybatisflex.core.paginate.Page;
+import com.mybatisflex.core.query.QueryWrapper;
 import io.github.lazzz.common.security.util.SecurityUtils;
 import io.github.lazzz.common.web.annotation.PreventDuplicateResubmit;
 import io.github.lazzz.sagittarius.common.annotation.RefreshableController;
 import io.github.lazzz.sagittarius.common.result.Result;
+import io.github.lazzz.sagittarius.user.model.entity.SysUser;
 import io.github.lazzz.sagittarius.user.model.request.form.SysUserSaveForm;
 import io.github.lazzz.sagittarius.user.model.request.form.SysUserUpdateForm;
 import io.github.lazzz.sagittarius.user.model.request.query.SysUserPageQuery;
 import io.github.lazzz.sagittarius.user.model.vo.SysUserProfileVO;
 import io.github.lazzz.sagittarius.user.model.vo.SysUserVO;
-import io.github.lazzz.sagittarius.user.service.ISysRolePermissionService;
 import io.github.lazzz.sagittarius.user.service.ISysUserRoleService;
 import io.github.lazzz.sagittarius.user.service.ISysUserService;
 import io.github.lazzz.user.dto.UserAuthDTO;
@@ -87,22 +88,31 @@ public class SysUserController {
      */
     @PostMapping("/save")
     @Operation(summary = "添加用户")
-    @PreAuthorize("@ss.hasPerm('sys:user:save')")
+    @PreAuthorize("@ss.hasPerm('sys:user:add')")
     public Result<Boolean> save(@ParameterObject@Validated SysUserSaveForm form) {
         return Result.judge(sysUserService.saveUser(form));
     }
 
-    /**
-     * 修改用户
-     *
-     * @param form 用户表单
-     * @return {@code true} 修改成功，{@code false} 修改失败
-     */
-    @PutMapping("/update")
+    @PutMapping("/{userId}")
     @Operation(summary = "修改用户")
-    @PreAuthorize("@ss.hasPerm('sys:user:update')")
-    public Result<Boolean> update(@ParameterObject@Validated SysUserUpdateForm form) {
-        return Result.judge(sysUserService.updateUser(form));
+    @PreAuthorize("@ss.hasPerm('sys:user:edit')")
+    @PreventDuplicateResubmit
+    public Result<Boolean> edit(@PathVariable Long userId, @RequestBody SysUserUpdateForm form) {
+        return Result.judge(sysUserService.updateUser(userId, form));
+    }
+
+    @Operation(summary = "修改用户状态")
+    @PatchMapping("/{userId}/status")
+    @PreAuthorize("@ss.hasPerm('sys:user:status')")
+    public Result<Boolean> updateStatus(
+            @Parameter(description = "用户ID") @PathVariable Long userId,
+            @Parameter(description = "用户状态(1:启用;0:禁用)") @RequestParam Integer status
+    ) {
+        var result = sysUserService.updateChain()
+                .eq(SysUser::getId, userId)
+                .set(SysUser::getStatus, status)
+                .update();
+        return Result.judge(result);
     }
 
     /**

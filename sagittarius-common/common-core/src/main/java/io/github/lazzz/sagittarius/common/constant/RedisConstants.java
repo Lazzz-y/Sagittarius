@@ -19,7 +19,7 @@ public interface RedisConstants {
     /**
      * 防重复提交锁前缀
      */
-    String RESUBMIT_LOCK_PREFIX = "LOCK:RESUBMIT:" + TenantContext.getTenantId();
+    String RESUBMIT_LOCK_PREFIX = "LOCK:RESUBMIT:" + TenantContext.getTenantId() + ":";
 
     /**
      * 角色和权限缓存前缀

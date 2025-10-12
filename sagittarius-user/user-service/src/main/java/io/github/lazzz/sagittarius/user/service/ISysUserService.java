@@ -64,7 +64,7 @@ public interface ISysUserService extends IService<SysUser> {
      * @param form 用户表单
      * @return {@link Boolean}
      */
-    Boolean updateUser(SysUserUpdateForm form);
+    Boolean updateUser(Long userId, SysUserUpdateForm form);
 
     /**
      * 获取用户信息

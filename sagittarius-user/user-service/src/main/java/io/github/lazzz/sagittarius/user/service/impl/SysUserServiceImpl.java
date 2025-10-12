@@ -149,24 +149,14 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 
     @Override
     @Transactional
-    public Boolean updateUser(SysUserUpdateForm form) {
+    public Boolean updateUser(Long userId, SysUserUpdateForm form) {
         Assert.isTrue(this.mapper.selectCountByQuery(
                 queryChain()
-                        .where(SysUser::getUsername)
-                        .eq(form.getUsername())) == 0, "用户名已存在");
-
-        If.ifThen(StrUtil.isNotBlank(form.getPhone()), () -> {
-            Assert.isTrue(this.mapper.selectCountByQuery(
-                    queryChain()
-                            .where(SysUser::getPhone)
-                            .eq(form.getPhone())) == 0, "手机号已存在");
-        }).elseIf(StrUtil.isNotBlank(form.getEmail()), () -> {
-            Assert.isTrue(this.mapper.selectCountByQuery(
-                    queryChain()
-                            .where(SysUser::getEmail)
-                            .eq(form.getEmail())) == 0, "邮箱已存在");
-        });
-        return this.updateById(converter.convert(form, SysUser.class));
+                        .eq(SysUser::getUsername, form.getUsername())
+                        .ne(SysUser::getId, userId)) == 0, "用户名已存在");
+        var user = converter.convert(form, SysUser.class);
+        user.setId(userId);
+        return this.updateById(user);
     }
 
     @Override

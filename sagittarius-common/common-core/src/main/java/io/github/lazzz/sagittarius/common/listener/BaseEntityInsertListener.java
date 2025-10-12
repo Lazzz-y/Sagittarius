@@ -3,9 +3,7 @@ package io.github.lazzz.sagittarius.common.listener;
 
 import com.mybatisflex.annotation.InsertListener;
 import io.github.lazzz.sagittarius.common.base.BaseEntity;
-import io.github.lazzz.sagittarius.common.base.BaseSnowflakeEntity;
 import io.github.lazzz.sagittarius.common.base.component.Deleted;
-import io.github.lazzz.sagittarius.common.utils.condition.If;
 
 import java.time.LocalDateTime;
 
@@ -25,8 +23,8 @@ public class BaseEntityInsertListener extends BaseListener implements InsertList
         base.setCreateBy(userId);
         base.setUpdateBy(userId);
 
-        base.setCreateTime(now);
-        base.setUpdateTime(now);
+        base.setCreateAt(now);
+        base.setUpdateAt(now);
         if (base instanceof Deleted other) {
             other.setDeleted(0);
         }
