@@ -2,7 +2,6 @@ package io.github.lazzz.sagittarius.user.service.impl;
 
 
 import cn.hutool.core.lang.Assert;
-import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.mybatisflex.core.paginate.Page;
 import com.mybatisflex.core.query.QueryChain;
@@ -10,7 +9,6 @@ import com.mybatisflex.core.query.QueryWrapper;
 import io.github.lazzz.sagittarius.common.utils.condition.If;
 import io.github.lazzz.sagittarius.common.utils.condition.IfFlattener;
 import io.github.lazzz.sagittarius.user.model.entity.SysRolePermission;
-import io.github.lazzz.sagittarius.user.model.entity.SysUserRole;
 import io.github.lazzz.sagittarius.user.model.request.form.SysRoleForm;
 import io.github.lazzz.sagittarius.user.model.request.query.SysRolePageQuery;
 import io.github.lazzz.sagittarius.user.model.vo.SysRoleVO;
@@ -18,7 +16,6 @@ import io.github.lazzz.sagittarius.user.service.ISysRolePermissionService;
 import io.github.lazzz.sagittarius.user.service.ISysUserRoleService;
 import io.github.linpeilie.Converter;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import io.github.lazzz.sagittarius.user.service.ISysRoleService;
 import io.github.lazzz.sagittarius.user.model.entity.SysRole;
@@ -28,7 +25,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * 服务层实现。
@@ -68,7 +64,7 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
         var rs = this.saveOrUpdate(role);
         if (rs) {
             // 判断是否修改了角色编码，如果修改了则刷新角色权限缓存
-            if (oldRole != null && !StrUtil.equals(oldRole.getRoleCode(), role.getRoleCode())){
+            if (oldRole != null && !StrUtil.equals(oldRole.getRoleCode(), role.getRoleCode())) {
                 sysRolePermissionService.refreshRolePermsCache(oldRole.getRoleCode(), roleCode);
             }
         }
@@ -81,12 +77,12 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
     public boolean deleteRoles(String ids) {
         List<Long> roleIds = Arrays.stream(ids.split(","))
                 .map(Long::parseLong).toList();
-        for (Long id : roleIds){
+        for (Long id : roleIds) {
             SysRole role = this.getById(id);
             Assert.isTrue(role != null, "角色不存在");
 
             // 判断角色是否被用户关联
-            boolean isRoleAssigned = sysUserRoleService.hasAssignedUsers(id);
+            boolean isRoleAssigned = sysUserRoleService.hasAssignedUsersToRoles(id);
             Assert.isTrue(!isRoleAssigned, "角色【{}】已分配用户，请先解除关联后删除", role.getRoleName());
             boolean deleteResult = this.removeById(id);
             if (deleteResult) {
@@ -112,10 +108,10 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
         Assert.isTrue(role != null, "角色不存在");
 
         // 删除角色权限关系
-        sysRolePermissionService.remove(
-                QueryChain.of(SysRolePermission.class)
-                        .from(SysRolePermission.class)
-                        .eq(SysRolePermission::getRoleId, roleId)
+        sysRolePermissionService.remove(QueryChain
+                .of(SysRolePermission.class)
+                .from(SysRolePermission.class)
+                .eq(SysRolePermission::getRoleId, roleId)
         );
 
         // 新增角色权限关系

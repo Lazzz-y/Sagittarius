@@ -100,7 +100,7 @@ public interface ISysUserService extends IService<SysUser> {
      *
      * @author Lazzz
      * @date 2025/9/27
-     * @return io.github.lazzz.sagittarius.user.model.vo.SysUserProfileVO
+     * @return {@link SysUserProfileVO}
      */
     SysUserProfileVO getUserProfile();
 

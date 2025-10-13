@@ -33,4 +33,12 @@ public interface ISysRolePermissionService extends IService<SysRolePermission> {
      * @param newRoleCode 新角色编码
      */
     void refreshRolePermsCache(String oldRoleCode, String newRoleCode);
+
+    /**
+     * 判断角色是否被权限关联
+     *
+     * @param permId 角色ID
+     * @return {@link Boolean}
+     */
+    boolean hasAssignedRolesToPerms(Long permId);
 }

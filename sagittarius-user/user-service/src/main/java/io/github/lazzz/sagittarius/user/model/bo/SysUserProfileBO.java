@@ -117,8 +117,8 @@ public class SysUserProfileBO {
      * 创建时间
      */
     @Schema(description = "创建时间")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime createTime;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS")
+    private LocalDateTime createAt;
 
 }
 

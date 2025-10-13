@@ -35,6 +35,6 @@ public interface ISysUserRoleService extends IService<SysUserRole> {
      * @param roleId 角色ID
      * @return {@link Boolean}
      */
-    boolean hasAssignedUsers(@NotNull(message = "角色ID不能为空") Long roleId);
+    boolean hasAssignedUsersToRoles(@NotNull(message = "角色ID不能为空") Long roleId);
 
 }

@@ -51,6 +51,4 @@ public interface ISysRoleService extends IService<SysRole> {
      */
     boolean assignPermToRole(Long roleId, List<Long> permIds);
 
-
-
 }

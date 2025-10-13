@@ -8,7 +8,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 /**
- * 角色保存表单
+ * 角色表单
  * 
  * @author Lazzz 
  * @date 2025/10/10 15:54

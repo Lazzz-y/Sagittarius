@@ -6,7 +6,6 @@ import io.github.lazzz.sagittarius.common.base.BaseVO;
 import io.github.lazzz.sagittarius.user.model.entity.SysRole;
 import io.github.linpeilie.annotations.AutoMapper;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 import java.util.Date;

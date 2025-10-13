@@ -72,7 +72,7 @@ public class SysUserRoleServiceImpl extends ServiceImpl<SysUserRoleMapper, SysUs
     }
 
     @Override
-    public boolean hasAssignedUsers(Long roleId) {
+    public boolean hasAssignedUsersToRoles(Long roleId) {
         return this.count(queryChain()
                 .from(SysUserRole.class)
                 .innerJoin(SysUser.class)

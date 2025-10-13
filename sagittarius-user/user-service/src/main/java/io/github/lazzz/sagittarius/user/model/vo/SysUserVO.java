@@ -1,14 +1,11 @@
 package io.github.lazzz.sagittarius.user.model.vo;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import io.github.lazzz.sagittarius.common.base.BaseVO;
 import io.github.lazzz.sagittarius.user.model.entity.SysUser;
 import io.github.linpeilie.annotations.AutoMapper;
 import io.github.linpeilie.annotations.AutoMappers;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
-
-import java.util.Date;
 
 /**
  * 用户视图对象
@@ -107,32 +104,6 @@ public class SysUserVO extends BaseVO {
      */
     @Schema(description = "被访问次数")
     private Integer viewCount;
-
-    /**
-     * 创建时间
-     */
-    @Schema(description = "创建时间")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date createTime;
-
-    /**
-     * 更新时间
-     */
-    @Schema(description = "更新时间")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date updateTime;
-
-    /**
-     * 创建人ID
-     */
-    @Schema(description = "创建人ID")
-    private Long createBy;
-
-    /**
-     * 更新人ID
-     */
-    @Schema(description = "更新人ID")
-    private Long updateBy;
 
 }
 

@@ -101,4 +101,15 @@ public class SysRolePermissionServiceImpl extends ServiceImpl<SysRolePermissionM
                             bo.getPerms());
         }
     }
+
+    @Override
+    public boolean hasAssignedRolesToPerms(Long permId) {
+        return this.count(queryChain()
+                .from(SysRolePermission.class)
+                .innerJoin(SysRole.class)
+                .on(SysRole::getId, SysRolePermission::getRoleId)
+                .innerJoin(SysPermission.class)
+                .on(SysRolePermission::getPermissionId, SysPermission::getId)
+                .eq(SysPermission::getId, permId)) > 0;
+    }
 }

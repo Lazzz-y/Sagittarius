@@ -1,7 +1,6 @@
 package io.github.lazzz.sagittarius.user.controller;
 
 import com.mybatisflex.core.paginate.Page;
-import com.mybatisflex.core.query.QueryWrapper;
 import io.github.lazzz.common.security.util.SecurityUtils;
 import io.github.lazzz.common.web.annotation.PreventDuplicateResubmit;
 import io.github.lazzz.sagittarius.common.annotation.RefreshableController;

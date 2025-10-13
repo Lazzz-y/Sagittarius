@@ -4,7 +4,6 @@ package io.github.lazzz.sagittarius.user.model.request.form;
 import cn.hutool.core.util.StrUtil;
 import io.github.lazzz.sagittarius.common.constant.SystemConstants;
 import io.github.lazzz.sagittarius.common.utils.condition.If;
-import io.github.lazzz.sagittarius.common.utils.condition.IfFlattener;
 import io.github.lazzz.sagittarius.user.model.entity.SysUser;
 import io.github.linpeilie.annotations.AutoMapper;
 import io.swagger.v3.oas.annotations.media.Schema;
