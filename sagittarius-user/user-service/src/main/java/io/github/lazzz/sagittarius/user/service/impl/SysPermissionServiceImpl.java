@@ -73,21 +73,21 @@ public class SysPermissionServiceImpl extends ServiceImpl<SysPermissionMapper, S
     @Override
     @Transactional
     public boolean deletePerms(String ids) {
-        List<Long> roleIds = Arrays.stream(ids.split(",")).map(Long::parseLong).toList();
-        for (Long id : roleIds) {
+        List<Long> permIds = Arrays.stream(ids.split(",")).map(Long::parseLong).toList();
+        for (Long id : permIds) {
             SysPermission perm = this.getById(id);
             Assert.isTrue(perm != null, "权限不存在");
 
             // 判断权限是否被角色使用
             Assert.isTrue(
                     !sysRolePermissionService.hasAssignedRolesToPerms(id)
-                    , "权限[{}]角色使用，请先解除关联后删除"
+                    , "权限[{}]被角色使用，请先解除关联后删除"
                     , perm.getPermName()
             );
             // 判断权限是否被菜单使用
             Assert.isTrue(
                     !sysMenuRelationService.hasAssignedMenusToPerms(id)
-                    , "权限[{}]菜单使用，请先解除关联后删除"
+                    , "权限[{}]被菜单使用，请先解除关联后删除"
                     , perm.getPermName()
             );
             var rs = this.removeById(id);

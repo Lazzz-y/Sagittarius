@@ -3,15 +3,10 @@ package io.github.lazzz.sagittarius.user.service.impl;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.ObjectUtil;
-import com.mybatisflex.core.query.QueryColumn;
-import com.mybatisflex.core.query.QueryTable;
-import com.mybatisflex.core.query.QueryWrapper;
-import io.github.lazzz.common.security.service.PermissionService;
 import io.github.lazzz.sagittarius.common.constant.RedisConstants;
-import io.github.lazzz.sagittarius.user.model.bo.RolePermsBO;
+import io.github.lazzz.sagittarius.user.model.bo.SysRolePermsBO;
 import io.github.lazzz.sagittarius.user.model.entity.SysPermission;
 import io.github.lazzz.sagittarius.user.model.entity.SysRole;
-import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -20,8 +15,6 @@ import io.github.lazzz.sagittarius.user.model.entity.SysRolePermission;
 import io.github.lazzz.sagittarius.user.mapper.SysRolePermissionMapper;
 import com.mybatisflex.spring.service.impl.ServiceImpl;
 
-import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -53,7 +46,7 @@ public class SysRolePermissionServiceImpl extends ServiceImpl<SysRolePermissionM
                 .on(SysRole::getId, SysRolePermission::getRoleId)
                 .innerJoin(SysPermission.class).as("p")
                 .on(SysRolePermission::getPermissionId, SysPermission::getId)
-                .listAs(RolePermsBO.class);
+                .listAs(SysRolePermsBO.class);
         if(CollectionUtil.isNotEmpty(bo)){
             bo.forEach(item -> {
                 String roleCode = item.getRoleCode();
@@ -73,7 +66,7 @@ public class SysRolePermissionServiceImpl extends ServiceImpl<SysRolePermissionM
                 .innerJoin(SysPermission.class).as("p")
                 .on(SysRolePermission::getPermissionId, SysPermission::getId)
                 .where(SysRole::getRoleCode).eq(roleCode)
-                .oneAs(RolePermsBO.class);
+                .oneAs(SysRolePermsBO.class);
         if(ObjectUtil.isNotNull(bo)){
             redisTemplate.opsForHash()
                     .put(RedisConstants.ROLE_PERMS_PREFIX,
@@ -93,7 +86,7 @@ public class SysRolePermissionServiceImpl extends ServiceImpl<SysRolePermissionM
                 .innerJoin(SysPermission.class).as("p")
                 .on(SysRolePermission::getPermissionId, SysPermission::getId)
                 .where(SysRole::getRoleCode).eq(newRoleCode)
-                .oneAs(RolePermsBO.class);
+                .oneAs(SysRolePermsBO.class);
         if(ObjectUtil.isNotNull(bo)){
             redisTemplate.opsForHash()
                     .put(RedisConstants.ROLE_PERMS_PREFIX,

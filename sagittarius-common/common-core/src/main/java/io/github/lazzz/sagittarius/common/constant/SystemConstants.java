@@ -38,5 +38,10 @@ public interface SystemConstants {
      * 默认租户ID字符串
      */
     String DEFAULT_TENANT_ID_STR = "1";
+
+    /**
+     * 根菜单ID
+     */
+    Long ROOT_NODE_ID = 0L;
 }
 

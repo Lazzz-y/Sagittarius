@@ -12,7 +12,7 @@ import java.util.Set;
  * @date 2025/09/28 17:26
 **/
 @Data
-public class RolePermsBO {
+public class SysRolePermsBO {
 
     /**
      * 角色编码

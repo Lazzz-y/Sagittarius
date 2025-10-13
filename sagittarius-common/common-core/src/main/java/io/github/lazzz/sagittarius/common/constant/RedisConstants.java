@@ -14,28 +14,28 @@ public interface RedisConstants {
      * JWK缓存
      * 启动的时候需要初始化，而启动时间无法获取租户ID，所以不使用租户id区分
      */
-    String JWK_SET_KEY = "jwk_set:";
+    String JWK_SET_KEY = "jwk_set";
 
     /**
      * 防重复提交锁前缀
      */
-    String RESUBMIT_LOCK_PREFIX = "LOCK:RESUBMIT:" + TenantContext.getTenantId() + ":";
+    String RESUBMIT_LOCK_PREFIX = TenantContext.getTenantId() + ":" + "LOCK:RESUBMIT:";
 
     /**
      * 角色和权限缓存前缀
      */
-    String ROLE_PERMS_PREFIX = "role_perms:" + TenantContext.getTenantId();
+    String ROLE_PERMS_PREFIX = TenantContext.getTenantId() + ":" + "role_perms";
 
     /**
      * 黑名单TOKEN Key前缀
      * 租户ID在全局过滤器中拼接
      */
-    String TOKEN_BLACKLIST_PREFIX = "token:blacklist:" + TenantContext.getTenantId() + ":";
+    String TOKEN_BLACKLIST_PREFIX = TenantContext.getTenantId() + ":" + "token:blacklist:";
 
     /**
      * 注册短信验证码key前缀
      */
-    String REGISTER_SMS_CODE_PREFIX = "sms_code:register:" + TenantContext.getTenantId();
+    String REGISTER_SMS_CODE_PREFIX = TenantContext.getTenantId() + "sms_code:register:";
 
 }
 

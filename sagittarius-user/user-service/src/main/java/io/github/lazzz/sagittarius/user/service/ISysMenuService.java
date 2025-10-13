@@ -3,6 +3,12 @@ package io.github.lazzz.sagittarius.user.service;
 
 import io.github.lazzz.sagittarius.user.model.entity.SysMenu;
 import com.mybatisflex.core.service.IService;
+import io.github.lazzz.sagittarius.user.model.request.form.SysMenuForm;
+import io.github.lazzz.sagittarius.user.model.request.query.SysMenuQuery;
+import io.github.lazzz.sagittarius.user.model.vo.RouteVO;
+import io.github.lazzz.sagittarius.user.model.vo.SysMenuVO;
+
+import java.util.List;
 
 /**
  * 系统菜单表 服务层。
@@ -11,5 +17,34 @@ import com.mybatisflex.core.service.IService;
  * @since 1.0
  */
 public interface ISysMenuService extends IService<SysMenu> {
+
+    /**
+     * 获取菜单列表
+     *
+     * @author Lazzz
+     * @date 2025/10/13
+     * @param query 菜单查询参数
+     * @return {@link List<SysMenuVO>}
+     */
+    List<SysMenuVO> listMenuVO(SysMenuQuery query);
+
+    /**
+     * 保存或更新菜单
+     *
+     * @author Lazzz
+     * @date 2025/10/13
+     * @param form 菜单表单
+     * @return {@link Boolean}
+     */
+    boolean saveOrUpdateMenu(SysMenuForm form);
+
+    /**
+     * 获取菜单路由
+     *
+     * @author Lazzz
+     * @date 2025/10/13
+     * @return {@link List<RouteVO>}
+     */
+    List<RouteVO> listRoutes();
 
 }

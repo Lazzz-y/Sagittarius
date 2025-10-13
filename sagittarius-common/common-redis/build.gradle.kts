@@ -10,4 +10,6 @@ dependencies{
     //implementation("org.apache.commons:commons-pool2")
 
     compileOnly("org.springframework.boot:spring-boot-configuration-processor")
+
+    compileOnly(project(":sagittarius-common:common-core"))
 }
