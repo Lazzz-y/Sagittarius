@@ -66,6 +66,9 @@ allprojects {
             dependency("org.springdoc:springdoc-openapi-starter-common:2.3.0")
             dependency("cloud.tianai.captcha:tianai-captcha-springboot-starter:1.5.2")
             dependency("io.micrometer:micrometer-tracing-bom:1.5.4")
+            dependency("com.github.ben-manes.caffeine:caffeine:3.2.2")
+            dependency("com.alicp.jetcache:jetcache-starter-redis-lettuce:2.7.8")
+            dependency("com.esotericsoftware.kryo:kryo5:5.6.2")
         }
     }
 }

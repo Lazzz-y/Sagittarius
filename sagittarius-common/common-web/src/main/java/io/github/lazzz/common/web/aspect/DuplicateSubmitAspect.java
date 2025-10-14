@@ -5,7 +5,7 @@ import cn.hutool.core.util.StrUtil;
 import io.github.lazzz.common.security.util.SecurityUtils;
 import io.github.lazzz.common.web.annotation.PreventDuplicateResubmit;
 import io.github.lazzz.common.web.exception.BizException;
-import io.github.lazzz.sagittarius.common.constant.RedisConstants;
+import io.github.lazzz.sagittarius.common.cache.constant.CacheConstants;
 import io.github.lazzz.sagittarius.common.result.ResultCode;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -47,7 +47,7 @@ public class DuplicateSubmitAspect {
 
         String jti = SecurityUtils.getJti();
         if (StrUtil.isNotBlank(jti)) {
-            String resubmitLockKey = RedisConstants.RESUBMIT_LOCK_PREFIX + jti + ":" + request.getMethod() + "-" + request.getRequestURI();
+            String resubmitLockKey = CacheConstants.RESUBMIT_LOCK_PREFIX + jti + ":" + request.getMethod() + "-" + request.getRequestURI();
             // 防止重复提交过期时间
             int expire = preventDuplicateResubmit.expire();
             RLock lock = redissonClient.getLock(resubmitLockKey);

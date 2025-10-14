@@ -5,12 +5,8 @@ import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.mybatisflex.core.query.QueryWrapper;
-import io.github.lazzz.common.security.service.PermissionService;
-import io.github.lazzz.sagittarius.common.constant.RedisConstants;
 import io.github.lazzz.sagittarius.common.constant.SystemConstants;
 import io.github.lazzz.sagittarius.common.enums.StatusEnum;
-import io.github.lazzz.sagittarius.common.redis.annotation.CacheKeySuffix;
-import io.github.lazzz.sagittarius.common.utils.TenantContext;
 import io.github.lazzz.sagittarius.common.utils.condition.If;
 import io.github.lazzz.sagittarius.user.enums.MenuTypeEnum;
 import io.github.lazzz.sagittarius.user.model.bo.RouteBO;
@@ -22,7 +18,6 @@ import io.github.lazzz.sagittarius.user.model.vo.SysMenuVO;
 import io.github.linpeilie.Converter;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import io.github.lazzz.sagittarius.user.service.ISysMenuService;
 import io.github.lazzz.sagittarius.user.mapper.SysMenuMapper;
@@ -68,7 +63,7 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
     }
 
     @Override
-    public boolean saveOrUpdateMenu(SysMenuForm form) {
+    public List<RouteVO> saveOrUpdateMenu(SysMenuForm form) {
         String path = form.getPath();
         Long parentId = form.getParentId();
         MenuTypeEnum menuType = form.getMenuType();
@@ -78,11 +73,35 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
             form.setComponent("Layout");
         }).elseIf(menuType == MenuTypeEnum.EXTLINK, () -> form.setComponent(null));
         SysMenu menu = converter.convert(form, SysMenu.class);
-        var rs = this.saveOrUpdate(menu);
-        If.ifThen(rs && form.getId() != null, () -> {
-            // TODO 刷新缓存
-        });
-        return rs;
+        String treePath = generateMenuTreePath(parentId);
+        menu.setTreePath(treePath);
+        this.saveOrUpdate(menu);
+        return listRoutes();
+    }
+
+    /**
+     * 菜单构建路径生成
+     *
+     * @param parentId 父ID
+     * @return 父节点路径以英文逗号(, )分割，eg: 1,2,3
+     */
+    private String generateMenuTreePath(Long parentId) {
+        if (SystemConstants.ROOT_NODE_ID.equals(parentId)) {
+            return String.valueOf(parentId);
+        } else {
+            SysMenu parent = this.getById(parentId);
+            return parent != null ? parent.getTreePath() + "," + parent.getId() : null;
+        }
+    }
+
+    @Override
+    public List<RouteVO> deleteMenu(Long menuId) {
+        this.remove(QueryWrapper.create()
+                .from(SysMenu.class)
+                .eq(SysMenu::getId, menuId)
+                .or("CONCAT (',',tree_path,',') LIKE CONCAT('%,',?,',%')", menuId)
+        );
+        return listRoutes();
     }
 
     /**
@@ -105,8 +124,6 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
     }
 
     @Override
-    @CacheKeySuffix("route")
-    @Cacheable(cacheNames = "menus", keyGenerator = "tenantKeyGenerator")
     public List<RouteVO> listRoutes() {
         var bos = sysMenuMapper.listRoutes();
         return buildRoutes(SystemConstants.ROOT_NODE_ID, bos);

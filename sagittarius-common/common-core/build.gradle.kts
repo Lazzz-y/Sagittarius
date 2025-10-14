@@ -20,4 +20,7 @@ dependencies {
     
     // Fastjson
     implementation("com.alibaba:fastjson")
+
+    // Kryo 序列化
+    implementation("com.esotericsoftware.kryo:kryo5")
 }

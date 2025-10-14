@@ -3,7 +3,7 @@ package io.github.lazzz.sagittarius.user.service.impl;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.ObjectUtil;
-import io.github.lazzz.sagittarius.common.constant.RedisConstants;
+import io.github.lazzz.sagittarius.common.cache.constant.CacheConstants;
 import io.github.lazzz.sagittarius.user.model.bo.SysRolePermsBO;
 import io.github.lazzz.sagittarius.user.model.entity.SysPermission;
 import io.github.lazzz.sagittarius.user.model.entity.SysRole;
@@ -31,7 +31,7 @@ public class SysRolePermissionServiceImpl extends ServiceImpl<SysRolePermissionM
 
     @Override
     public void lazyLoadRole() {
-        if (!redisTemplate.hasKey(RedisConstants.ROLE_PERMS_PREFIX)){
+        if (!redisTemplate.hasKey(CacheConstants.ROLE_PERMS_PREFIX)){
             refreshRolePermsCache();
         }
     }
@@ -39,7 +39,7 @@ public class SysRolePermissionServiceImpl extends ServiceImpl<SysRolePermissionM
     @Override
     public void refreshRolePermsCache() {
         // 清理缓存
-        redisTemplate.opsForHash().delete(RedisConstants.ROLE_PERMS_PREFIX, "*");
+        redisTemplate.opsForHash().delete(CacheConstants.ROLE_PERMS_PREFIX, "*");
         var bo = queryChain().select("r.role_code", "p.perm_code as perms")
                 .from(SysRole.class).as("r")
                 .innerJoin(SysRolePermission.class).as("rp")
@@ -51,14 +51,14 @@ public class SysRolePermissionServiceImpl extends ServiceImpl<SysRolePermissionM
             bo.forEach(item -> {
                 String roleCode = item.getRoleCode();
                 Set<String> perms = item.getPerms();
-                redisTemplate.opsForHash().put(RedisConstants.ROLE_PERMS_PREFIX, roleCode, perms);
+                redisTemplate.opsForHash().put(CacheConstants.ROLE_PERMS_PREFIX, roleCode, perms);
             });
         }
     }
 
     @Override
     public void refreshRolePermsCache(String roleCode) {
-        redisTemplate.opsForHash().delete(RedisConstants.ROLE_PERMS_PREFIX, roleCode);
+        redisTemplate.opsForHash().delete(CacheConstants.ROLE_PERMS_PREFIX, roleCode);
         var bo = queryChain().select("r.role_code", "p.perm_code as perms")
                 .from(SysRole.class).as("r")
                 .innerJoin(SysRolePermission.class).as("rp")
@@ -69,7 +69,7 @@ public class SysRolePermissionServiceImpl extends ServiceImpl<SysRolePermissionM
                 .oneAs(SysRolePermsBO.class);
         if(ObjectUtil.isNotNull(bo)){
             redisTemplate.opsForHash()
-                    .put(RedisConstants.ROLE_PERMS_PREFIX,
+                    .put(CacheConstants.ROLE_PERMS_PREFIX,
                             bo.getRoleCode(),
                             bo.getPerms());
         }
@@ -78,7 +78,7 @@ public class SysRolePermissionServiceImpl extends ServiceImpl<SysRolePermissionM
 
     @Override
     public void refreshRolePermsCache(String oldRoleCode, String newRoleCode) {
-        redisTemplate.opsForHash().delete(RedisConstants.ROLE_PERMS_PREFIX, oldRoleCode);
+        redisTemplate.opsForHash().delete(CacheConstants.ROLE_PERMS_PREFIX, oldRoleCode);
         var bo = queryChain().select("r.role_code", "p.perm_code as perms")
                 .from(SysRole.class).as("r")
                 .innerJoin(SysRolePermission.class).as("rp")
@@ -89,7 +89,7 @@ public class SysRolePermissionServiceImpl extends ServiceImpl<SysRolePermissionM
                 .oneAs(SysRolePermsBO.class);
         if(ObjectUtil.isNotNull(bo)){
             redisTemplate.opsForHash()
-                    .put(RedisConstants.ROLE_PERMS_PREFIX,
+                    .put(CacheConstants.ROLE_PERMS_PREFIX,
                             bo.getRoleCode(),
                             bo.getPerms());
         }

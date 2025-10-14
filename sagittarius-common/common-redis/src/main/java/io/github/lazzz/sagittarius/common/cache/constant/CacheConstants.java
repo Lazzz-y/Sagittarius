@@ -1,4 +1,4 @@
-package io.github.lazzz.sagittarius.common.constant;
+package io.github.lazzz.sagittarius.common.cache.constant;
 
 
 import io.github.lazzz.sagittarius.common.utils.TenantContext;
@@ -8,7 +8,9 @@ import io.github.lazzz.sagittarius.common.utils.TenantContext;
  * @author Lazzz 
  * @date 2025/09/20 01:11
 **/
-public interface RedisConstants {
+public interface CacheConstants {
+
+    String DEFAULT_AREA = "default";
 
     /**
      * JWK缓存
@@ -36,6 +38,13 @@ public interface RedisConstants {
      * 注册短信验证码key前缀
      */
     String REGISTER_SMS_CODE_PREFIX = TenantContext.getTenantId() + "sms_code:register:";
+
+    /////////////////// SpEl 表达式 生成 ///////////////////
+
+    String TENANT_ID = "T(io.github.lazzz.sagittarius.common.utils.TenantContext).getTenantId() + ";
+
+    String MENU_KEY = TENANT_ID + "':route'";
+
 
 }
 

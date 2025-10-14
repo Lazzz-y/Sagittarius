@@ -109,4 +109,11 @@ public class SysMenu extends BaseSnowflakeEntity {
     @Schema(description = "跳转路径")
     @Column(value = "redirect")
     private String redirect;
+
+    /**
+     * 菜单构建路径
+     */
+    @Schema(description = "菜单构建路径")
+    @Column(value = "tree_path")
+    private String treePath;
 }

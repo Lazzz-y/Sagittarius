@@ -5,7 +5,7 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.jwt.JWTPayload;
 import com.nimbusds.jose.JWSObject;
 import io.github.lazzz.sagittarius.common.constant.JwtClaimConstants;
-import io.github.lazzz.sagittarius.common.constant.RedisConstants;
+import io.github.lazzz.sagittarius.common.cache.constant.CacheConstants;
 import io.github.lazzz.sagittarius.common.result.ResultCode;
 import io.github.lazzz.sagittarius.gateway.util.WebFluxUtils;
 import lombok.RequiredArgsConstructor;
@@ -56,7 +56,7 @@ public class TokenValidationGlobalFilter implements GlobalFilter, Ordered {
             // 获取令牌ID
             String jti = (String) jwsObject.getPayload().toJSONObject().get(JWTPayload.JWT_ID);
             // 检查令牌是否在黑名单中
-            Boolean isBlackToken = redisTemplate.hasKey(RedisConstants.TOKEN_BLACKLIST_PREFIX + jti);
+            Boolean isBlackToken = redisTemplate.hasKey(CacheConstants.TOKEN_BLACKLIST_PREFIX + jti);
             // 如果在黑名单中，则返回错误信息
             if (isBlackToken) {
                 return WebFluxUtils.writeErrorResponse(response, ResultCode.TOKEN_ACCESS_FORBIDDEN);

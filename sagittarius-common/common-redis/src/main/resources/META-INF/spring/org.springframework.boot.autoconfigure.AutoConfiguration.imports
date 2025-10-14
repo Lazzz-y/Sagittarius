@@ -1,2 +1,2 @@
-io.github.lazzz.sagittarius.common.redis.RedisConfig
-io.github.lazzz.sagittarius.common.redis.cache.RedisCacheConfig
+io.github.lazzz.sagittarius.common.cache.redis.RedisConfig
+io.github.lazzz.sagittarius.common.cache.config.JetCacheConfig

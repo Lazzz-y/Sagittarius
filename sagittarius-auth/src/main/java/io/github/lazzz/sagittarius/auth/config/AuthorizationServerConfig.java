@@ -16,7 +16,7 @@ import io.github.lazzz.sagittarius.auth.oauth2.handler.CustomAuthenticationFailu
 import io.github.lazzz.sagittarius.auth.oauth2.handler.CustomAuthenticationSuccessHandler;
 import io.github.lazzz.sagittarius.auth.oauth2.jackson.SysUserMixin;
 import io.github.lazzz.sagittarius.common.constant.AuthConstants;
-import io.github.lazzz.sagittarius.common.constant.RedisConstants;
+import io.github.lazzz.sagittarius.common.cache.constant.CacheConstants;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -177,7 +177,7 @@ public class AuthorizationServerConfig {
             return new ImmutableJWKSet<>(jwkSet);
         }
         // 优先从 Redis 查找 JWK
-        String jwkSetStr = redis.opsForValue().get(RedisConstants.JWK_SET_KEY);
+        String jwkSetStr = redis.opsForValue().get(CacheConstants.JWK_SET_KEY);
         if (StrUtil.isNotBlank(jwkSetStr)) {
             JWKSet jwkSet = JWKSet.parse(jwkSetStr);
             return new ImmutableJWKSet<>(jwkSet);
@@ -192,7 +192,7 @@ public class AuthorizationServerConfig {
                     .build();
             JWKSet jwkSet = new JWKSet(rsaKey);
             // 将JWKSet存储在Redis中
-            redis.opsForValue().set(RedisConstants.JWK_SET_KEY, jwkSet.toString(Boolean.FALSE));
+            redis.opsForValue().set(CacheConstants.JWK_SET_KEY, jwkSet.toString(Boolean.FALSE));
             return new ImmutableJWKSet<>(jwkSet);
         }
     }

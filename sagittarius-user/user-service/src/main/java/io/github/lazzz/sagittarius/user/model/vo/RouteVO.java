@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -16,7 +18,10 @@ import java.util.List;
 @Data
 @Schema(description = "菜单路由视图对象")
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class RouteVO {
+public class RouteVO implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     @Schema(description = "路由路径", example = "role")
     private String path;
@@ -35,7 +40,10 @@ public class RouteVO {
 
     @Data
     @Schema(description = "路由元数据类型")
-    public static class Meta{
+    public static class Meta implements Serializable{
+
+        @Serial
+        private static final long serialVersionUID = 1L;
 
         @Schema(description = "路由标题", example = "用户管理")
         private String title;

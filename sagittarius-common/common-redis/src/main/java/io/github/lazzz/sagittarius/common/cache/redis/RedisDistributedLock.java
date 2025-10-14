@@ -1,4 +1,4 @@
-package io.github.lazzz.sagittarius.common.redis;
+package io.github.lazzz.sagittarius.common.cache.redis;
 
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.script.DefaultRedisScript;

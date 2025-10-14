@@ -34,9 +34,19 @@ public interface ISysMenuService extends IService<SysMenu> {
      * @author Lazzz
      * @date 2025/10/13
      * @param form 菜单表单
+     * @return {@link List<RouteVO>}
+     */
+    List<RouteVO> saveOrUpdateMenu(SysMenuForm form);
+
+    /**
+     * 删除菜单
+     *
+     * @author Lazzz
+     * @date 2025/10/13
+     * @param menuId 菜单ID
      * @return {@link Boolean}
      */
-    boolean saveOrUpdateMenu(SysMenuForm form);
+    List<RouteVO> deleteMenu(Long menuId);
 
     /**
      * 获取菜单路由

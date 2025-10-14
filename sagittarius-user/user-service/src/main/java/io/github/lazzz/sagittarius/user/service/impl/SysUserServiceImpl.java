@@ -6,7 +6,7 @@ import cn.hutool.core.util.StrUtil;
 import com.mybatisflex.core.paginate.Page;
 import com.mybatisflex.core.query.QueryWrapper;
 import io.github.lazzz.common.security.util.SecurityUtils;
-import io.github.lazzz.sagittarius.common.constant.RedisConstants;
+import io.github.lazzz.sagittarius.common.cache.constant.CacheConstants;
 import io.github.lazzz.sagittarius.common.constant.SystemConstants;
 import io.github.lazzz.sagittarius.common.utils.condition.If;
 import io.github.lazzz.sagittarius.user.model.bo.SysUserProfileBO;
@@ -91,12 +91,12 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
             if (expireTime> currentTimeSeconds) {
                 // token 未过期，添加至缓存作为黑名单，缓存时间为 token 剩余的有效时间
                 long remainingTimeInSeconds = expireTime - currentTimeSeconds;
-                redisTemplate.opsForValue().set(RedisConstants.TOKEN_BLACKLIST_PREFIX + jti, "", remainingTimeInSeconds, TimeUnit.SECONDS);
+                redisTemplate.opsForValue().set(CacheConstants.TOKEN_BLACKLIST_PREFIX + jti, "", remainingTimeInSeconds, TimeUnit.SECONDS);
             }
         });
         if (expireTimeOpt.isEmpty()) {
             // token 永不过期则永久加入黑名单
-            redisTemplate.opsForValue().set(RedisConstants.TOKEN_BLACKLIST_PREFIX + jti, "");
+            redisTemplate.opsForValue().set(CacheConstants.TOKEN_BLACKLIST_PREFIX + jti, "");
         }
         return true;
     }
