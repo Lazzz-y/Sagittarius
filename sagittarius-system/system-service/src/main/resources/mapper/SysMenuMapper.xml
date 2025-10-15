@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.github.lazzz.sagittarius.system.mapper.SysMenuMapper">
+    <resultMap id="BaseResultMap" type="io.github.lazzz.sagittarius.system.model.entity.SysMenu">
+        <id column="id" jdbcType="OTHER" property="id"/>
+        <result column="parent_id" jdbcType="OTHER" property="parentId"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="path" jdbcType="VARCHAR" property="path"/>
+        <result column="component" jdbcType="VARCHAR" property="component"/>
+        <result column="icon" jdbcType="VARCHAR" property="icon"/>
+        <result column="sort_order" jdbcType="INTEGER" property="sortOrder"/>
+        <result column="is_visible" jdbcType="TINYINT" property="isVisible"/>
+        <result column="menu_type" jdbcType="OTHER" property="menuType"/>
+        <result column="tenant_id" jdbcType="BIGINT" property="tenantId"/>
+        <result column="create_at" jdbcType="TIMESTAMP" property="createAt"/>
+        <result column="update_at" jdbcType="TIMESTAMP" property="updateAt"/>
+        <result column="create_by" jdbcType="BIGINT" property="createBy"/>
+        <result column="update_by" jdbcType="BIGINT" property="updateBy"/>
+        <result column="deleted" jdbcType="TINYINT" property="deleted"/>
+    </resultMap>
+
+    <!-- 定义RouteBO的结果映射 -->
+    <resultMap id="RouteBOResultMap" type="io.github.lazzz.sagittarius.system.model.bo.RouteBO">
+        <!-- 用id字段作为唯一标识，MyBatis会根据id合并相同记录 -->
+        <id property="id" column="id"/>
+        <!-- 映射其他基本字段 -->
+        <result property="parentId" column="parent_id"/>
+        <result property="name" column="name"/>
+        <result property="path" column="path"/>
+        <result property="component" column="component"/>
+        <result property="icon" column="icon"/>
+        <result property="sortOrder" column="sort_order"/>
+        <result property="isVisible" column="is_visible"/>
+        <result property="menuType" column="menu_type" jdbcType="OTHER"/> <!-- 枚举类型需要指定处理器 -->
+        <result property="alwaysShow" column="always_show"/>
+        <result property="keepAlive" column="keep_alive"/>
+        <result property="redirect" column="redirect"/>
+
+        <!-- 映射roles集合：将多行的role_code合并为List<String> -->
+        <collection property="roles" ofType="string" javaType="list">
+            <result column="role_code"/>
+        </collection>
+    </resultMap>
+    <sql id="Base_Column_List">
+        `id`, `parent_id`, `name`, `path`, `component`, `icon`, `sort_order`, `is_visible`, `menu_type`, `tenant_id`,
+        `create_at`, `update_at`, `create_by`, `update_by`, `deleted`
+    </sql>
+
+    <select id="listRoutes" resultMap="RouteBOResultMap">
+        SELECT
+            `sys_menu`.`id`, `sys_menu`.`parent_id`, `sys_menu`.`name`,
+            `sys_menu`.`path`, `sys_menu`.`component`, `sys_menu`.`icon`,
+            `sys_menu`.`sort_order`, `sys_menu`.`is_visible`, `sys_menu`.`menu_type`,
+            `sys_menu`.`always_show`, `sys_menu`.`keep_alive`, `sys_menu`.`redirect`,
+            `sys_role`.`role_code`
+        FROM `sys_menu`
+                 LEFT JOIN `sys_menu_relation` ON `sys_menu_relation`.`tenant_id` = 1 AND `sys_menu_relation`.`menu_id` = `sys_menu`.`id`
+                 LEFT JOIN `sys_permission` ON `sys_permission`.`tenant_id` = 1 AND (`sys_menu_relation`.`permission_id` = `sys_permission`.`id`) AND `sys_permission`.`deleted` = 0
+                 LEFT JOIN `sys_role_permission` ON `sys_role_permission`.`tenant_id` = 1 AND `sys_role_permission`.`permission_id` = `sys_permission`.`id`
+                 LEFT JOIN `sys_role` ON `sys_role`.`tenant_id` = 1 AND (`sys_role_permission`.`role_id` = `sys_role`.`id`) AND `sys_role`.`deleted` = 0
+        WHERE `sys_menu`.`menu_type` != '${@io.github.lazzz.sagittarius.system.enums.MenuTypeEnum@BUTTON.getValue()}'
+        AND `sys_menu`.`tenant_id` = 1 AND `sys_menu`.`deleted` = 0
+        ORDER BY `sys_menu`.`sort_order`
+    </select>
+
+</mapper>

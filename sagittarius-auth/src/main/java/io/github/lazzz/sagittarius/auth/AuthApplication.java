@@ -11,7 +11,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
  */
 @SpringBootApplication
 @EnableDiscoveryClient
-@EnableFeignClients(basePackages = "io.github.lazzz.user.api")
+@EnableFeignClients(basePackages = "io.github.lazzz.system.api")
 public class AuthApplication {
 
     public static void main(String[] args) {

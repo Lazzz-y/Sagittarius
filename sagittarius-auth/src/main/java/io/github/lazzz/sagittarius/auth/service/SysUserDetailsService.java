@@ -3,8 +3,8 @@ package io.github.lazzz.sagittarius.auth.service;
 
 import cn.hutool.core.lang.Assert;
 import io.github.lazzz.sagittarius.auth.model.SysUserDetails;
-import io.github.lazzz.user.api.UserFeignClient;
-import io.github.lazzz.user.dto.UserAuthDTO;
+import io.github.lazzz.system.api.UserFeignClient;
+import io.github.lazzz.system.dto.UserAuthDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.DisabledException;

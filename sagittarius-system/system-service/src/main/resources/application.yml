@@ -1,0 +1,7 @@
+server:
+  port: 8802
+spring:
+  profiles:
+    active: dev
+  application:
+    name: sagittarius-system

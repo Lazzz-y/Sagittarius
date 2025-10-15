@@ -32,9 +32,9 @@ include(":sagittarius-notification")
 include(":sagittarius-notification:notification-api")
 include(":sagittarius-notification:notification-service")
 
-include(":sagittarius-user")
-include("sagittarius-user:user-api")
-include("sagittarius-user:user-service")
+include(":sagittarius-system")
+include("sagittarius-system:system-api")
+include("sagittarius-system:system-service")
 
 include(":sagittarius-common")
 include(":sagittarius-common:common-web")

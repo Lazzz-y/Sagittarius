@@ -34,5 +34,5 @@ dependencies {
     api(project(":sagittarius-common:common-redis"))
     api(project(":sagittarius-common:common-apidoc"))
 
-    api(project(":sagittarius-user:user-api"))
+    api(project(":sagittarius-system:system-api"))
 }
