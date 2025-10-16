@@ -1,6 +1,6 @@
 package io.github.lazzz.sagittarius.system.model.entity;
 
-import io.github.lazzz.sagittarius.common.base.BaseSnowflakeEntity;
+import io.github.lazzz.sagittarius.common.base.BaseSnowflakeLogicEntity;
 import io.github.lazzz.sagittarius.system.model.request.form.SysMenuForm;
 import io.github.lazzz.sagittarius.system.model.vo.SysMenuVO;
 import io.github.linpeilie.annotations.AutoMapper;
@@ -31,7 +31,7 @@ import java.lang.Integer;
         @AutoMapper(target = SysMenuVO.class),
         @AutoMapper(target = SysMenuForm.class),
 })
-public class SysMenu extends BaseSnowflakeEntity {
+public class SysMenu extends BaseSnowflakeLogicEntity {
 
     /**
      * 父级ID

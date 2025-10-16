@@ -76,4 +76,9 @@ public class Result<T> implements Serializable {
     public static boolean isSuccess(Result<?> result) {
         return result != null && ResultCode.SUCCESS.getCode().equals(result.getCode());
     }
+
+    public Result<T> setDataWithCast(Object data) {
+        this.data = (T) data;
+        return this;
+    }
 }

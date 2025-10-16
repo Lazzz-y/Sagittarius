@@ -4,8 +4,8 @@ import com.alicp.jetcache.anno.CacheInvalidate;
 import com.alicp.jetcache.anno.CacheType;
 import com.alicp.jetcache.anno.CacheUpdate;
 import com.alicp.jetcache.anno.Cached;
-import io.github.lazzz.common.web.annotation.PreventDuplicateResubmit;
-import io.github.lazzz.sagittarius.common.cache.constant.CacheConstants;
+import io.github.lazzz.sagittarius.common.web.annotation.PreventDuplicateResubmit;
+import io.github.lazzz.sagittarius.common.constant.CacheConstants;
 import io.github.lazzz.sagittarius.system.model.request.form.SysMenuForm;
 import io.github.lazzz.sagittarius.system.model.request.query.SysMenuQuery;
 import io.github.lazzz.sagittarius.system.model.vo.RouteVO;
@@ -45,7 +45,7 @@ public class SysMenuController {
 
     @Operation(summary = "路由列表")
     @GetMapping("/routes")
-    @Cached(name = "menu:", key = CacheConstants.MENU_KEY, expire = 30, localExpire = 15,cacheType = CacheType.BOTH)
+    @Cached(name = "menu:", key = CacheConstants.SPEL_MENU_KEY, expire = 30, localExpire = 15,cacheType = CacheType.BOTH)
     public Result<List<RouteVO>> listRoutes() {
         List<RouteVO> routeList = sysMenuService.listRoutes();
         return Result.success(routeList);
@@ -55,7 +55,7 @@ public class SysMenuController {
     @PreventDuplicateResubmit
     @Operation(summary = "新增菜单")
     @PreAuthorize("@ss.hasPerm('sys:menu:add')")
-    @CacheUpdate(name = "menu:", key = CacheConstants.MENU_KEY, value = "#result")    public Result<List<RouteVO>> saveMenu(@RequestBody SysMenuForm form) {
+    @CacheUpdate(name = "menu:", key = CacheConstants.SPEL_MENU_KEY, value = "#result")    public Result<List<RouteVO>> saveMenu(@RequestBody SysMenuForm form) {
         return Result.success(sysMenuService.saveOrUpdateMenu(form));
     }
 
@@ -63,7 +63,7 @@ public class SysMenuController {
     @Operation(summary = "修改菜单")
     @PutMapping(value = "/{id}")
     @PreAuthorize("@ss.hasPerm('sys:menu:edit')")
-    @CacheUpdate(name = "menu:", key = CacheConstants.MENU_KEY, value = "#result")
+    @CacheUpdate(name = "menu:", key = CacheConstants.SPEL_MENU_KEY, value = "#result")
     public Result<List<RouteVO>> updateMenu(
             @PathVariable Long id,
             @RequestBody SysMenuForm form
@@ -75,7 +75,7 @@ public class SysMenuController {
     @Operation(summary = "删除菜单")
     @DeleteMapping("/{id}")
     @PreAuthorize("@ss.hasPerm('sys:menu:delete')")
-    @CacheInvalidate(name = "menu:", key = CacheConstants.MENU_KEY)
+    @CacheInvalidate(name = "menu:", key = CacheConstants.SPEL_MENU_KEY)
     public Result<List<RouteVO>> deleteMenu(
             @Parameter(description ="菜单ID") @PathVariable("id") Long id
     ) {

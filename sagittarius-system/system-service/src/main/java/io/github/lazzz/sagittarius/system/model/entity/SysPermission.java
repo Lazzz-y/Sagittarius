@@ -1,6 +1,6 @@
 package io.github.lazzz.sagittarius.system.model.entity;
 
-import io.github.lazzz.sagittarius.common.base.BaseSnowflakeEntity;
+import io.github.lazzz.sagittarius.common.base.BaseSnowflakeLogicEntity;
 import io.github.lazzz.sagittarius.system.model.vo.SysPermVO;
 import io.github.linpeilie.annotations.AutoMapper;
 import lombok.*;
@@ -24,7 +24,7 @@ import java.lang.String;
 @Table(value = "sys_permission")
 @EqualsAndHashCode(callSuper = true)
 @AutoMapper(target = SysPermVO.class)
-public class SysPermission extends BaseSnowflakeEntity {
+public class SysPermission extends BaseSnowflakeLogicEntity {
 
     /**
      * 权限编码

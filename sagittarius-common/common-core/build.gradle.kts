@@ -9,6 +9,9 @@ dependencies {
     compileOnly("org.springframework.boot:spring-boot-starter-security")
     compileOnly("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
 
+    // jakarta
+    implementation("jakarta.validation:jakarta.validation-api")
+
     // MyBatis-Flex
     implementation("com.mybatis-flex:mybatis-flex-spring-boot3-starter")
     

@@ -4,7 +4,6 @@ import com.mybatisflex.annotation.Column;
 import com.mybatisflex.annotation.Id;
 import com.mybatisflex.annotation.KeyType;
 import com.mybatisflex.core.keygen.KeyGenerators;
-import io.github.lazzz.sagittarius.common.base.component.Deleted;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -15,7 +14,7 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-public abstract class BaseSnowflakeEntity extends BaseEntity implements Deleted {
+public abstract class BaseSnowflakeEntity extends BaseEntity{
 
     /**
      * 主键ID
@@ -29,12 +28,5 @@ public abstract class BaseSnowflakeEntity extends BaseEntity implements Deleted 
      */
     @Column(tenantId = true)
     private Long tenantId;
-
-    /**
-     * 逻辑删除标志
-     * 0:未删除 1:已删除
-     */
-    @Column(value = "deleted", isLogicDelete = true)
-    private Integer deleted;
 
 }

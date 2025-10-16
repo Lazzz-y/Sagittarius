@@ -2,7 +2,8 @@ package io.github.lazzz.sagittarius.system.model.entity;
 
 import com.mybatisflex.annotation.*;
 import com.mybatisflex.core.mask.Masks;
-import io.github.lazzz.sagittarius.common.base.BaseSnowflakeEntity;
+import io.github.lazzz.sagittarius.common.base.BaseSnowflakeLogicEntity;
+import io.github.lazzz.sagittarius.jetcache.annotation.Dict;
 import io.github.lazzz.sagittarius.system.model.vo.SysUserVO;
 import io.github.linpeilie.annotations.AutoMapper;
 import io.github.linpeilie.annotations.AutoMappers;
@@ -26,7 +27,7 @@ import java.lang.Integer;
 @Table(value = "sys_user")
 @EqualsAndHashCode(callSuper = true)
 @AutoMappers(value = {@AutoMapper(target = SysUserVO.class)})
-public class SysUser extends BaseSnowflakeEntity {
+public class SysUser extends BaseSnowflakeLogicEntity {
 
     /**
      * 用户名

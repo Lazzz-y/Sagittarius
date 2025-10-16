@@ -6,7 +6,7 @@ import cn.hutool.core.util.StrUtil;
 import com.mybatisflex.core.paginate.Page;
 import com.mybatisflex.core.query.QueryWrapper;
 import io.github.lazzz.common.security.util.SecurityUtils;
-import io.github.lazzz.sagittarius.common.cache.constant.CacheConstants;
+import io.github.lazzz.sagittarius.common.constant.CacheConstants;
 import io.github.lazzz.sagittarius.common.constant.SystemConstants;
 import io.github.lazzz.sagittarius.common.utils.condition.If;
 import io.github.lazzz.sagittarius.system.model.bo.SysUserProfileBO;
@@ -19,7 +19,7 @@ import io.github.lazzz.sagittarius.system.model.vo.SysUserProfileVO;
 import io.github.lazzz.sagittarius.system.model.vo.SysUserVO;
 import io.github.lazzz.sagittarius.system.service.ISysRolePermissionService;
 import io.github.lazzz.sagittarius.system.service.ISysUserRoleService;
-import io.github.lazzz.system.dto.UserAuthDTO;
+import io.github.lazzz.sagittarius.system.dto.UserAuthDTO;
 import io.github.linpeilie.Converter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -197,7 +197,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         SysUserProfileBO sysUserProfileBO = queryChain()
                 .select("id", "username", "nickname", "sex", "email", "phone",
                         "avatar", "user_type", "bio", "website", "article_count",
-                        "comment_count", "view_count", "create_time")
+                        "comment_count", "view_count", "create_at")
                 .from(SysUser.class).as("u")
                 .where(SysUser::getId).eq(userId)
                 .oneAs(SysUserProfileBO.class);

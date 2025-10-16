@@ -2,7 +2,7 @@ package io.github.lazzz.sagittarius.auth.model;
 
 
 import cn.hutool.core.collection.CollectionUtil;
-import io.github.lazzz.system.dto.UserAuthDTO;
+import io.github.lazzz.sagittarius.system.dto.UserAuthDTO;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

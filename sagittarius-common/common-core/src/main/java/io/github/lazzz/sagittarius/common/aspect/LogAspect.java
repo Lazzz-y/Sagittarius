@@ -12,6 +12,7 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.slf4j.MDC;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StopWatch;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -33,8 +34,7 @@ import java.util.UUID;
 public class LogAspect {
 
     @Pointcut("execution(* io.github.lazzz.sagittarius..controller..*(..))")
-    public void controllerPointcut() {
-    }
+    public void controllerPointcut() {}
 
     /**
      * 执行拦截

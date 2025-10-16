@@ -43,5 +43,7 @@ public interface SystemConstants {
      * 根菜单ID
      */
     Long ROOT_NODE_ID = 0L;
+
+    String DICT_VALUE_SUFFIX = "Text";
 }
 

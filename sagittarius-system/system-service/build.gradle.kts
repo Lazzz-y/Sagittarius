@@ -5,6 +5,9 @@ dependencies {
     // Sentinel
     implementation("com.alibaba.cloud:spring-cloud-starter-alibaba-sentinel")
 
+    // openfeign
+    implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
+
     // hutool
     implementation("cn.hutool:hutool-all")
 
@@ -15,5 +18,6 @@ dependencies {
     implementation(project(":sagittarius-common:common-core"))
     implementation(project(":sagittarius-common:common-mybatis"))
     implementation(project(":sagittarius-common:common-security"))
-    
+    implementation(project(":sagittarius-common:common-jetcache"))
+
 }

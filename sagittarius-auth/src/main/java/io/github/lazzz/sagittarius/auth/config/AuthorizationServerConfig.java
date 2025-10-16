@@ -16,7 +16,7 @@ import io.github.lazzz.sagittarius.auth.oauth2.handler.CustomAuthenticationFailu
 import io.github.lazzz.sagittarius.auth.oauth2.handler.CustomAuthenticationSuccessHandler;
 import io.github.lazzz.sagittarius.auth.oauth2.jackson.SysUserMixin;
 import io.github.lazzz.sagittarius.common.constant.AuthConstants;
-import io.github.lazzz.sagittarius.common.cache.constant.CacheConstants;
+import io.github.lazzz.sagittarius.common.constant.CacheConstants;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;

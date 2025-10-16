@@ -1,7 +1,7 @@
 package io.github.lazzz.sagittarius.system.controller;
 
 import com.mybatisflex.core.paginate.Page;
-import io.github.lazzz.common.web.annotation.PreventDuplicateResubmit;
+import io.github.lazzz.sagittarius.common.web.annotation.PreventDuplicateResubmit;
 import io.github.lazzz.sagittarius.common.annotation.RefreshableController;
 import io.github.lazzz.sagittarius.common.result.Result;
 import io.github.lazzz.sagittarius.system.model.request.form.SysPermForm;

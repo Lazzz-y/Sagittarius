@@ -26,14 +26,14 @@ public class BaseVO implements Serializable {
      */
     @Schema(description = "创建时间")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS")
-    private Date createTime;
+    private Date createAt;
 
     /**
      * 更新时间
      */
     @Schema(description = "更新时间")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS")
-    private Date updateTime;
+    private Date updateAt;
 
     /**
      * 创建人ID

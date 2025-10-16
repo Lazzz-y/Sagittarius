@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="io.github.lazzz.sagittarius.user.mapper.SysUserMapper">
+<mapper namespace="io.github.lazzz.sagittarius.system.mapper.SysUserMapper">
     <resultMap id="BaseResultMap" type="io.github.lazzz.sagittarius.system.model.entity.SysUser">
         <id column="id" jdbcType="BIGINT" property="id"/>
         <result column="username" jdbcType="VARCHAR" property="username"/>
@@ -18,8 +18,8 @@
         <result column="article_count" jdbcType="INTEGER" property="articleCount"/>
         <result column="comment_count" jdbcType="INTEGER" property="commentCount"/>
         <result column="view_count" jdbcType="INTEGER" property="viewCount"/>
-        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
-        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="create_at" jdbcType="TIMESTAMP" property="createAt"/>
+        <result column="update_at" jdbcType="TIMESTAMP" property="updateAt"/>
         <result column="create_by" jdbcType="BIGINT" property="createBy"/>
         <result column="update_by" jdbcType="BIGINT" property="updateBy"/>
         <result column="deleted" jdbcType="TINYINT" property="deleted"/>

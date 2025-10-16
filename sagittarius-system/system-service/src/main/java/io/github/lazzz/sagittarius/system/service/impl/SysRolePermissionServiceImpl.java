@@ -3,7 +3,7 @@ package io.github.lazzz.sagittarius.system.service.impl;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.ObjectUtil;
-import io.github.lazzz.sagittarius.common.cache.constant.CacheConstants;
+import io.github.lazzz.sagittarius.common.constant.CacheConstants;
 import io.github.lazzz.sagittarius.system.model.bo.SysRolePermsBO;
 import io.github.lazzz.sagittarius.system.model.entity.SysPermission;
 import io.github.lazzz.sagittarius.system.model.entity.SysRole;

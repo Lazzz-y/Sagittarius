@@ -1,6 +1,6 @@
 package io.github.lazzz.sagittarius.system.model.entity;
 
-import io.github.lazzz.sagittarius.common.base.BaseSnowflakeEntity;
+import io.github.lazzz.sagittarius.common.base.BaseSnowflakeLogicEntity;
 import io.github.lazzz.sagittarius.system.model.vo.SysRoleVO;
 import io.github.linpeilie.annotations.AutoMapper;
 import lombok.*;
@@ -25,7 +25,7 @@ import java.lang.Integer;
 @EqualsAndHashCode(callSuper = true)
 @Table(value = "sys_role")
 @AutoMapper(target = SysRoleVO.class)
-public class SysRole extends BaseSnowflakeEntity {
+public class SysRole extends BaseSnowflakeLogicEntity {
 
     /**
      * 角色编码

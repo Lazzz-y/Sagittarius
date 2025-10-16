@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.github.lazzz.sagittarius.system.mapper.SysDictMapper">
+    <resultMap id="BaseResultMap" type="io.github.lazzz.sagittarius.system.model.entity.SysDict">
+        <result column="id" jdbcType="OTHER" property="id"/>
+        <result column="type_code" jdbcType="VARCHAR" property="typeCode"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="value" jdbcType="VARCHAR" property="value"/>
+        <result column="sort" jdbcType="INTEGER" property="sort"/>
+        <result column="status" jdbcType="TINYINT" property="status"/>
+        <result column="defaulted" jdbcType="TINYINT" property="defaulted"/>
+        <result column="remark" jdbcType="VARCHAR" property="remark"/>
+        <result column="tenant_id" jdbcType="BIGINT" property="tenantId"/>
+        <result column="create_at" jdbcType="TIMESTAMP" property="createAt"/>
+        <result column="update_at" jdbcType="TIMESTAMP" property="updateAt"/>
+        <result column="create_by" jdbcType="BIGINT" property="createBy"/>
+        <result column="update_by" jdbcType="BIGINT" property="updateBy"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        `id`, `type_code`, `name`, `value`, `sort`, `status`, `defaulted`, `remark`, `tenant_id`, `create_at`,
+        `update_at`, `create_by`, `update_by`
+    </sql>
+
+</mapper>

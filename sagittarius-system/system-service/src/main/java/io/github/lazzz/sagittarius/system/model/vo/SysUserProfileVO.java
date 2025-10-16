@@ -2,6 +2,7 @@ package io.github.lazzz.sagittarius.system.model.vo;
 
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import io.github.lazzz.sagittarius.jetcache.annotation.Dict;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
@@ -37,6 +38,7 @@ public class SysUserProfileVO {
     /**
      * 性别
      */
+    @Dict(typeCode = "sex")
     @Schema(description = "性别")
     private String sex;
 
@@ -99,7 +101,7 @@ public class SysUserProfileVO {
      */
     @Schema(description = "创建时间")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime createTime;
+    private LocalDateTime createAt;
 
 }
 

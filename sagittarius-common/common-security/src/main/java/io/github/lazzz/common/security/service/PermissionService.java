@@ -4,7 +4,7 @@ package io.github.lazzz.common.security.service;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
 import io.github.lazzz.common.security.util.SecurityUtils;
-import io.github.lazzz.sagittarius.common.cache.constant.CacheConstants;
+import io.github.lazzz.sagittarius.common.constant.CacheConstants;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;

@@ -5,7 +5,7 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.jwt.JWTPayload;
 import com.nimbusds.jose.JWSObject;
 import io.github.lazzz.sagittarius.common.constant.JwtClaimConstants;
-import io.github.lazzz.sagittarius.common.cache.constant.CacheConstants;
+import io.github.lazzz.sagittarius.common.constant.CacheConstants;
 import io.github.lazzz.sagittarius.common.result.ResultCode;
 import io.github.lazzz.sagittarius.gateway.util.WebFluxUtils;
 import lombok.RequiredArgsConstructor;

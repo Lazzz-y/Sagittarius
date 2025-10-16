@@ -2,7 +2,7 @@ package io.github.lazzz.sagittarius.system.controller;
 
 import com.mybatisflex.core.paginate.Page;
 import io.github.lazzz.common.security.util.SecurityUtils;
-import io.github.lazzz.common.web.annotation.PreventDuplicateResubmit;
+import io.github.lazzz.sagittarius.common.web.annotation.PreventDuplicateResubmit;
 import io.github.lazzz.sagittarius.common.annotation.RefreshableController;
 import io.github.lazzz.sagittarius.common.result.Result;
 import io.github.lazzz.sagittarius.system.model.entity.SysUser;
@@ -13,7 +13,7 @@ import io.github.lazzz.sagittarius.system.model.vo.SysUserProfileVO;
 import io.github.lazzz.sagittarius.system.model.vo.SysUserVO;
 import io.github.lazzz.sagittarius.system.service.ISysUserRoleService;
 import io.github.lazzz.sagittarius.system.service.ISysUserService;
-import io.github.lazzz.system.dto.UserAuthDTO;
+import io.github.lazzz.sagittarius.system.dto.UserAuthDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;

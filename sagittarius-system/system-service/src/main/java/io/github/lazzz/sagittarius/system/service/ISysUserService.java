@@ -9,7 +9,7 @@ import io.github.lazzz.sagittarius.system.model.request.form.SysUserUpdateForm;
 import io.github.lazzz.sagittarius.system.model.request.query.SysUserPageQuery;
 import io.github.lazzz.sagittarius.system.model.vo.SysUserProfileVO;
 import io.github.lazzz.sagittarius.system.model.vo.SysUserVO;
-import io.github.lazzz.system.dto.UserAuthDTO;
+import io.github.lazzz.sagittarius.system.dto.UserAuthDTO;
 
 import java.io.Serializable;
 import java.util.List;

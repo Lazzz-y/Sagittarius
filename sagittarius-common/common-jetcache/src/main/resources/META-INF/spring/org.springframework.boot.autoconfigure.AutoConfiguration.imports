@@ -1,0 +1,3 @@
+io.github.lazzz.sagittarius.jetcache.config.JetCacheConfig
+io.github.lazzz.sagittarius.jetcache.service.DictCacheService
+io.github.lazzz.sagittarius.jetcache.config.DictAutoConfiguration

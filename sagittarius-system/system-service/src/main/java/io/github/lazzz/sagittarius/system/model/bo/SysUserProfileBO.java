@@ -38,15 +38,15 @@ public class SysUserProfileBO {
     @Schema(description = "用户昵称")
     private String nickname;
 
-    @AutoMapping(
-            targetClass = SysUserProfileVO.class,
-            target = "sex",
-            expression =
-                    """
-                    java(io.github.lazzz.sagittarius.common.base.IBaseEnum.getLabelByValue(source.getSex()
-                    , io.github.lazzz.sagittarius.common.enums.SexEnum.class))
-                    """
-    )
+//    @AutoMapping(
+//            targetClass = SysUserProfileVO.class,
+//            target = "sex",
+//            expression =
+//                    """
+//                    java(io.github.lazzz.sagittarius.common.base.IBaseEnum.getLabelByValue(source.getSex()
+//                    , io.github.lazzz.sagittarius.common.enums.SexEnum.class))
+//                    """
+//    )
     @Schema(description = "性别")
     private Integer sex;
 
