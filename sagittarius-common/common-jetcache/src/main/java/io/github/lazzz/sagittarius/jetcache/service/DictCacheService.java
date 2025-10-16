@@ -3,7 +3,6 @@ package io.github.lazzz.sagittarius.jetcache.service;
 
 import com.alicp.jetcache.Cache;
 import io.github.lazzz.sagittarius.common.constant.CacheConstants;
-import io.github.lazzz.sagittarius.common.utils.TenantContext;
 import io.github.lazzz.sagittarius.system.api.DictFeignClient;
 import io.github.lazzz.sagittarius.system.dto.DictDetailDTO;
 import lombok.RequiredArgsConstructor;
