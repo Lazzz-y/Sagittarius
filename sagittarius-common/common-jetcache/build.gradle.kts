@@ -2,8 +2,6 @@ dependencies{
 
     api("com.alicp.jetcache:jetcache-starter-redis-lettuce")
 
-    api("org.redisson:redisson-spring-boot-starter")
-
 //    implementation("org.springframework.boot:spring-boot-starter-cache")
     implementation("org.apache.commons:commons-pool2")
 
@@ -17,4 +15,6 @@ dependencies{
     compileOnly(project(":sagittarius-common:common-core"))
 
     compileOnly(project(":sagittarius-system:system-api"))
+
+    api(project(":sagittarius-common:common-redisson"))
 }

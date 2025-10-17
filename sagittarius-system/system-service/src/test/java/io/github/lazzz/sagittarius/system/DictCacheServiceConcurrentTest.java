@@ -40,19 +40,13 @@ public class DictCacheServiceConcurrentTest {
         // 初始化测试数据
         List<DictDetailDTO> mockData = new ArrayList<>();
         DictDetailDTO dto = new DictDetailDTO();
-        dto.setTypeCode(testTypeCode);
-        dto.setName("未知");
-        dto.setValue("0");
+        dto.setTypeCode(testTypeCode);dto.setName("未知");dto.setValue("0");
         mockData.add(dto);
         dto = new DictDetailDTO();
-        dto.setTypeCode(testTypeCode);
-        dto.setName("男");
-        dto.setValue("1");
+        dto.setTypeCode(testTypeCode);dto.setName("男");dto.setValue("1");
         mockData.add(dto);
         dto = new DictDetailDTO();
-        dto.setTypeCode(testTypeCode);
-        dto.setName("女");
-        dto.setValue("2");
+        dto.setTypeCode(testTypeCode);dto.setName("女");dto.setValue("2");
         mockData.add(dto);
         
         // 模拟远程调用返回数据

@@ -46,29 +46,24 @@ public class DictCacheService {
             // 命中缓存 直接返回
             List<DictDetailDTO> rs = dictCache.get(cacheKey);
             if (rs != null) {
-                System.out.println("缓存命中");
                 return rs;
             }
             // 缓存未命中，加锁
             var locked = lock.tryLock(5, 30, TimeUnit.SECONDS);
-            System.out.println("抢锁");
             if (locked) {
                 try {
                     // 锁内二次查缓存(防止等待期间其他节点已加载)
                     rs = dictCache.get(cacheKey);
                     if (rs != null) {
-                        System.out.println("锁内二次查找");
                         return rs;
                     }
                     // 查数据(仅一个节点执行)
                     rs = dictFeignClient.getDictDetailDTO(typeCode);
                     if (rs != null){
-                        System.out.println("数据库查询数据");
                         dictCache.put(cacheKey, rs);
                     }
                     return rs;
                 } finally {
-                    System.out.println("锁内逻辑结束，释放锁");
                     // 释放锁(锁内逻辑执行完必须释放)
                     lock.unlock();
                 }
