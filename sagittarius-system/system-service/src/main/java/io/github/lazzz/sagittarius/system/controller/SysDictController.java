@@ -1,10 +1,7 @@
 package io.github.lazzz.sagittarius.system.controller;
 
-import com.alicp.jetcache.anno.CacheType;
-import com.alicp.jetcache.anno.Cached;
 import io.github.lazzz.sagittarius.common.web.annotation.PreventDuplicateResubmit;
 import io.github.lazzz.sagittarius.common.web.model.Option;
-import io.github.lazzz.sagittarius.common.constant.CacheConstants;
 import io.github.lazzz.sagittarius.system.model.request.form.SysDictForm;
 import io.github.lazzz.sagittarius.system.model.request.form.SysDictTypeForm;
 import io.github.lazzz.sagittarius.system.model.request.query.SysDictPageQuery;
@@ -43,25 +40,12 @@ public class SysDictController {
 
     private final ISysDictTypeService sysDictTypeService;
 
-    @Operation(summary = "根据类型编码获取字典缓存", hidden = true)
-    @RequestMapping("/{typeCode}/dict")
+    @Operation(summary = "根据类型编码获取字典缓存")
+    @GetMapping("/{typeCode}/dict")
     public Result<List<DictDetailDTO>> getDictListByType(
             @Parameter(description = "字典类型编码")
             @PathVariable String typeCode){
         return Result.success(sysDictService.getDictListByType(typeCode));
-    }
-
-    @Operation(summary = "字典列表")
-    @GetMapping("/list")
-    @Cached(
-            name = "dict:",
-            key = CacheConstants.SPEL_DICT_KEY,
-            expire = 24,
-            localExpire = 12,
-            cacheType = CacheType.BOTH
-    )
-    public Result<List<DictDetailDTO>> getDictList() {
-        return Result.success(sysDictService.getDictDetailDTO());
     }
 
     @Operation(summary = "字典分页查询")
@@ -85,27 +69,27 @@ public class SysDictController {
     @PostMapping
     @PreAuthorize("@ss.hasPerm('sys:dict:add')")
     @PreventDuplicateResubmit
-    public Result<Boolean> saveDict(
+    public Result<List<DictDetailDTO>> saveDict(
             @RequestBody SysDictForm form
     ) {
-        boolean result = sysDictService.saveDict(form);
-        return Result.judge(result);
+        return Result.success(sysDictService.saveDict(form));
     }
 
     @Operation(summary = "修改字典")
     @PutMapping("/{id}")
+    @PreventDuplicateResubmit
     @PreAuthorize("@ss.hasPerm('sys:dict:edit')")
-    public Result<Boolean> updateDict(
+    public Result<List<DictDetailDTO>> updateDict(
             @PathVariable Long id,
             @RequestBody SysDictForm form
     ) {
-        boolean status = sysDictService.updateDict(id, form);
-        return Result.judge(status);
+        return Result.success(sysDictService.updateDict(id, form));
     }
 
     @Operation(summary = "删除字典")
     @DeleteMapping("/{ids}")
     @PreAuthorize("@ss.hasPerm('sys:dict:delete')")
+    @PreventDuplicateResubmit
     public Result<Boolean> deleteDict(
             @Parameter(description = "字典ID，多个以英文逗号(,)拼接") @PathVariable String ids
     ) {
@@ -154,6 +138,7 @@ public class SysDictController {
 
     @Operation(summary = "修改字典类型")
     @PutMapping("/types/{id}")
+    @PreventDuplicateResubmit
     @PreAuthorize("@ss.hasPerm('sys:dict_type:edit')")
     public Result<Boolean> updateDictType(@PathVariable Long id, @RequestBody SysDictTypeForm form) {
         boolean status = sysDictTypeService.updateDictType(id, form);
@@ -162,6 +147,7 @@ public class SysDictController {
 
     @Operation(summary = "删除字典类型")
     @DeleteMapping("/types/{ids}")
+    @PreventDuplicateResubmit
     @PreAuthorize("@ss.hasPerm('sys:dict_type:delete')")
     public Result<Boolean> deleteDictTypes(
             @Parameter(description = "字典类型ID，多个以英文逗号(,)分割") @PathVariable String ids

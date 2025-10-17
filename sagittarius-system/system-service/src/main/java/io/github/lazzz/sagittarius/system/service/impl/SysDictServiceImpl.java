@@ -4,9 +4,11 @@ package io.github.lazzz.sagittarius.system.service.impl;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.StrUtil;
+import com.alicp.jetcache.anno.CacheUpdate;
 import com.mybatisflex.core.logicdelete.LogicDeleteManager;
 import com.mybatisflex.core.paginate.Page;
 import com.mybatisflex.core.query.QueryWrapper;
+import io.github.lazzz.sagittarius.common.constant.CacheConstants;
 import io.github.lazzz.sagittarius.common.web.model.Option;
 import io.github.lazzz.sagittarius.system.model.request.form.SysDictForm;
 import io.github.lazzz.sagittarius.system.model.request.query.SysDictPageQuery;
@@ -19,6 +21,7 @@ import io.github.lazzz.sagittarius.system.service.ISysDictService;
 import io.github.lazzz.sagittarius.system.model.entity.SysDict;
 import io.github.lazzz.sagittarius.system.mapper.SysDictMapper;
 import com.mybatisflex.spring.service.impl.ServiceImpl;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
 import java.util.List;
@@ -89,25 +92,42 @@ public class SysDictServiceImpl extends ServiceImpl<SysDictMapper, SysDict> impl
     }
 
     @Override
-    public boolean saveDict(SysDictForm dictForm) {
-        SysDict dict = converter.convert(dictForm, SysDict.class);
-        return LogicDeleteManager.execWithoutLogicDelete(() -> this.save(dict));
+    @CacheUpdate(
+            area = "dict",
+            name = "dict:",
+            key = CacheConstants.SPEL_DICT_FORM_TYPE_CODE_KEY,
+            value = "#result"
+    )
+    @Transactional
+    public List<DictDetailDTO> saveDict(SysDictForm form) {
+        SysDict dict = converter.convert(form, SysDict.class);
+        this.save(dict);
+        return getDictListByType(dict.getTypeCode());
     }
 
     @Override
-    public boolean updateDict(Long id, SysDictForm dictForm) {
-        SysDict dict = converter.convert(dictForm, SysDict.class);
+    @CacheUpdate(
+            area = "dict",
+            name = "dict:",
+            key = CacheConstants.SPEL_DICT_FORM_TYPE_CODE_KEY,
+            value = "#result"
+    )
+    @Transactional
+    public List<DictDetailDTO> updateDict(Long id, SysDictForm form) {
+        SysDict dict = converter.convert(form, SysDict.class);
         dict.setId(id);
-        return this.updateById(dict);
+        this.updateById(dict);
+        return getDictListByType(dict.getTypeCode());
     }
 
     @Override
+    @Transactional
     public boolean deleteDict(String idsStr) {
         Assert.isTrue(StrUtil.isNotBlank(idsStr), "删除数据为空");
         List<Long> ids = Arrays.stream(idsStr.split(","))
                 .map(Long::parseLong)
                 .toList();
-        return LogicDeleteManager.execWithoutLogicDelete(() -> this.removeByIds(ids));
+        return this.removeByIds(ids);
     }
 
     @Override

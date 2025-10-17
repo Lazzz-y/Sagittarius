@@ -46,11 +46,11 @@ public interface CacheConstants {
 
     /////////////////// SpEl 表达式 生成 ///////////////////
 
-    String TENANT_ID = "T(io.github.lazzz.sagittarius.common.utils.TenantContext).getTenantId() + ";
+    String TENANT_ID = "T(io.github.lazzz.sagittarius.common.utils.TenantContext).getTenantId() + ':' + ";
 
     String SPEL_MENU_KEY = TENANT_ID + "':route'";
 
-    String SPEL_DICT_KEY = TENANT_ID + "':dict:'";
+    String SPEL_DICT_FORM_TYPE_CODE_KEY = TENANT_ID + "'dict:' + #form.typeCode";
 
 
     static String parseSpEl(String spEl, Object rootObject) {

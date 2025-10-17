@@ -55,19 +55,19 @@ public interface ISysDictService extends IService<SysDict> {
     /**
      * 新增字典数据项
      *
-     * @param dictForm 字典数据项表单
+     * @param form 字典数据项表单
      * @return {@link Boolean}
      */
-    boolean saveDict(SysDictForm dictForm);
+    List<DictDetailDTO> saveDict(SysDictForm form);
 
     /**
      * 修改字典数据项
      *
      * @param id       字典数据项ID
-     * @param dictForm 字典数据项表单
+     * @param form 字典数据项表单
      * @return {@link Boolean}
      */
-    boolean updateDict(Long id, SysDictForm dictForm);
+    List<DictDetailDTO> updateDict(Long id, SysDictForm form);
 
     /**
      * 删除字典数据项
