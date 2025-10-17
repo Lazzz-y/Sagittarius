@@ -5,3 +5,7 @@ spring:
     active: dev
   application:
     name: sagittarius-system
+  redis:
+    redisson:
+      # 单节点服务
+      file: classpath:redisson-system-single.yml

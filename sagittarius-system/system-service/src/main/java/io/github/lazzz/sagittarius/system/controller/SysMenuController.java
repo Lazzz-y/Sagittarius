@@ -55,7 +55,7 @@ public class SysMenuController {
     @PreventDuplicateResubmit
     @Operation(summary = "新增菜单")
     @PreAuthorize("@ss.hasPerm('sys:menu:add')")
-    @CacheUpdate(name = "menu:", key = CacheConstants.SPEL_MENU_KEY, value = "#result")    public Result<List<RouteVO>> saveMenu(@RequestBody SysMenuForm form) {
+    public Result<List<RouteVO>> saveMenu(@RequestBody SysMenuForm form) {
         return Result.success(sysMenuService.saveOrUpdateMenu(form));
     }
 

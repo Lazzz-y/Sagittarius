@@ -4,7 +4,9 @@ package io.github.lazzz.sagittarius.system.service.impl;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
+import com.alicp.jetcache.anno.CacheUpdate;
 import com.mybatisflex.core.query.QueryWrapper;
+import io.github.lazzz.sagittarius.common.constant.CacheConstants;
 import io.github.lazzz.sagittarius.common.constant.SystemConstants;
 import io.github.lazzz.sagittarius.common.enums.StatusEnum;
 import io.github.lazzz.sagittarius.common.utils.condition.If;
@@ -63,6 +65,7 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
     }
 
     @Override
+    @CacheUpdate(name = "menu:", key = CacheConstants.SPEL_MENU_KEY, value = "#result")
     public List<RouteVO> saveOrUpdateMenu(SysMenuForm form) {
         String path = form.getPath();
         Long parentId = form.getParentId();

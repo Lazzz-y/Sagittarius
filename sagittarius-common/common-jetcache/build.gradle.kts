@@ -2,6 +2,8 @@ dependencies{
 
     api("com.alicp.jetcache:jetcache-starter-redis-lettuce")
 
+    api("org.redisson:redisson-spring-boot-starter")
+
 //    implementation("org.springframework.boot:spring-boot-starter-cache")
     implementation("org.apache.commons:commons-pool2")
 

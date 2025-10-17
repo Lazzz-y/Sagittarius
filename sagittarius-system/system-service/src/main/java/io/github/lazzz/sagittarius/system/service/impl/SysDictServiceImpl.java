@@ -85,19 +85,17 @@ public class SysDictServiceImpl extends ServiceImpl<SysDictMapper, SysDict> impl
                         SysDict::getValue,
                         SysDict::getStatus,
                         SysDict::getSort,
-                        SysDict::getRemark
-                ));
+                        SysDict::getRemark));
         Assert.isTrue(dict != null, "字典数据项不存在");
         return converter.convert(dict, SysDictForm.class);
     }
 
     @Override
     @CacheUpdate(
-            area = "dict",
-            name = "dict:",
+            area = CacheConstants.DICT_AREA,
+            name = CacheConstants.DICT_NAME,
             key = CacheConstants.SPEL_DICT_FORM_TYPE_CODE_KEY,
-            value = "#result"
-    )
+            value = "#result")
     @Transactional
     public List<DictDetailDTO> saveDict(SysDictForm form) {
         SysDict dict = converter.convert(form, SysDict.class);
@@ -107,11 +105,10 @@ public class SysDictServiceImpl extends ServiceImpl<SysDictMapper, SysDict> impl
 
     @Override
     @CacheUpdate(
-            area = "dict",
-            name = "dict:",
+            area = CacheConstants.DICT_AREA,
+            name = CacheConstants.DICT_NAME,
             key = CacheConstants.SPEL_DICT_FORM_TYPE_CODE_KEY,
-            value = "#result"
-    )
+            value = "#result")
     @Transactional
     public List<DictDetailDTO> updateDict(Long id, SysDictForm form) {
         SysDict dict = converter.convert(form, SysDict.class);

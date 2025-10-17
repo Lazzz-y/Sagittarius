@@ -13,8 +13,20 @@ import org.springframework.expression.spel.support.StandardEvaluationContext;
 **/
 public interface CacheConstants {
 
-    String DEFAULT_AREA = "default";
+    /////////////////// Redis 分布式锁 ///////////////////
+    String DICT_LOCK_PREFIX = "LOCK:DICT:" + TenantContext.getTenantId() + ":";
 
+    /////////////////// JetCache Area ///////////////////
+
+    String DICT_AREA = "dict";
+    String MENU_AREA = "menu";
+
+    /////////////////// JetCache Name ///////////////////
+
+    String DICT_NAME = "dict:";
+    String MENU_NAME = "menu:";
+
+    /////////////////// Redis Key 前缀 ///////////////////
     /**
      * JWK缓存
      * 启动的时候需要初始化，而启动时间无法获取租户ID，所以不使用租户id区分
@@ -24,32 +36,31 @@ public interface CacheConstants {
     /**
      * 防重复提交锁前缀
      */
-    String RESUBMIT_LOCK_PREFIX = TenantContext.getTenantId() + ":" + "LOCK:RESUBMIT:";
+    String RESUBMIT_LOCK_PREFIX = "local:resubmit:" + TenantContext.getTenantId() + ":";
 
     /**
      * 角色和权限缓存前缀
      */
-    String ROLE_PERMS_PREFIX = TenantContext.getTenantId() + ":" + "role_perms";
+    String ROLE_PERMS_PREFIX = "role_perms:" + TenantContext.getTenantId() + ":";
 
     /**
      * 黑名单TOKEN Key前缀
      * 租户ID在全局过滤器中拼接
      */
-    String TOKEN_BLACKLIST_PREFIX = TenantContext.getTenantId() + ":" + "token:blacklist:";
+    String TOKEN_BLACKLIST_PREFIX = "token:blacklist:" + TenantContext.getTenantId() + ":";
 
     /**
      * 注册短信验证码key前缀
      */
-    String REGISTER_SMS_CODE_PREFIX = TenantContext.getTenantId() + "sms_code:register:";
+    String REGISTER_SMS_CODE_PREFIX = "sms_code:register:" + TenantContext.getTenantId() + ":";
 
     String DICT_PREFIX = TenantContext.getTenantId() + ":dict:";
 
-    /////////////////// SpEl 表达式 生成 ///////////////////
+
+    /////////////////// SpEl 表达式 主要用于注解 ///////////////////
 
     String TENANT_ID = "T(io.github.lazzz.sagittarius.common.utils.TenantContext).getTenantId() + ':' + ";
-
-    String SPEL_MENU_KEY = TENANT_ID + "':route'";
-
+    String SPEL_MENU_KEY = TENANT_ID + "'route'";
     String SPEL_DICT_FORM_TYPE_CODE_KEY = TENANT_ID + "'dict:' + #form.typeCode";
 
 

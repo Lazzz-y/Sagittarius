@@ -14,6 +14,7 @@ import io.github.lazzz.sagittarius.common.utils.TenantContext;
 import io.github.lazzz.sagittarius.system.dto.DictDetailDTO;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
+import org.redisson.api.RedissonClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -34,9 +35,13 @@ public class JetCacheConfig {
 
     private Cache<String, List<DictDetailDTO>> dictCache;
 
+    private final RedissonClient redissonClient;
+
     @PostConstruct
     public void init() {
-        QuickConfig dictQc = QuickConfig.newBuilder("dict", "dict:")
+        QuickConfig dictQc = QuickConfig.newBuilder(
+                        CacheConstants.DICT_AREA,
+                        CacheConstants.DICT_NAME)
                 // 本地缓存有效期
                 .localExpire(Duration.ofHours(12))
                 // 本地缓存数量限制 128个缓存
