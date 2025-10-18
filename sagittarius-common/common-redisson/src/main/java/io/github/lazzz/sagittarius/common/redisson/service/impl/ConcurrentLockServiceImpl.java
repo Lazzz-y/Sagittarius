@@ -48,7 +48,7 @@ public class ConcurrentLockServiceImpl implements LockService, Closeable {
             // 获取多个锁对象
             List<RLock> locks = keyList.stream()
                     .map(redissonClient::getLock)
-                    .collect(Collectors.toList());
+                    .toList();
 
             // 创建联锁
             multiLock = redissonClient.getMultiLock(locks.toArray(new RLock[0]));
