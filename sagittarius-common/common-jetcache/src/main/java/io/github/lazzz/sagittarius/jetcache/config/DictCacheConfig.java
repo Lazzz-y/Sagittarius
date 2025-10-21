@@ -5,16 +5,13 @@ import com.alicp.jetcache.Cache;
 import com.alicp.jetcache.CacheManager;
 import com.alicp.jetcache.anno.CacheType;
 import com.alicp.jetcache.support.Fastjson2KeyConvertor;
-import com.alicp.jetcache.support.Fastjson2ValueDecoder;
 import com.alicp.jetcache.support.Kryo5ValueDecoder;
 import com.alicp.jetcache.support.Kryo5ValueEncoder;
 import com.alicp.jetcache.template.QuickConfig;
 import io.github.lazzz.sagittarius.common.constant.CacheConstants;
-import io.github.lazzz.sagittarius.common.utils.TenantContext;
 import io.github.lazzz.sagittarius.system.dto.DictDetailDTO;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
-import org.redisson.api.RedissonClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -29,13 +26,11 @@ import java.util.List;
  **/
 @Configuration
 @RequiredArgsConstructor
-public class JetCacheConfig {
+public class DictCacheConfig {
 
     private final CacheManager cacheManager;
 
     private Cache<String, List<DictDetailDTO>> dictCache;
-
-    private final RedissonClient redissonClient;
 
     @PostConstruct
     public void init() {

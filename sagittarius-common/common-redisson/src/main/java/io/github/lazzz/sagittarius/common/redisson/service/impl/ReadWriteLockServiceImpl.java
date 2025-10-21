@@ -2,6 +2,7 @@ package io.github.lazzz.sagittarius.common.redisson.service.impl;
 
 
 import io.github.lazzz.sagittarius.common.redisson.model.LockInfo;
+import io.github.lazzz.sagittarius.common.redisson.model.LockType;
 import io.github.lazzz.sagittarius.common.redisson.service.LockService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,6 +14,7 @@ import java.io.Closeable;
 
 /**
  * 读写锁服务实现
+ * 适用于读多写少的场景
  *
  * @author Lazzz
  * @date 2025/10/17 20:46
@@ -34,7 +36,7 @@ public class ReadWriteLockServiceImpl implements LockService, Closeable {
 
         // 默认获取读锁
         if (lockInfo.getLockType() == null) {
-            lockInfo.setLockType(LockInfo.LockType.READ);
+            lockInfo.setLockType(LockType.READ);
         }
     }
 
@@ -47,13 +49,19 @@ public class ReadWriteLockServiceImpl implements LockService, Closeable {
         try {
             RReadWriteLock rwLock = redissonClient.getReadWriteLock(lockInfo.getName());
             // 根据锁类型获取对应的锁
-            currentLock = lockInfo.getLockType() == LockInfo.LockType.READ ? rwLock.readLock() : rwLock.writeLock();
-            // 默认获取读锁，如需写锁可改为rwLock.writeLock()
-            return currentLock.tryLock(
+            currentLock = lockInfo.getLockType() == LockType.READ ? rwLock.readLock() : rwLock.writeLock();
+            var rs = currentLock.tryLock(
                     lockInfo.getWaitTime(),
                     lockInfo.getLeaseTime(),
                     lockInfo.getTimeUnit()
             );
+            if (rs) {
+                log.debug("成功获取{}锁，锁名称: {}", lockInfo.getLockType(), lockInfo.getName());
+            } else {
+                log.debug("获取{}锁失败，锁名称: {}", lockInfo.getLockType(), lockInfo.getName());
+            }
+            // 默认获取读锁，如需写锁可改为rwLock.writeLock()
+            return rs;
         } catch (InterruptedException e) {
             log.info("获取{}锁时线程被中断, 锁名称: {}", lockInfo.getLockType(), lockInfo.getName());
             Thread.currentThread().interrupt();
@@ -66,19 +74,19 @@ public class ReadWriteLockServiceImpl implements LockService, Closeable {
     @Override
     public void releaseLock() {
         if (currentLock == null) {
-            log.warn("释放锁失败，锁对象为空");
+            log.debug("手动释放: 释放锁失败，锁对象为空");
             return;
         }
         try {
             // 释放对应的读锁
             if (currentLock.isHeldByCurrentThread()) {
                 currentLock.unlockAsync();
-                log.debug("成功释放{}锁，锁名称: {}", lockInfo.getLockType(), lockInfo.getName());
+                log.debug("手动释放: 成功释放{}锁，锁名称: {}", lockInfo.getLockType(), lockInfo.getName());
             } else {
-                log.warn("当前线程未持有该{}锁，无法释放，锁名称: {}", lockInfo.getLockType(), lockInfo.getName());
+                log.warn("手动释放: 当前线程未持有该{}锁，无法释放，锁名称: {}", lockInfo.getLockType(), lockInfo.getName());
             }
         } catch (Exception e) {
-            log.error("释放{}锁发生异常, 锁名称: {}", lockInfo.getLockType(), lockInfo.getName(), e);
+            log.error("手动释放: 释放{}锁发生异常, 锁名称: {}", lockInfo.getLockType(), lockInfo.getName(), e);
         } finally {
             currentLock = null;
             lockInfo = null;
@@ -87,7 +95,24 @@ public class ReadWriteLockServiceImpl implements LockService, Closeable {
 
     @Override
     public void close() {
-        this.releaseLock();
+        if (currentLock == null) {
+            log.debug("自动释放: 释放锁失败，锁对象为空");
+            return;
+        }
+        try {
+            // 释放对应的读锁
+            if (currentLock.isHeldByCurrentThread()) {
+                currentLock.unlockAsync();
+                log.debug("自动释放: 成功释放{}锁，锁名称: {}", lockInfo.getLockType(), lockInfo.getName());
+            } else {
+                log.warn("自动释放: 当前线程未持有该{}锁，无法释放，锁名称: {}", lockInfo.getLockType(), lockInfo.getName());
+            }
+        } catch (Exception e) {
+            log.error("自动释放: 释放{}锁发生异常, 锁名称: {}", lockInfo.getLockType(), lockInfo.getName(), e);
+        } finally {
+            currentLock = null;
+            lockInfo = null;
+        }
     }
 }
 

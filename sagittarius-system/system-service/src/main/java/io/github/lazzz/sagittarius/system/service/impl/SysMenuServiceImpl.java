@@ -2,16 +2,17 @@ package io.github.lazzz.sagittarius.system.service.impl;
 
 
 import cn.hutool.core.collection.CollectionUtil;
-import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
-import com.alicp.jetcache.anno.CacheUpdate;
+import com.alicp.jetcache.Cache;
 import com.mybatisflex.core.query.QueryWrapper;
 import io.github.lazzz.sagittarius.common.constant.CacheConstants;
 import io.github.lazzz.sagittarius.common.constant.SystemConstants;
-import io.github.lazzz.sagittarius.common.enums.StatusEnum;
+import io.github.lazzz.sagittarius.common.redisson.annotation.Lock;
+import io.github.lazzz.sagittarius.common.redisson.model.LockType;
+import io.github.lazzz.sagittarius.common.redisson.service.LockService;
 import io.github.lazzz.sagittarius.common.utils.condition.If;
+import io.github.lazzz.sagittarius.system.cache.RouteCacheService;
 import io.github.lazzz.sagittarius.system.enums.MenuTypeEnum;
-import io.github.lazzz.sagittarius.system.model.bo.RouteBO;
 import io.github.lazzz.sagittarius.system.model.entity.*;
 import io.github.lazzz.sagittarius.system.model.request.form.SysMenuForm;
 import io.github.lazzz.sagittarius.system.model.request.query.SysMenuQuery;
@@ -19,13 +20,15 @@ import io.github.lazzz.sagittarius.system.model.vo.RouteVO;
 import io.github.lazzz.sagittarius.system.model.vo.SysMenuVO;
 import io.github.linpeilie.Converter;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang3.StringUtils;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import io.github.lazzz.sagittarius.system.service.ISysMenuService;
 import io.github.lazzz.sagittarius.system.mapper.SysMenuMapper;
 import com.mybatisflex.spring.service.impl.ServiceImpl;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -36,13 +39,19 @@ import java.util.stream.Collectors;
  * @author Lazzz
  * @since 1.0
  */
+@Slf4j
 @Service
-@RequiredArgsConstructor
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> implements ISysMenuService {
 
     private final Converter converter;
 
-    private final SysMenuMapper sysMenuMapper;
+    private final Cache<String, List<RouteVO>> menuCache;
+
+    private final RouteCacheService routeCacheService;
+
+    @Qualifier("readWriteLockService")
+    private final ObjectProvider<LockService> lockServiceProvider;
 
     @Override
     public List<SysMenuVO> listMenuVO(SysMenuQuery query) {
@@ -65,8 +74,9 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
     }
 
     @Override
-    @CacheUpdate(name = "menu:", key = CacheConstants.SPEL_MENU_KEY, value = "#result")
-    public List<RouteVO> saveOrUpdateMenu(SysMenuForm form) {
+    @Lock(name = "LOCK:MENU:${T(io.github.lazzz.sagittarius.common.utils.TenantContext).getTenantId()}:UPDATE",
+            lockType = LockType.WRITE)
+    public Boolean saveOrUpdateMenu(SysMenuForm form) {
         String path = form.getPath();
         Long parentId = form.getParentId();
         MenuTypeEnum menuType = form.getMenuType();
@@ -78,8 +88,9 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
         SysMenu menu = converter.convert(form, SysMenu.class);
         String treePath = generateMenuTreePath(parentId);
         menu.setTreePath(treePath);
-        this.saveOrUpdate(menu);
-        return listRoutes();
+        var rs = this.saveOrUpdate(menu);
+        routeCacheService.refreshMenuCache();
+        return rs;
     }
 
     /**
@@ -98,13 +109,16 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
     }
 
     @Override
-    public List<RouteVO> deleteMenu(Long menuId) {
-        this.remove(QueryWrapper.create()
+    @Lock(name = "LOCK:MENU:${T(io.github.lazzz.sagittarius.common.utils.TenantContext).getTenantId()}:DELETE",
+            lockType = LockType.WRITE)
+    public Boolean deleteMenu(Long menuId) {
+        var rs = this.remove(QueryWrapper.create()
                 .from(SysMenu.class)
                 .eq(SysMenu::getId, menuId)
                 .or("CONCAT (',',tree_path,',') LIKE CONCAT('%,',?,',%')", menuId)
         );
-        return listRoutes();
+        routeCacheService.refreshMenuCache();
+        return rs;
     }
 
     /**
@@ -128,57 +142,20 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
 
     @Override
     public List<RouteVO> listRoutes() {
-        var bos = sysMenuMapper.listRoutes();
-        return buildRoutes(SystemConstants.ROOT_NODE_ID, bos);
-    }
-
-    private List<RouteVO> buildRoutes(Long parentId, List<RouteBO> menus) {
-        List<RouteVO> routes = new ArrayList<>();
-
-        for (RouteBO menu : menus) {
-            if (menu.getParentId().equals(parentId)) {
-                RouteVO vo = boToVO(menu);
-                List<RouteVO> children = buildRoutes(menu.getId(), menus);
-                if (!children.isEmpty()) {
-                    vo.setChildren(children);
-                }
-                routes.add(vo);
-            }
+        String cacheKey = CacheConstants.MENU_PREFIX + "route";
+        List<RouteVO> rs = menuCache.get(cacheKey);
+        if (rs != null) {
+            System.out.println("直接返回");
+            return rs;
         }
-        return routes;
-    }
-
-    private RouteVO boToVO(RouteBO bo) {
-        RouteVO vo = new RouteVO();
-        // 路由name 转换为大驼峰
-        String routeName = StringUtils.capitalize(StrUtil.toCamelCase(bo.getPath(), '-'));
-        // 根据 name 路由跳转 this.$router.push({ name:xxx })
-        vo.setName(routeName);
-        // 根据path路由跳转 this.$router.push({path:xxx})
-        vo.setPath(bo.getPath());
-        vo.setRedirect(bo.getRedirect());
-        vo.setComponent(bo.getComponent());
-
-        RouteVO.Meta meta = new RouteVO.Meta();
-        meta.setTitle(bo.getName());
-        meta.setIcon(bo.getIcon());
-        meta.setRoles(bo.getRoles());
-        meta.setHidden(StatusEnum.DISABLE.getValue().equals(bo.getIsVisible()));
-        // 菜单类型为[菜单]时，设置缓存
-        If.ifThen(
-                MenuTypeEnum.MENU.equals(bo.getMenuType()) &&
-                        ObjectUtil.equals(bo.getKeepAlive(), 1),
-                () -> meta.setKeepAlive(true)
-        );
-
-        // 菜单类型为[目录]时，设置[目录]是否始终显示
-        If.ifThen(
-                MenuTypeEnum.CATALOG.equals(bo.getMenuType()) &&
-                        ObjectUtil.equals(bo.getAlwaysShow(), 1),
-                () -> meta.setAlwaysShow(true)
-        );
-        vo.setMeta(meta);
-        return vo;
+        rs = routeCacheService.getFromCache();
+        if (rs != null) {
+            System.out.println("读锁内查询（已缓存）");
+            return rs;
+        }
+        // 缓存为空：释放读锁后，调用带写锁的方法
+        // 这里会自动释放当前读锁（由切面控制）
+        return routeCacheService.refreshMenuCache();
     }
 
 }

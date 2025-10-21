@@ -4,18 +4,27 @@ package io.github.lazzz.sagittarius.system.service.impl;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.StrUtil;
+import com.alicp.jetcache.Cache;
 import com.alicp.jetcache.anno.CacheUpdate;
 import com.mybatisflex.core.logicdelete.LogicDeleteManager;
 import com.mybatisflex.core.paginate.Page;
 import com.mybatisflex.core.query.QueryWrapper;
 import io.github.lazzz.sagittarius.common.constant.CacheConstants;
+import io.github.lazzz.sagittarius.common.redisson.model.LockInfo;
+import io.github.lazzz.sagittarius.common.redisson.model.LockType;
+import io.github.lazzz.sagittarius.common.redisson.service.LockService;
+import io.github.lazzz.sagittarius.common.utils.condition.If;
 import io.github.lazzz.sagittarius.common.web.model.Option;
 import io.github.lazzz.sagittarius.system.model.request.form.SysDictForm;
 import io.github.lazzz.sagittarius.system.model.request.query.SysDictPageQuery;
 import io.github.lazzz.sagittarius.system.model.vo.SysDictVO;
 import io.github.lazzz.sagittarius.system.dto.DictDetailDTO;
 import io.github.linpeilie.Converter;
+import jakarta.annotation.Resource;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import io.github.lazzz.sagittarius.system.service.ISysDictService;
 import io.github.lazzz.sagittarius.system.model.entity.SysDict;
@@ -32,11 +41,18 @@ import java.util.List;
  * @author Lazzz
  * @since 1.0
  */
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class SysDictServiceImpl extends ServiceImpl<SysDictMapper, SysDict> implements ISysDictService {
 
     private final Converter converter;
+
+    private final Cache<String, List<DictDetailDTO>> dictCache;
+
+    @Resource
+    @Qualifier("readWriteLockService")
+    private LockService lockService;
 
     @Override
     @SuppressWarnings("unchecked")
@@ -91,30 +107,25 @@ public class SysDictServiceImpl extends ServiceImpl<SysDictMapper, SysDict> impl
     }
 
     @Override
-    @CacheUpdate(
-            area = CacheConstants.DICT_AREA,
-            name = CacheConstants.DICT_NAME,
-            key = CacheConstants.SPEL_DICT_FORM_TYPE_CODE_KEY,
-            value = "#result")
     @Transactional
-    public List<DictDetailDTO> saveDict(SysDictForm form) {
+    public Boolean saveDict(SysDictForm form) {
         SysDict dict = converter.convert(form, SysDict.class);
-        this.save(dict);
-        return getDictListByType(dict.getTypeCode());
+        var rs = this.save(dict);
+        If.ifThen(rs, () -> refreshDictCache(dict.getTypeCode(), dict.getId()));
+        return rs;
     }
 
     @Override
-    @CacheUpdate(
-            area = CacheConstants.DICT_AREA,
-            name = CacheConstants.DICT_NAME,
-            key = CacheConstants.SPEL_DICT_FORM_TYPE_CODE_KEY,
-            value = "#result")
     @Transactional
-    public List<DictDetailDTO> updateDict(Long id, SysDictForm form) {
+    public Boolean updateDict(Long id, SysDictForm form) {
+        SysDict oldDict = this.getById(id);
+        Assert.isTrue(oldDict != null, "字典数据项不存在");
+        String typeCode = oldDict.getTypeCode();
         SysDict dict = converter.convert(form, SysDict.class);
         dict.setId(id);
-        this.updateById(dict);
-        return getDictListByType(dict.getTypeCode());
+        var rs = this.updateById(dict);
+        If.ifThen(rs, () -> refreshDictCache(typeCode, id));
+        return rs;
     }
 
     @Override
@@ -124,7 +135,13 @@ public class SysDictServiceImpl extends ServiceImpl<SysDictMapper, SysDict> impl
         List<Long> ids = Arrays.stream(idsStr.split(","))
                 .map(Long::parseLong)
                 .toList();
-        return this.removeByIds(ids);
+        List<SysDict> list = this.list(queryChain().in(SysDict::getId, ids));
+        var rs = this.removeByIds(ids);
+        If.ifThen(rs, () ->
+                list.forEach(dict ->
+                        refreshDictCache(dict.getTypeCode(), dict.getId()))
+        );
+        return rs;
     }
 
     @Override
@@ -138,5 +155,25 @@ public class SysDictServiceImpl extends ServiceImpl<SysDictMapper, SysDict> impl
                 .stream()
                 .map(item -> new Option<>(item.getValue(), item.getName()))
                 .toList();
+    }
+
+    private void refreshDictCache(String typeCode, Long id) {
+        String lockKey = CacheConstants.DICT_LOCK_PREFIX + typeCode + ":" + id;
+        String cacheKey = CacheConstants.DICT_PREFIX + typeCode;
+        var lockInfo = LockInfo.builder()
+                .name(lockKey)
+                .lockType(LockType.WRITE)
+                .waitTime(5)
+                .leaseTime(10)
+                .build();
+        try (LockService lock = lockService) {
+            lock.setLockInfo(lockInfo);
+            if (lock.lock()) {
+                dictCache.remove(cacheKey);
+                dictCache.put(cacheKey, this.getDictListByType(typeCode));
+            }
+        } catch (Exception e) {
+            log.error("刷新字典缓存失败，typeCode: {}", typeCode, e);
+        }
     }
 }

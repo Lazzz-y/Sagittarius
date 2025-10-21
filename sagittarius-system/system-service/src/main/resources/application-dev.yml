@@ -19,4 +19,4 @@ spring:
   config:
     import:
       - nacos:sagittarius-common?refreshEnabled=true
-      - nacos:sagittarius-user?refreshEnabled=true
+      - nacos:sagittarius-system?refreshEnabled=true

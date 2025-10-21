@@ -45,7 +45,6 @@ public class SysMenuController {
 
     @Operation(summary = "路由列表")
     @GetMapping("/routes")
-    @Cached(name = "menu:", key = CacheConstants.SPEL_MENU_KEY, expire = 30, localExpire = 15,cacheType = CacheType.BOTH)
     public Result<List<RouteVO>> listRoutes() {
         List<RouteVO> routeList = sysMenuService.listRoutes();
         return Result.success(routeList);
@@ -55,30 +54,28 @@ public class SysMenuController {
     @PreventDuplicateResubmit
     @Operation(summary = "新增菜单")
     @PreAuthorize("@ss.hasPerm('sys:menu:add')")
-    public Result<List<RouteVO>> saveMenu(@RequestBody SysMenuForm form) {
-        return Result.success(sysMenuService.saveOrUpdateMenu(form));
+    public Result<Boolean> saveMenu(@RequestBody SysMenuForm form) {
+        return Result.judge(sysMenuService.saveOrUpdateMenu(form));
     }
 
     @PreventDuplicateResubmit
     @Operation(summary = "修改菜单")
     @PutMapping(value = "/{id}")
     @PreAuthorize("@ss.hasPerm('sys:menu:edit')")
-    @CacheUpdate(name = "menu:", key = CacheConstants.SPEL_MENU_KEY, value = "#result")
-    public Result<List<RouteVO>> updateMenu(
+    public Result<Boolean> updateMenu(
             @PathVariable Long id,
             @RequestBody SysMenuForm form
     ) {
         form.setId(id);
-        return Result.success(sysMenuService.saveOrUpdateMenu(form));
+        return Result.judge(sysMenuService.saveOrUpdateMenu(form));
     }
 
     @Operation(summary = "删除菜单")
     @DeleteMapping("/{id}")
     @PreAuthorize("@ss.hasPerm('sys:menu:delete')")
-    @CacheInvalidate(name = "menu:", key = CacheConstants.SPEL_MENU_KEY)
-    public Result<List<RouteVO>> deleteMenu(
+    public Result<Boolean> deleteMenu(
             @Parameter(description ="菜单ID") @PathVariable("id") Long id
     ) {
-        return Result.success(sysMenuService.deleteMenu(id));
+        return Result.judge(sysMenuService.deleteMenu(id));
     }
 }

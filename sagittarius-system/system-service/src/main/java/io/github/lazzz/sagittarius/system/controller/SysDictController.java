@@ -69,21 +69,21 @@ public class SysDictController {
     @PostMapping
     @PreAuthorize("@ss.hasPerm('sys:dict:add')")
     @PreventDuplicateResubmit
-    public Result<List<DictDetailDTO>> saveDict(
+    public Result<Boolean> saveDict(
             @RequestBody SysDictForm form
     ) {
-        return Result.success(sysDictService.saveDict(form));
+        return Result.judge(sysDictService.saveDict(form));
     }
 
     @Operation(summary = "修改字典")
     @PutMapping("/{id}")
     @PreventDuplicateResubmit
     @PreAuthorize("@ss.hasPerm('sys:dict:edit')")
-    public Result<List<DictDetailDTO>> updateDict(
+    public Result<Boolean> updateDict(
             @PathVariable Long id,
             @RequestBody SysDictForm form
     ) {
-        return Result.success(sysDictService.updateDict(id, form));
+        return Result.judge(sysDictService.updateDict(id, form));
     }
 
     @Operation(summary = "删除字典")

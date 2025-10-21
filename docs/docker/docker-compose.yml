@@ -220,3 +220,21 @@ services:
       - "9411:9411"
     networks:
       - sagittarius
+  # mongodb
+  mongodb:
+      image: mongo:8.0.15
+      container_name: sagittarius-mongodb
+      restart: unless-stopped
+      environment:
+        - MONGO_INITDB_ROOT_USERNAME=root
+        - MONGO_INITDB_ROOT_PASSWORD=root
+      volumes:
+        - ./mongodb/data:/data/db
+        - ./mongodb/config:/etc/mongo
+      ports:
+        - "27017:27017"
+      command:
+        - --wiredTigerCacheSizeGB
+        - '0.5'
+      networks:
+        - sagittarius

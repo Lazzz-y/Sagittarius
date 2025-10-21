@@ -1,6 +1,8 @@
 package io.github.lazzz.sagittarius.system.service;
 
 
+import io.github.lazzz.sagittarius.common.redisson.annotation.Lock;
+import io.github.lazzz.sagittarius.common.redisson.model.LockType;
 import io.github.lazzz.sagittarius.system.model.entity.SysMenu;
 import com.mybatisflex.core.service.IService;
 import io.github.lazzz.sagittarius.system.model.request.form.SysMenuForm;
@@ -34,9 +36,9 @@ public interface ISysMenuService extends IService<SysMenu> {
      * @author Lazzz
      * @date 2025/10/13
      * @param form 菜单表单
-     * @return {@link List<RouteVO>}
+     * @return {@link Boolean}
      */
-    List<RouteVO> saveOrUpdateMenu(SysMenuForm form);
+    Boolean saveOrUpdateMenu(SysMenuForm form);
 
     /**
      * 删除菜单
@@ -46,7 +48,7 @@ public interface ISysMenuService extends IService<SysMenu> {
      * @param menuId 菜单ID
      * @return {@link Boolean}
      */
-    List<RouteVO> deleteMenu(Long menuId);
+    Boolean deleteMenu(Long menuId);
 
     /**
      * 获取菜单路由

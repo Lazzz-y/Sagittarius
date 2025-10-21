@@ -14,6 +14,8 @@ import org.springframework.expression.spel.support.StandardEvaluationContext;
 public interface CacheConstants {
 
     /////////////////// Redis 分布式锁 ///////////////////
+
+    String MENU_LOCK_PREFIX = "LOCK:MENU:" + TenantContext.getTenantId() + ":";
     String DICT_LOCK_PREFIX = "LOCK:DICT:" + TenantContext.getTenantId() + ":";
 
     /////////////////// JetCache Area ///////////////////
@@ -54,6 +56,8 @@ public interface CacheConstants {
      */
     String REGISTER_SMS_CODE_PREFIX = "sms_code:register:" + TenantContext.getTenantId() + ":";
 
+    String MENU_PREFIX = TenantContext.getTenantId() + ":menu:";
+
     String DICT_PREFIX = TenantContext.getTenantId() + ":dict:";
 
 
@@ -61,7 +65,6 @@ public interface CacheConstants {
 
     String TENANT_ID = "T(io.github.lazzz.sagittarius.common.utils.TenantContext).getTenantId() + ':' + ";
     String SPEL_MENU_KEY = TENANT_ID + "'route'";
-    String SPEL_DICT_FORM_TYPE_CODE_KEY = TENANT_ID + "'dict:' + #form.typeCode";
 
 
     static String parseSpEl(String spEl, Object rootObject) {
