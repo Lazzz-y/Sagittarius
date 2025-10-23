@@ -1,4 +1,4 @@
-package io.github.lazzz.category;
+package io.github.lazzz.sagittarius.category;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

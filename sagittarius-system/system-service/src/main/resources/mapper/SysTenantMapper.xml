@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.github.lazzz.sagittarius.system.mapper.SysTenantMapper">
+    <resultMap id="BaseResultMap" type="io.github.lazzz.sagittarius.system.model.entity.SysTenant">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="tenant_key" jdbcType="VARCHAR" property="tenantKey"/>
+        <result column="tenant_name" jdbcType="VARCHAR" property="tenantName"/>
+        <result column="tenant_type" jdbcType="TINYINT" property="tenantType"/>
+        <result column="domain" jdbcType="VARCHAR" property="domain"/>
+        <result column="logo_url" jdbcType="VARCHAR" property="logoUrl"/>
+        <result column="theme_config" jdbcType="OTHER" property="themeConfig"/>
+        <result column="contact_info" jdbcType="OTHER" property="contactInfo"/>
+        <result column="billing_plan" jdbcType="VARCHAR" property="billingPlan"/>
+        <result column="quota_config" jdbcType="OTHER" property="quotaConfig"/>
+        <result column="used_storage" jdbcType="BIGINT" property="usedStorage"/>
+        <result column="status" jdbcType="TINYINT" property="status"/>
+        <result column="expire_time" jdbcType="TIMESTAMP" property="expireTime"/>
+        <result column="lock_reason" jdbcType="VARCHAR" property="lockReason"/>
+        <result column="create_at" jdbcType="TIMESTAMP" property="createAt"/>
+        <result column="update_at" jdbcType="TIMESTAMP" property="updateAt"/>
+        <result column="create_by" jdbcType="BIGINT" property="createBy"/>
+        <result column="update_by" jdbcType="BIGINT" property="updateBy"/>
+        <result column="deleted" jdbcType="TINYINT" property="deleted"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        `id`, `tenant_key`, `tenant_name`, `tenant_type`, `domain`, `logo_url`, `theme_config`, `contact_info`,
+        `billing_plan`, `quota_config`, `used_storage`, `status`, `expire_time`, `lock_reason`, `create_at`,
+        `update_at`, `create_by`, `update_by`, `deleted`
+    </sql>
+
+</mapper>

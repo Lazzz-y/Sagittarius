@@ -1,6 +1,7 @@
 package io.github.lazzz.sagittarius.common.redisson.service.impl;
 
 import io.github.lazzz.sagittarius.common.redisson.model.LockInfo;
+import io.github.lazzz.sagittarius.common.redisson.model.LockType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -42,7 +43,7 @@ class ReadWriteLockServiceImplTest {
     void setUp() {
         readLockInfo = LockInfo.builder()
                 .name("test-rw-lock")
-                .lockType(LockInfo.LockType.READ)
+                .lockType(LockType.READ)
                 .waitTime(10)
                 .leaseTime(30)
                 .timeUnit(TimeUnit.SECONDS)
@@ -50,7 +51,7 @@ class ReadWriteLockServiceImplTest {
 
         writeLockInfo = LockInfo.builder()
                 .name("test-rw-lock")
-                .lockType(LockInfo.LockType.WRITE)
+                .lockType(LockType.WRITE)
                 .waitTime(10)
                 .leaseTime(30)
                 .timeUnit(TimeUnit.SECONDS)

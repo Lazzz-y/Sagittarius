@@ -9,7 +9,6 @@ import io.github.lazzz.sagittarius.common.constant.CacheConstants;
 import io.github.lazzz.sagittarius.common.constant.SystemConstants;
 import io.github.lazzz.sagittarius.common.redisson.annotation.Lock;
 import io.github.lazzz.sagittarius.common.redisson.model.LockType;
-import io.github.lazzz.sagittarius.common.redisson.service.LockService;
 import io.github.lazzz.sagittarius.common.utils.condition.If;
 import io.github.lazzz.sagittarius.system.cache.RouteCacheService;
 import io.github.lazzz.sagittarius.system.enums.MenuTypeEnum;
@@ -21,9 +20,6 @@ import io.github.lazzz.sagittarius.system.model.vo.SysMenuVO;
 import io.github.linpeilie.Converter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.ObjectProvider;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import io.github.lazzz.sagittarius.system.service.ISysMenuService;
 import io.github.lazzz.sagittarius.system.mapper.SysMenuMapper;
@@ -41,7 +37,7 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @Service
-@RequiredArgsConstructor(onConstructor = @__(@Autowired))
+@RequiredArgsConstructor
 public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> implements ISysMenuService {
 
     private final Converter converter;
@@ -49,9 +45,6 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
     private final Cache<String, List<RouteVO>> menuCache;
 
     private final RouteCacheService routeCacheService;
-
-    @Qualifier("readWriteLockService")
-    private final ObjectProvider<LockService> lockServiceProvider;
 
     @Override
     public List<SysMenuVO> listMenuVO(SysMenuQuery query) {

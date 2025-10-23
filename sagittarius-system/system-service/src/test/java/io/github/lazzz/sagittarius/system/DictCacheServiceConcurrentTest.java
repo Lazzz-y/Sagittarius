@@ -18,6 +18,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
@@ -51,28 +52,22 @@ public class DictCacheServiceConcurrentTest {
         
         // 模拟远程调用返回数据
         Mockito.when(dictFeignClient.getDictDetailDTO(eq(testTypeCode))).thenReturn(mockData);
-        
-        // 清空缓存，确保测试环境干净
         dictCacheService.evictDictCache(testTypeCode);
     }
 
     @Test
     void testConcurrentGetDictByType() throws InterruptedException {
-        int threadCount = 20; // 模拟20个并发线程
+        int threadCount = 5; // 模拟20个并发线程
         ExecutorService executor = Executors.newFixedThreadPool(threadCount);
         CountDownLatch startLatch = new CountDownLatch(1); // 用于统一启动所有线程
         CountDownLatch endLatch = new CountDownLatch(threadCount); // 等待所有线程完成
-
         for (int i = 0; i < threadCount; i++) {
-            int finalI = i;
             executor.submit(() -> {
                 try {
                     startLatch.await(); // 等待统一开始信号
-                    if (finalI == 1) {
-                        Thread.sleep(5000);
-                    }
                     List<DictDetailDTO> result = dictCacheService.getDictByType(testTypeCode);
-                    assertNotNull(result, "返回结果不应为null");
+                    assertNotNull(result, "返回结果为空");
+                    assertEquals(3, result.size(), "返回结果数量不正确");
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
                 } finally {

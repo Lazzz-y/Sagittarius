@@ -12,6 +12,10 @@ include(":sagittarius-category")
 include(":sagittarius-category:category-api")
 include(":sagittarius-category:category-service")
 
+include(":sagittarius-article")
+include(":sagittarius-article:article-api")
+include(":sagittarius-article:article-service")
+
 include(":sagittarius-search")
 include(":sagittarius-search:search-api")
 include(":sagittarius-search:search-service")

@@ -26,6 +26,7 @@ Sagittarius是一个基于Spring Cloud的微服务架构博客系统，提供完
 
 ### 数据存储
 - MySQL 8.0 (关系型数据库)
+- MongoDB 8.0 (文档数据库)
 - Redis 7.0 (缓存、分布式锁)
 - Elasticsearch 8.x (全文搜索引擎)
 - MinIO (对象存储)
@@ -57,7 +58,7 @@ Sagittarius是一个基于Spring Cloud的微服务架构博客系统，提供完
 |--------------------------|--------|------|---------|
 | sagittarius-gateway      | API网关  | 8800 | 请求路由、负载均衡、限流、认证前置 |
 | sagittarius-auth         | 认证授权服务 | 8801 | 用户认证、授权管理、JWT签发验证 |
-| sagittarius-system        | 系统服务   | 8802 | 用户信息管理、个人设置、权限控制 |
+| sagittarius-system       | 系统服务   | 8802 | 用户信息管理、个人设置、权限控制 |
 | sagittarius-task         | 任务调度服务 | 8803 | 定时任务管理、执行调度、日志记录 |
 | sagittarius-category     | 分类服务   | 8804 | 内容分类、标签管理、目录结构 |
 | sagittarius-search       | 搜索服务   | 8805 | 全文检索、搜索建议、结果排序 |
@@ -65,6 +66,7 @@ Sagittarius是一个基于Spring Cloud的微服务架构博客系统，提供完
 | sagittarius-report       | 报表服务   | 8807 | 数据统计、报表生成、趋势分析 |
 | sagittarius-file         | 文件服务   | 8808 | 文件上传、下载、存储、管理 |
 | sagittarius-monitor      | 监控服务   | 8809 | 系统监控、健康检查、性能分析 |
+| sagittarius-article      | 内容服务   | 8810 | 博客文章管理、评论、点赞、收藏 |
 | sagittarius-common       | 公共模块   | - | 共享工具类、常量、配置、实体类 |
 
 ## 快速开始
