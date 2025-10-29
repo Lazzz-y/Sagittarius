@@ -1,1 +1,4 @@
   io.github.lazzz.common.rabbitmq.config.RabbitMQConfig
+  io.github.lazzz.common.rabbitmq.config.ExChangeConfig
+  io.github.lazzz.common.rabbitmq.config.QueueConfig
+  io.github.lazzz.common.rabbitmq.config.BindingConfig

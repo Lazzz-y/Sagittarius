@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.github.lazzz.sagittarius.article.mapper.ArticleMetaMapper">
+    <resultMap id="BaseResultMap" type="io.github.lazzz.sagittarius.article.model.entity.ArticleMeta">
+        <id column="id" jdbcType="OTHER" property="id"/>
+        <result column="title" jdbcType="VARCHAR" property="title"/>
+        <result column="summary" jdbcType="VARCHAR" property="summary"/>
+        <result column="author_id" jdbcType="BIGINT" property="authorId"/>
+        <result column="category_id" jdbcType="BIGINT" property="categoryId"/>
+        <result column="status" jdbcType="TINYINT" property="status"/>
+        <result column="view_count" jdbcType="INTEGER" property="viewCount"/>
+        <result column="like_count" jdbcType="INTEGER" property="likeCount"/>
+        <result column="comment_count" jdbcType="INTEGER" property="commentCount"/>
+        <result column="is_recommended" jdbcType="TINYINT" property="isRecommended"/>
+        <result column="mongo_doc_id" jdbcType="VARCHAR" property="mongoDocId"/>
+        <result column="submit_audit_time" jdbcType="TIMESTAMP" property="submitAuditTime"/>
+        <result column="publish_time" jdbcType="TIMESTAMP" property="publishTime"/>
+        <result column="tenant_id" jdbcType="OTHER" property="tenantId"/>
+        <result column="create_at" jdbcType="TIMESTAMP" property="createAt"/>
+        <result column="update_at" jdbcType="TIMESTAMP" property="updateAt"/>
+        <result column="create_by" jdbcType="BIGINT" property="createBy"/>
+        <result column="update_by" jdbcType="BIGINT" property="updateBy"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        `id`, `title`, `summary`, `author_id`, `category_id`, `status`, `view_count`, `like_count`, `comment_count`,
+        `is_recommended`, `mongo_doc_id`, `create_time`, `update_time`, `submit_audit_time`, `publish_time`,
+        `tenant_id`, `create_at`, `update_at`, `create_by`, `update_by`
+    </sql>
+
+</mapper>

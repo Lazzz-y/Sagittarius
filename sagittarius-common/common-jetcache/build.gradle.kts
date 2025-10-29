@@ -14,7 +14,7 @@ dependencies{
 
     compileOnly(project(":sagittarius-common:common-core"))
 
-    compileOnly(project(":sagittarius-system:system-api"))
+    api(project(":sagittarius-system:system-api"))
 
     api(project(":sagittarius-common:common-redisson"))
 }

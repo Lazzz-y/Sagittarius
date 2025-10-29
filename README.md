@@ -76,6 +76,7 @@ Sagittarius是一个基于Spring Cloud的微服务架构博客系统，提供完
 - Gradle 9.0+ 
 - Docker (用于运行依赖服务)
 - MySQL 8.0+
+- MongoDB 8.0+
 - Redis 7.0+
 - Nacos 3.0+
 - sentinel 1.8+

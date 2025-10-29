@@ -238,3 +238,21 @@ services:
         - '0.5'
       networks:
         - sagittarius
+
+############## 业务服务 ##############
+
+  gateway:
+    image: sagittarius-gateway:latest
+    container_name: sagittarius-gateway
+    restart: unless-stopped
+    mem_limit: 256m # 限制内存使用
+    environment:
+      - TZ=Asia/Shanghai
+      - LANG=C.UTF-8
+      - LC_ALL=C.UTF-8
+    ports:
+      - "8800:8800"
+    networks:
+      - sagittarius
+    depends_on:
+      - nacos

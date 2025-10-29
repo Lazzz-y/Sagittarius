@@ -8,6 +8,8 @@ import com.mybatisflex.core.query.QueryWrapper;
 import io.github.lazzz.common.security.util.SecurityUtils;
 import io.github.lazzz.sagittarius.common.constant.CacheConstants;
 import io.github.lazzz.sagittarius.common.constant.SystemConstants;
+import io.github.lazzz.sagittarius.common.event.UserUpdateEvent;
+import io.github.lazzz.sagittarius.common.utils.TransactionManagerUtils;
 import io.github.lazzz.sagittarius.common.utils.condition.If;
 import io.github.lazzz.sagittarius.system.model.bo.SysUserProfileBO;
 import io.github.lazzz.sagittarius.system.model.entity.SysRole;
@@ -22,6 +24,7 @@ import io.github.lazzz.sagittarius.system.service.ISysUserRoleService;
 import io.github.lazzz.sagittarius.system.dto.UserAuthDTO;
 import io.github.linpeilie.Converter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -55,6 +58,8 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     private final ISysUserRoleService sysUserRoleService;
 
     private final ISysRolePermissionService sysRolePermissionService;
+
+    private final RabbitTemplate rabbitTemplate;
 
     @Override
     public UserAuthDTO getUserAuthDTO(String username) {
@@ -156,7 +161,20 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
                         .ne(SysUser::getId, userId)) == 0, "用户名已存在");
         var user = converter.convert(form, SysUser.class);
         user.setId(userId);
-        return this.updateById(user);
+        var rs = this.updateById(user);
+        TransactionManagerUtils.afterCommit(() -> {
+            if (rs) {
+                // 发布用户更新事件
+                UserUpdateEvent event =
+                        new UserUpdateEvent()
+                                .setId(userId)
+                                .setUsername(form.getUsername())
+                                .setNickname(form.getNickname());
+                System.out.println("发布用户更新事件：" + event);
+                rabbitTemplate.convertAndSend("user.exchange", "user.updated", event);
+            }
+        });
+        return rs;
     }
 
     @Override

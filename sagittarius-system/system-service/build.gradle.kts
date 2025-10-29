@@ -19,5 +19,6 @@ dependencies {
     implementation(project(":sagittarius-common:common-mybatis"))
     implementation(project(":sagittarius-common:common-security"))
     implementation(project(":sagittarius-common:common-jetcache"))
+    implementation(project(":sagittarius-common:common-rabbitmq"))
 
 }
