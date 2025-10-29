@@ -1,44 +1,27 @@
-package io.github.lazzz.sagittarius.article.model.entity;
+package io.github.lazzz.sagittarius.article.model.vo;
 
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import io.github.lazzz.sagittarius.article.model.vo.ArticleVO;
-import io.github.linpeilie.annotations.AutoMapper;
-import io.github.linpeilie.annotations.AutoMappers;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.*;
-import lombok.experimental.Accessors;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
+import lombok.Data;
 
 import java.util.Date;
 import java.util.List;
 
 /**
- * 文章内容实体类
- * 用于存储文章的详细内容，与文章元数据 ArticleMeta 是一对一关系
- * 包含文章的 HTML 内容、Markdown 内容等
+ * 文章视图层
  *
  * @author Lazzz
- * @date 2025/10/22 11:25
+ * @date 2025/10/23 23:09
  **/
 @Data
-@Accessors(chain = true)
-@NoArgsConstructor
-@AllArgsConstructor
-@Document(collection = "article")
-@AutoMappers(
-        value = {
-                @AutoMapper(target = ArticleVO.class)
-        }
-)
-public class Article {
+public class ArticleVO {
 
     /**
      * 文档ID（对应MongoDB的_id字段，自动生成或手动指定）
      * 与MySQL的article表中mongo_doc_id字段关联
      */
-    @Id
+    @Schema(description = "文章ID")
     private String id;
 
     /**
@@ -56,22 +39,22 @@ public class Article {
     private String contentMarkdown;
 
     /**
-     * 正文特征（动态字段，可选）
+     * 正文特征（如总字数、代码块列表、是否包含视频等）
      */
-    @Schema(description = "正文特征（动态字段，可选）")
-    private ContentFeatures contentFeatures;
+    @Schema(description = "正文特征（如总字数、代码块列表、是否包含视频等）")
+    private ContentFeaturesVO contentFeatures;
 
     /**
      * 编辑版本号（首次发布为1，修改后递增）
      */
     @Schema(description = "编辑版本号（首次发布为1，修改后递增）")
-    private Integer version = 1;
+    private Integer version;
 
     /**
-     * 编辑历史（保留最近3次修改，可选）
+     * 编辑历史列表
      */
-    @Schema(description = "编辑历史（保留最近N次修改，可选）")
-    private List<EditHistory> editHistory;
+    @Schema(description = "编辑历史列表（按版本号排序）")
+    private List<EditHistoryVO> editHistory;
 
     /**
      * 创建时间（文档首次存入MongoDB的时间）
@@ -86,5 +69,12 @@ public class Article {
     @Schema(description = "更新时间（文档最后修改时间）")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date updateTime;
+
+    /**
+     * 文章元数据（如标题、摘要、作者、分类、状态等）
+     */
+    @Schema(description = "文章元数据（如标题、摘要、作者、分类、状态等）")
+    private ArticleMetaVO meta;
+
 }
 

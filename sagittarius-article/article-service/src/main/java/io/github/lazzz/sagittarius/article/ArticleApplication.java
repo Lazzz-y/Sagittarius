@@ -6,6 +6,7 @@ import io.github.lazzz.sagittarius.common.utils.IPUtils;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.util.StopWatch;
 
 import java.util.Objects;
@@ -18,6 +19,7 @@ import java.util.Objects;
 **/
 @SpringBootApplication
 @EnableDiscoveryClient
+@EnableFeignClients(basePackages = "io.github.lazzz.sagittarius.system.api")
 public class ArticleApplication {
 
     public static void main(String[] args) {

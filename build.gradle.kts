@@ -13,7 +13,7 @@ version = "1.0-SNAPSHOT"
 // 应用于所有项目的配置
 allprojects {
     group = "io.github.lazzz"
-    version = "1.0-SNAPSHOT"
+//    version = "1.0-SNAPSHOT"
     apply(plugin = "idea")
     apply(plugin = "io.spring.dependency-management")
 
@@ -83,9 +83,10 @@ subprojects {
     val openFeignClientsProp: String? by project
     val openFeignClients: List<String> = openFeignClientsProp?.split(",")?.map { it.trim() } ?: emptyList()
     if (project.name in openFeignClients){
+        println("${project.name} 开启 OpenFeign 客户端")
         dependencies {
-            implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
-            implementation("io.github.openfeign:feign-okhttp")
+            api("org.springframework.cloud:spring-cloud-starter-openfeign")
+            api("io.github.openfeign:feign-okhttp")
         }
     }
 

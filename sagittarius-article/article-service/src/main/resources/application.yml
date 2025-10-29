@@ -5,10 +5,4 @@ spring:
     active: dev
   application:
     name: sagittarius-article
-  data:
-    mongodb:
-      additional-hosts: localhost:27017
-      username: root
-      password: root
-      authentication-database: admin
-      database: sagittarius
+

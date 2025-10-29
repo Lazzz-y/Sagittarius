@@ -1,5 +1,9 @@
 package io.github.lazzz.sagittarius.article.model.entity;
 
+import io.github.lazzz.sagittarius.article.model.vo.CodeBlockVO;
+import io.github.linpeilie.annotations.AutoMapper;
+import io.github.linpeilie.annotations.AutoMappers;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 /**
@@ -10,15 +14,22 @@ import lombok.Data;
  * @date 2025/10/23 20:54
  */
 @Data
+@AutoMappers(
+        value = {
+                @AutoMapper(target = CodeBlockVO.class)
+        }
+)
 public class CodeBlock {
 
     /**
      * 代码语言（如java、sql、python）
      */
+    @Schema(description = "代码语言（如java、sql、python）")
     private String language;
 
     /**
      * 代码行数
      */
+    @Schema(description = "代码行数")
     private Integer lines;
 }

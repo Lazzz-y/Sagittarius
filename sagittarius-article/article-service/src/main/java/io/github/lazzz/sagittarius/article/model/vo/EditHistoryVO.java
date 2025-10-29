@@ -1,4 +1,5 @@
-package io.github.lazzz.sagittarius.article.model.entity;
+package io.github.lazzz.sagittarius.article.model.vo;
+
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -6,16 +7,14 @@ import lombok.Data;
 
 import java.util.Date;
 
-
 /**
- * 编辑历史明细（内嵌在ArticleContent中）
- * 用于存储文章的编辑历史，包括版本号、编辑者ID、编辑时间和变更日志
- *
- * @author Lazzz
- * @date 2025/10/23 20:57
- **/
+ * 编辑历史视图层
+ * 
+ * @author Lazzz 
+ * @date 2025/10/25 12:57
+**/
 @Data
-public class EditHistory {
+public class EditHistoryVO {
 
     /**
      * 版本号（与ArticleContent的version对应）
@@ -41,4 +40,6 @@ public class EditHistory {
      */
     @Schema(description = "变更日志（如“首次发布”“修改了代码块”）")
     private String changeLog;
+
 }
+

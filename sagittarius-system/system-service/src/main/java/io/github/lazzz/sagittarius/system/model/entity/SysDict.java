@@ -31,7 +31,7 @@ import java.lang.Integer;
         value = {
                 @AutoMapper(target = SysDictVO.class),
                 @AutoMapper(target = SysDictForm.class),
-                @AutoMapper(target = DictDetailDTO.class)
+//                @AutoMapper(target = DictDetailDTO.class)
         }
 )
 public class SysDict extends BaseSnowflakeEntity {
