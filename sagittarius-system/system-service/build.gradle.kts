@@ -16,6 +16,7 @@ dependencies {
 
     // common
     implementation(project(":sagittarius-common:common-core"))
+    implementation(project(":sagittarius-common:common-dict"))
     implementation(project(":sagittarius-common:common-mybatis"))
     implementation(project(":sagittarius-common:common-security"))
     implementation(project(":sagittarius-common:common-jetcache"))

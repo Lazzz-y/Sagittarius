@@ -2,7 +2,7 @@ package io.github.lazzz.sagittarius.system.model.vo;
 
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import io.github.lazzz.sagittarius.jetcache.annotation.Dict;
+import io.github.lazzz.sagittarius.dict.annotation.Dict;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 

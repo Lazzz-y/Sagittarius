@@ -1,7 +1,7 @@
-package io.github.lazzz.sagittarius.jetcache.config;
+package io.github.lazzz.sagittarius.dict.config;
 
-import io.github.lazzz.sagittarius.jetcache.aspect.DictAspect;
-import io.github.lazzz.sagittarius.jetcache.service.DictCacheService;
+import io.github.lazzz.sagittarius.dict.aspect.DictAspect;
+import io.github.lazzz.sagittarius.dict.service.DictCacheService;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

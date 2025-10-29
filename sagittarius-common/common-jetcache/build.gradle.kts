@@ -7,14 +7,5 @@ dependencies{
 
     implementation("com.github.ben-manes.caffeine:caffeine")
 
-    implementation("com.mybatis-flex:mybatis-flex-spring-boot3-starter")
-
-    // hutool
-    implementation("cn.hutool:hutool-all")
-
-    compileOnly(project(":sagittarius-common:common-core"))
-
-    api(project(":sagittarius-system:system-api"))
-
     api(project(":sagittarius-common:common-redisson"))
 }

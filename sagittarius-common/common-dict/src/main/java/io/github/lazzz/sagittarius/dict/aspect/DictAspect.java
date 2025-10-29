@@ -1,4 +1,4 @@
-package io.github.lazzz.sagittarius.jetcache.aspect;
+package io.github.lazzz.sagittarius.dict.aspect;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
@@ -7,8 +7,8 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.mybatisflex.core.paginate.Page;
 import io.github.lazzz.sagittarius.common.constant.SystemConstants;
 import io.github.lazzz.sagittarius.common.result.Result;
-import io.github.lazzz.sagittarius.jetcache.annotation.Dict;
-import io.github.lazzz.sagittarius.jetcache.service.DictCacheService;
+import io.github.lazzz.sagittarius.dict.annotation.Dict;
+import io.github.lazzz.sagittarius.dict.service.DictCacheService;
 import io.github.lazzz.sagittarius.system.dto.DictDetailDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -22,9 +22,7 @@ import org.springframework.stereotype.Component;
 import java.lang.reflect.Field;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
