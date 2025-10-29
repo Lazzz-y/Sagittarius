@@ -1,4 +1,4 @@
-package io.github.lazzz.sagittarius.jetcache.annotation;
+package io.github.lazzz.sagittarius.dict.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

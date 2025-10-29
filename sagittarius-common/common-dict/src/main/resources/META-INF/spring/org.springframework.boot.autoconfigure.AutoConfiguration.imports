@@ -1,0 +1,3 @@
+io.github.lazzz.sagittarius.dict.config.DictCacheConfig
+io.github.lazzz.sagittarius.dict.service.DictCacheService
+io.github.lazzz.sagittarius.dict.config.DictAutoConfiguration

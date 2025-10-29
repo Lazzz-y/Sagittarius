@@ -1,7 +1,7 @@
 package io.github.lazzz.sagittarius.system.model.vo;
 
 import io.github.lazzz.sagittarius.common.base.BaseVO;
-import io.github.lazzz.sagittarius.jetcache.annotation.Dict;
+import io.github.lazzz.sagittarius.dict.annotation.Dict;
 import io.github.lazzz.sagittarius.system.model.entity.SysUser;
 import io.github.linpeilie.annotations.AutoMapper;
 import io.github.linpeilie.annotations.AutoMappers;

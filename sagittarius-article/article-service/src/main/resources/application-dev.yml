@@ -18,3 +18,21 @@ spring:
     import:
       - nacos:sagittarius-common?refreshEnabled=true
       - nacos:sagittarius-article?refreshEnabled=true
+
+jetcache:
+  statIntervalMinutes: 15
+  areaInCacheName: false
+  local:
+    user:
+      type: caffeine
+      keyConvertor: fastjson2
+      limit: 128
+  remote:
+    user:
+      type: redis.lettuce
+      keyConvertor: fastjson2
+      broadcastChannel: ${spring.application.name}
+      valueEncoder: kryo5
+      valueDecoder: kryo5
+      cacheNullValue: true
+      uri: redis://${redis.password}@${redis.host}:${redis.port}/1?timeout=5s

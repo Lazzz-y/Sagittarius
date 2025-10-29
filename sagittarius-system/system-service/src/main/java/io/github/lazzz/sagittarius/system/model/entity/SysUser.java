@@ -3,7 +3,6 @@ package io.github.lazzz.sagittarius.system.model.entity;
 import com.mybatisflex.annotation.*;
 import com.mybatisflex.core.mask.Masks;
 import io.github.lazzz.sagittarius.common.base.BaseSnowflakeLogicEntity;
-import io.github.lazzz.sagittarius.jetcache.annotation.Dict;
 import io.github.lazzz.sagittarius.system.model.vo.SysUserVO;
 import io.github.linpeilie.annotations.AutoMapper;
 import io.github.linpeilie.annotations.AutoMappers;

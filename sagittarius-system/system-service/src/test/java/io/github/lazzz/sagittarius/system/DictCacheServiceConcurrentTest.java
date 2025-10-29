@@ -1,6 +1,6 @@
 package io.github.lazzz.sagittarius.system;
 
-import io.github.lazzz.sagittarius.jetcache.service.DictCacheService;
+import io.github.lazzz.sagittarius.dict.service.DictCacheService;
 import io.github.lazzz.sagittarius.system.api.DictFeignClient;
 import io.github.lazzz.sagittarius.system.dto.DictDetailDTO;
 import org.junit.jupiter.api.BeforeEach;

@@ -1,4 +1,4 @@
-package io.github.lazzz.sagittarius.jetcache.service;
+package io.github.lazzz.sagittarius.dict.service;
 
 
 import com.alicp.jetcache.Cache;
@@ -31,7 +31,7 @@ public class DictCacheService {
 
     private final Cache<String, List<DictDetailDTO>> dictCache;
 
-    // 读写锁服务（需保证实现了ReadWriteLock语义）
+    // 读写锁服务
     private final ObjectProvider<LockService> lockServiceProvider;
 
     public DictCacheService(
@@ -51,42 +51,6 @@ public class DictCacheService {
      * @param typeCode 字典类型编码
      * @return {@link List<DictDetailDTO>} 字典项列表
      */
-//    public List<DictDetailDTO> getDictByType(String typeCode) {
-//        String lockKey = CacheConstants.DICT_LOCK_PREFIX + typeCode;
-//        String cacheKey = CacheConstants.DICT_PREFIX + typeCode;
-//        List<DictDetailDTO> rs = dictCache.get(cacheKey);
-//        // 命中缓存 直接返回
-//        if (rs != null) {
-//            log.debug("Dict: 缓存命中 | typeCode: {}", typeCode);
-//            return rs;
-//        }
-//        // 缓存未命中 需要写入缓存，所以先创建写锁
-//        var lockInfo = getLockInfo(lockKey, 5L, 30L, LockInfo.LockType.WRITE);
-//        try(LockService lock = lockService) {
-//            lock.setLockInfo(lockInfo);
-//            if (lock.lock()){
-//                // 锁内二次查询缓存，防止多线程等待锁时已有线程更新缓存
-//                rs = dictCache.get(cacheKey);
-//                if (rs != null) {
-//                    log.debug("Dict: 缓存已命中，已获取锁，二次查询缓存成功 | typeCode: {}", typeCode);
-//                    return rs;
-//                }
-//                // 缓存未命中，从远程服务获取并更新缓存
-//                log.debug("Dict: 缓存未命中，从远程服务获取并更新缓存，typeCode: {}", typeCode);
-//                rs = dictFeignClient.getDictDetailDTO(typeCode);
-//                // 更新缓存
-//                dictCache.put(cacheKey, rs);
-//                return rs;
-//            } else {
-//                log.debug("获取字典写锁失败，typeCode: {}", typeCode);
-//            }
-//        } catch (IOException e) {
-//            log.error("获取字典项异常，typeCode: {}", typeCode, e);
-//            throw new IllegalStateException("获取字典项失败");
-//        }
-//        return rs;
-//    }
-
     public List<DictDetailDTO> getDictByType(String typeCode) {
         String cacheKey = CacheConstants.DICT_PREFIX + typeCode;
         List<DictDetailDTO> dictList = dictCache.get(cacheKey);
