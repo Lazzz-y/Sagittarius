@@ -35,16 +35,16 @@ public class RouteCacheService {
 
     private final Cache<String, List<RouteVO>> menuCache;
 
-    @Lock(name = "LOCK:MENU:#{T(io.github.lazzz.sagittarius.common.utils.TenantContext).getTenantId()}:ROUTE",
+    @Lock(name = CacheConstants.SPEL_LOCK_ROUTE_KEY + "route",
             lockType = LockType.READ)
     public List<RouteVO> getFromCache() {
-        return menuCache.get(CacheConstants.MENU_PREFIX + "route");
+        return menuCache.get(CacheConstants.SUB_MENU_PREFIX + "route");
     }
 
-    @Lock(name = "LOCK:MENU:#{T(io.github.lazzz.sagittarius.common.utils.TenantContext).getTenantId()}:ROUTE",
+    @Lock(name = CacheConstants.SPEL_LOCK_ROUTE_KEY + "route",
             lockType = LockType.WRITE)
     public List<RouteVO> refreshMenuCache() {
-        String cacheKey = CacheConstants.MENU_PREFIX + "route";
+        String cacheKey = CacheConstants.SUB_MENU_PREFIX + "route";
         List<RouteVO> rs = menuCache.get(cacheKey);
         if (rs != null) {
             return rs;
@@ -56,7 +56,7 @@ public class RouteCacheService {
     }
 
     public void clearCache() {
-        menuCache.remove(CacheConstants.MENU_PREFIX + "route");
+        menuCache.remove(CacheConstants.SUB_MENU_PREFIX + "route");
     }
 
     private List<RouteVO> buildRoutes(Long parentId, List<RouteBO> menus) {

@@ -5,12 +5,15 @@ import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.StrUtil;
 import com.mybatisflex.core.paginate.Page;
 import com.mybatisflex.core.query.QueryWrapper;
+import io.github.lazzz.common.rabbitmq.constant.MQConstants;
 import io.github.lazzz.common.security.util.SecurityUtils;
 import io.github.lazzz.sagittarius.common.constant.CacheConstants;
 import io.github.lazzz.sagittarius.common.constant.SystemConstants;
-import io.github.lazzz.sagittarius.common.event.UserUpdateEvent;
+import io.github.lazzz.sagittarius.common.event.user.UserInfoEvent;
+import io.github.lazzz.sagittarius.common.utils.TenantContext;
 import io.github.lazzz.sagittarius.common.utils.TransactionManagerUtils;
 import io.github.lazzz.sagittarius.common.utils.condition.If;
+import io.github.lazzz.sagittarius.system.dto.UserInfoDTO;
 import io.github.lazzz.sagittarius.system.model.bo.SysUserProfileBO;
 import io.github.lazzz.sagittarius.system.model.entity.SysRole;
 import io.github.lazzz.sagittarius.system.model.entity.SysUserRole;
@@ -93,7 +96,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         long currentTimeSeconds = System.currentTimeMillis() / 1000;
         expireTimeOpt.ifPresent(expireTime -> {
             expireTime = expireTime / 1000;
-            if (expireTime> currentTimeSeconds) {
+            if (expireTime > currentTimeSeconds) {
                 // token 未过期，添加至缓存作为黑名单，缓存时间为 token 剩余的有效时间
                 long remainingTimeInSeconds = expireTime - currentTimeSeconds;
                 redisTemplate.opsForValue().set(CacheConstants.TOKEN_BLACKLIST_PREFIX + jti, "", remainingTimeInSeconds, TimeUnit.SECONDS);
@@ -165,13 +168,13 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         TransactionManagerUtils.afterCommit(() -> {
             if (rs) {
                 // 发布用户更新事件
-                UserUpdateEvent event =
-                        new UserUpdateEvent()
+                UserInfoEvent event =
+                        new UserInfoEvent()
                                 .setId(userId)
+                                .setTenantId(TenantContext.getTenantId())
                                 .setUsername(form.getUsername())
                                 .setNickname(form.getNickname());
-                System.out.println("发布用户更新事件：" + event);
-                rabbitTemplate.convertAndSend("user.exchange", "user.updated", event);
+                rabbitTemplate.convertAndSend(MQConstants.EXCHANGE_USER, MQConstants.ROUTING_KEY_USER_INFO, event);
             }
         });
         return rs;
@@ -220,5 +223,12 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
                 .where(SysUser::getId).eq(userId)
                 .oneAs(SysUserProfileBO.class);
         return converter.convert(sysUserProfileBO, SysUserProfileVO.class);
+    }
+
+    @Override
+    public UserInfoDTO getUserInfoDTO(Serializable id) {
+        var user = this.getById(id);
+        Assert.notNull(user, "用户不存在: " + id);
+        return new UserInfoDTO().setUserId(user.getId()).setUsername(user.getUsername());
     }
 }

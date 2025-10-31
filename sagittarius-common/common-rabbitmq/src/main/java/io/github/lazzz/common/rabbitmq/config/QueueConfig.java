@@ -30,7 +30,7 @@ public class QueueConfig {
         );
         return QueueBuilder
                 // 持久化队列
-                .durable(MQConstants.QUEUE_USER_UPDATE)
+                .durable(MQConstants.QUEUE_USER_INFO)
                 // 死信交换机
                 .withArguments(args)
                 // 消息过期时间 60s

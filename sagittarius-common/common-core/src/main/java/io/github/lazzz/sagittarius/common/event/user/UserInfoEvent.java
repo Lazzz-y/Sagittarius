@@ -1,4 +1,4 @@
-package io.github.lazzz.sagittarius.common.event;
+package io.github.lazzz.sagittarius.common.event.user;
 
 
 import lombok.Data;
@@ -12,12 +12,17 @@ import lombok.experimental.Accessors;
 **/
 @Data
 @Accessors(chain = true)
-public class UserUpdateEvent {
+public class UserInfoEvent {
 
     /**
      * 用户ID
      */
     Long id;
+
+     /**
+      * 租户ID
+      */
+    Long tenantId;
 
      /**
       * 用户名
@@ -28,7 +33,6 @@ public class UserUpdateEvent {
       * 昵称
       */
     String nickname;
-
 
 }
 

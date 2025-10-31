@@ -1,11 +1,15 @@
 package io.github.lazzz.sagittarius.article.listener;
 
 
+import com.alicp.jetcache.Cache;
 import io.github.lazzz.common.rabbitmq.constant.MQConstants;
-import io.github.lazzz.sagittarius.common.event.UserUpdateEvent;
+import io.github.lazzz.sagittarius.common.constant.CacheConstants;
+import io.github.lazzz.sagittarius.common.event.user.UserInfoEvent;
+import io.github.lazzz.sagittarius.common.redisson.annotation.Lock;
+import io.github.lazzz.sagittarius.common.redisson.model.LockType;
+import io.github.lazzz.sagittarius.common.utils.TenantContext;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.amqp.rabbit.annotation.Argument;
-import org.springframework.amqp.rabbit.annotation.Queue;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
 
@@ -18,11 +22,24 @@ import org.springframework.stereotype.Component;
  **/
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class UserEventListener {
 
-    @RabbitListener(queues = MQConstants.QUEUE_USER_UPDATE)
-    public void handleUserUpdate(UserUpdateEvent event) {
-        log.info("用户更新事件：{}", event);
+    private final Cache<String, String> userCache;
+
+    @RabbitListener(queues = MQConstants.QUEUE_USER_INFO)
+    @Lock(
+            name = CacheConstants.SPEL_LOCK_USER_EVENT_KEY + "#{event.id}",
+            lockType = LockType.WRITE
+    )
+    public void handleUserUpdate(UserInfoEvent event){
+        try {
+            TenantContext.setTenantId(event.getTenantId());
+            String key = CacheConstants.SUB_USER_PREFIX + event.getId();
+            userCache.put(key, event.getNickname());
+        } finally {
+            TenantContext.clear();
+        }
     }
 
 }

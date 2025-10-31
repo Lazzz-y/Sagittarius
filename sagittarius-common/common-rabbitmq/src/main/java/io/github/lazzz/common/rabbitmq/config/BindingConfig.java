@@ -27,7 +27,7 @@ public class BindingConfig {
     public Binding userQueueBinding() {
         return BindingBuilder.bind(queueConfig.userQueue())
                 .to(exchangeConfig.userExchange())
-                .with(MQConstants.ROUTING_KEY_USER_UPDATE);
+                .with(MQConstants.ROUTING_KEY_USER_INFO);
     }
 
 }

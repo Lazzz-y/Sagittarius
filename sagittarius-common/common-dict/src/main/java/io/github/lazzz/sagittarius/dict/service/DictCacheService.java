@@ -52,7 +52,7 @@ public class DictCacheService {
      * @return {@link List<DictDetailDTO>} 字典项列表
      */
     public List<DictDetailDTO> getDictByType(String typeCode) {
-        String cacheKey = CacheConstants.DICT_PREFIX + typeCode;
+        String cacheKey = CacheConstants.SUB_DICT_PREFIX + typeCode;
         List<DictDetailDTO> dictList = dictCache.get(cacheKey);
         if (dictList != null) {
             log.debug("Dict: 缓存命中 | {}", dictList);
@@ -107,7 +107,7 @@ public class DictCacheService {
     }
 
     public void evictDictCache(String typeCode) {
-        String cacheKey = CacheConstants.DICT_PREFIX + typeCode;
+        String cacheKey = CacheConstants.SUB_DICT_PREFIX + typeCode;
 
         // 删除缓存属于写操作，需获取写锁，防止并发删除/读取导致的不一致
         LockInfo writeLockInfo = getWriteLockInfo(typeCode);

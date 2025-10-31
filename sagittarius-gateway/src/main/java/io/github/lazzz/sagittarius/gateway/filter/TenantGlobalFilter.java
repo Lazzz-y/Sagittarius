@@ -37,23 +37,6 @@ public class TenantGlobalFilter implements GlobalFilter, Ordered {
                 throw new IllegalArgumentException("Invalid tenant ID: " + tenantIdStr);
             }
         }
-//        if (StrUtil.isNotBlank(tenantIdStr)){
-//            try {
-//                long tenantId = Long.parseLong(tenantIdStr);
-//                if (tenantId > 0) {
-//                    // 传递给下游服务
-//                    ServerHttpRequest mutatedRequest = request.mutate()
-//                            .header(SystemConstants.TENANT_HEADER, tenantIdStr)
-//                            .build();
-//                    ServerWebExchange mutatedExchange = exchange.mutate()
-//                            .request(mutatedRequest)
-//                            .build();
-//                    return chain.filter(mutatedExchange);
-//                }
-//            } catch (NumberFormatException e) {
-//                throw new IllegalArgumentException("Invalid tenant ID: " + tenantIdStr);
-//            }
-//        }
         // 传递给下游服务
         ServerHttpRequest mutatedRequest = request.mutate()
                 .header(SystemConstants.TENANT_HEADER, SystemConstants.DEFAULT_TENANT_ID_STR)

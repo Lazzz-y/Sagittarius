@@ -22,13 +22,16 @@ public interface CacheConstants {
 
     String DICT_AREA = "dict";
     String MENU_AREA = "menu";
+    String USER_AREA = "user";
 
     /////////////////// JetCache Name ///////////////////
 
     String DICT_NAME = "dict:";
     String MENU_NAME = "menu:";
+    String USER_NAME = "user:";
 
     /////////////////// Redis Key 前缀 ///////////////////
+
     /**
      * JWK缓存
      * 启动的时候需要初始化，而启动时间无法获取租户ID，所以不使用租户id区分
@@ -56,15 +59,19 @@ public interface CacheConstants {
      */
     String REGISTER_SMS_CODE_PREFIX = "sms_code:register:" + TenantContext.getTenantId() + ":";
 
-    String MENU_PREFIX = TenantContext.getTenantId() + ":menu:";
+    String SUB_MENU_PREFIX = TenantContext.getTenantId() + ":menu:";
 
-    String DICT_PREFIX = TenantContext.getTenantId() + ":dict:";
+    String SUB_DICT_PREFIX = TenantContext.getTenantId() + ":dict:";
+
+    String SUB_USER_PREFIX = TenantContext.getTenantId() + ":user:";
 
 
     /////////////////// SpEl 表达式 主要用于注解 ///////////////////
 
-    String TENANT_ID = "T(io.github.lazzz.sagittarius.common.utils.TenantContext).getTenantId() + ':' + ";
-    String SPEL_MENU_KEY = TENANT_ID + "'route'";
+    String TENANT_ID = "#{T(io.github.lazzz.sagittarius.common.utils.TenantContext).getTenantId()}:";
+    String SPEL_LOCK_ROUTE_KEY = "LOCK:MENU:" + TENANT_ID;
+    String SPEL_LOCK_USER_EVENT_KEY = "LOCK:USER:" + TENANT_ID;
+
 
 
     static String parseSpEl(String spEl, Object rootObject) {

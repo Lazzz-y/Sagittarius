@@ -6,6 +6,7 @@ import io.github.lazzz.sagittarius.article.model.vo.ArticleMetaVO;
 import io.github.lazzz.sagittarius.article.model.vo.ArticleVO;
 import io.github.lazzz.sagittarius.article.service.IArticleMetaService;
 import io.github.lazzz.sagittarius.article.service.IArticleService;
+import io.github.lazzz.sagittarius.article.service.UserCacheService;
 import io.github.linpeilie.Converter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -29,6 +30,8 @@ public class ArticleServiceImpl implements IArticleService {
 
     private final IArticleMetaService articleMetaService;
 
+    private final UserCacheService userCacheService;
+
     private final Converter converter;
 
     @Override
@@ -43,6 +46,9 @@ public class ArticleServiceImpl implements IArticleService {
         var mongoId = articleMetaVO.getMongoDocId();
         Article article = mongoTemplate.findById(mongoId, Article.class);
         Assert.isTrue(article != null, "文章不存在");
+        var authorId = articleMetaVO.getAuthorId();
+        var authorName = userCacheService.getUserNameById(authorId);
+        articleMetaVO.setAuthorName(authorName);
         // 合并文章元数据和内容
         ArticleVO articleVO = converter.convert(article, ArticleVO.class);
         articleVO.setMeta(articleMetaVO);

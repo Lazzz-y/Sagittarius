@@ -5,8 +5,6 @@ import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.StrUtil;
 import com.alicp.jetcache.Cache;
-import com.alicp.jetcache.anno.CacheUpdate;
-import com.mybatisflex.core.logicdelete.LogicDeleteManager;
 import com.mybatisflex.core.paginate.Page;
 import com.mybatisflex.core.query.QueryWrapper;
 import io.github.lazzz.sagittarius.common.constant.CacheConstants;
@@ -57,14 +55,16 @@ public class SysDictServiceImpl extends ServiceImpl<SysDictMapper, SysDict> impl
     @Override
     @SuppressWarnings("unchecked")
     public List<DictDetailDTO> getDictListByType(String typeCode) {
-        return converter.convert(this.list(queryChain()
+        var dictList = this.list(queryChain()
                 .eq(SysDict::getTypeCode, typeCode)
                 .select(
                         SysDict::getValue,
                         SysDict::getName,
                         SysDict::getTypeCode
-                )
-        ), DictDetailDTO.class);
+                ));
+        var dtoList = CollectionUtil.<DictDetailDTO>newArrayList();
+        BeanUtils.copyProperties(dictList, dtoList);
+        return dtoList;
     }
 
     @Override
@@ -159,7 +159,7 @@ public class SysDictServiceImpl extends ServiceImpl<SysDictMapper, SysDict> impl
 
     private void refreshDictCache(String typeCode, Long id) {
         String lockKey = CacheConstants.DICT_LOCK_PREFIX + typeCode + ":" + id;
-        String cacheKey = CacheConstants.DICT_PREFIX + typeCode;
+        String cacheKey = CacheConstants.SUB_DICT_PREFIX + typeCode;
         var lockInfo = LockInfo.builder()
                 .name(lockKey)
                 .lockType(LockType.WRITE)
