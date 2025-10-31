@@ -22,13 +22,13 @@ public interface MQConstants {
     /**
      * 用户更新队列
      */
-    String QUEUE_USER_UPDATE = "user.update.queue";
+    String QUEUE_USER_INFO = "user.info.queue";
 
     ////////////////////// 路由键 //////////////////////
 
     /**
      * 用户更新路由键
      */
-    String ROUTING_KEY_USER_UPDATE = "user.updated";
+    String ROUTING_KEY_USER_INFO = "user.info";
 }
 

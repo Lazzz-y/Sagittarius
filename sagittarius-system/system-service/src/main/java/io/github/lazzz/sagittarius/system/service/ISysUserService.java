@@ -2,6 +2,7 @@ package io.github.lazzz.sagittarius.system.service;
 
 
 import com.mybatisflex.core.paginate.Page;
+import io.github.lazzz.sagittarius.system.dto.UserInfoDTO;
 import io.github.lazzz.sagittarius.system.model.entity.SysUser;
 import com.mybatisflex.core.service.IService;
 import io.github.lazzz.sagittarius.system.model.request.form.SysUserSaveForm;
@@ -102,5 +103,16 @@ public interface ISysUserService extends IService<SysUser> {
      * @return {@link SysUserProfileVO}
      */
     SysUserProfileVO getUserProfile();
+
+    /**
+     * 获取用户信息DTO
+     *
+     * @author Lazzz
+     * @date 2025/10/31
+     *
+     * @param id 用户id
+     * @return {@link UserInfoDTO}
+     */
+    UserInfoDTO getUserInfoDTO(Serializable id);
 
 }

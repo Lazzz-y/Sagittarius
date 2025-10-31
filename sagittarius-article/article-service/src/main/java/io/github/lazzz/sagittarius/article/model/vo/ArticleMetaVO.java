@@ -38,6 +38,14 @@ public class ArticleMetaVO {
     @Schema(description = "作者ID（关联用户表）")
     private Long authorId;
 
+     /**
+     * 作者名称（缓存）
+     */
+    @Schema(description = "作者名称（缓存）")
+    private String authorName;
+
+
+
     /**
      * 分类ID（关联分类表）
      */

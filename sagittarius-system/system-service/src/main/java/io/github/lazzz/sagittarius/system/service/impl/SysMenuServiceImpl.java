@@ -135,15 +135,13 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
 
     @Override
     public List<RouteVO> listRoutes() {
-        String cacheKey = CacheConstants.MENU_PREFIX + "route";
+        String cacheKey = CacheConstants.SUB_MENU_PREFIX + "route";
         List<RouteVO> rs = menuCache.get(cacheKey);
         if (rs != null) {
-            System.out.println("直接返回");
             return rs;
         }
         rs = routeCacheService.getFromCache();
         if (rs != null) {
-            System.out.println("读锁内查询（已缓存）");
             return rs;
         }
         // 缓存为空：释放读锁后，调用带写锁的方法

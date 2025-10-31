@@ -22,6 +22,7 @@ public class TenantContextAspect {
     public Object around(ProceedingJoinPoint joinPoint, TenantAware tenantAware) throws Throwable {
         // 获取租户ID
         Long tenantId = TenantContext.getTenantId();
+        System.out.println("tenantId: " + tenantId);
         boolean needClear = false;
         if (tenantId != null) {
             // 在异步或新线程中重新设置上下文

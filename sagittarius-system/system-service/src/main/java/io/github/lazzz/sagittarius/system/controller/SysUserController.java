@@ -5,6 +5,7 @@ import io.github.lazzz.common.security.util.SecurityUtils;
 import io.github.lazzz.sagittarius.common.web.annotation.PreventDuplicateResubmit;
 import io.github.lazzz.sagittarius.common.annotation.RefreshableController;
 import io.github.lazzz.sagittarius.common.result.Result;
+import io.github.lazzz.sagittarius.system.dto.UserInfoDTO;
 import io.github.lazzz.sagittarius.system.model.entity.SysUser;
 import io.github.lazzz.sagittarius.system.model.request.form.SysUserSaveForm;
 import io.github.lazzz.sagittarius.system.model.request.form.SysUserUpdateForm;
@@ -139,7 +140,6 @@ public class SysUserController {
     @Operation(summary = "分页查询用户表")
     @PreAuthorize("@ss.hasPerm('sys:user:query')")
     public Result<Page<SysUserVO>> page(@ParameterObject @Validated SysUserPageQuery query) {
-        log.info("分页查询用户表: {}", query);
         Page<SysUserVO> pageResult = sysUserService.getUserPage(query);
         return Result.success(pageResult);
     }
@@ -162,5 +162,12 @@ public class SysUserController {
             @Parameter(name = "roleIds", description = "角色Id列表", required = true)
             @RequestBody List<Long> roleIds) {
         return Result.judge(sysUserRoleService.assignRoleToUser(userId, roleIds));
+    }
+
+    @PreventDuplicateResubmit
+    @Operation(summary = "根据用户ID查询用户信息")
+    @GetMapping("/{id}/userInfoDTO")
+    public Result<UserInfoDTO> getUserInfoDTO(@PathVariable Serializable id) {
+        return Result.success(sysUserService.getUserInfoDTO(id));
     }
 }
