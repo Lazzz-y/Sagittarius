@@ -226,6 +226,7 @@ services:
       container_name: sagittarius-mongodb
       restart: unless-stopped
       environment:
+        - TZ=Asia/Shanghai
         - MONGO_INITDB_ROOT_USERNAME=root
         - MONGO_INITDB_ROOT_PASSWORD=root
       volumes:

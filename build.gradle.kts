@@ -83,7 +83,6 @@ subprojects {
     val openFeignClientsProp: String? by project
     val openFeignClients: List<String> = openFeignClientsProp?.split(",")?.map { it.trim() } ?: emptyList()
     if (project.name in openFeignClients){
-        println("${project.name} 开启 OpenFeign 客户端")
         dependencies {
             api("org.springframework.cloud:spring-cloud-starter-openfeign")
             api("io.github.openfeign:feign-okhttp")

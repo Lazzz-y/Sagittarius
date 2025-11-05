@@ -1,5 +1,6 @@
 package io.github.lazzz.sagittarius.article.model.entity;
 
+import io.github.lazzz.sagittarius.article.model.request.form.ArticleMetaForm;
 import io.github.lazzz.sagittarius.article.model.vo.ArticleMetaVO;
 import io.github.lazzz.sagittarius.common.base.BaseSnowflakeLogicEntity;
 import io.github.linpeilie.annotations.AutoMapper;
@@ -31,7 +32,8 @@ import java.lang.Integer;
 @Table(value = "article_meta")
 @AutoMappers(
         value = {
-                @AutoMapper(target = ArticleMetaVO.class)
+                @AutoMapper(target = ArticleMetaVO.class),
+                @AutoMapper(target = ArticleMetaForm.class)
         }
 )
 public class ArticleMeta extends BaseSnowflakeLogicEntity {

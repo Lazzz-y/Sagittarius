@@ -39,10 +39,10 @@ public class ArticleVO {
     private String contentMarkdown;
 
     /**
-     * 正文特征（如总字数、代码块列表、是否包含视频等）
+     * 文章总字数
      */
-    @Schema(description = "正文特征（如总字数、代码块列表、是否包含视频等）")
-    private ContentFeaturesVO contentFeatures;
+    @Schema(description = "文章总字数")
+    private Integer wordCount;
 
     /**
      * 编辑版本号（首次发布为1，修改后递增）

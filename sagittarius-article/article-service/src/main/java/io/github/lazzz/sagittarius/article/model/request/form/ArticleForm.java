@@ -1,50 +1,31 @@
-package io.github.lazzz.sagittarius.article.model.entity;
+package io.github.lazzz.sagittarius.article.model.request.form;
 
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import io.github.lazzz.sagittarius.article.model.request.form.ArticleForm;
-import io.github.lazzz.sagittarius.article.model.vo.ArticleVO;
-import io.github.linpeilie.annotations.AutoMapper;
-import io.github.linpeilie.annotations.AutoMappers;
+import io.github.lazzz.sagittarius.article.model.vo.ArticleMetaVO;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.*;
-import lombok.experimental.Accessors;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
-import org.springframework.data.mongodb.core.mapping.FieldType;
-import org.springframework.format.annotation.DateTimeFormat;
+import jakarta.validation.constraints.NotBlank;
+import lombok.Data;
 
-import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
+
 /**
- * 文章内容实体类
- * 用于存储文章的详细内容，与文章元数据 ArticleMeta 是一对一关系
- * 包含文章的 HTML 内容、Markdown 内容等
+ * 文章插入表单
  *
  * @author Lazzz
- * @date 2025/10/22 11:25
+ * @date 2025/10/31 20:35
  **/
 @Data
-@Accessors(chain = true)
-@NoArgsConstructor
-@AllArgsConstructor
-@Document(collection = "article")
-@AutoMappers(
-        value = {
-                @AutoMapper(target = ArticleVO.class),
-                @AutoMapper(target = ArticleForm.class)
-        }
-)
-public class Article {
+public class ArticleForm {
 
     /**
      * 文档ID（对应MongoDB的_id字段，自动生成或手动指定）
      * 与MySQL的article表中mongo_doc_id字段关联
+     * 如果为null，则自动生成
      */
-    @Id
+    @Schema(description = "文章ID")
     private String id;
 
     /**
@@ -59,6 +40,7 @@ public class Article {
      * 例如：# 标题\n![图片](url)
      */
     @Schema(description = "Markdown原始内容（用于编辑回溯）")
+    @NotBlank(message = "文章正文内容不能为空")
     private String contentMarkdown;
 
     /**
@@ -74,17 +56,16 @@ public class Article {
     private Integer version;
 
     /**
-     * 编辑历史（保留最近3次修改，可选）
+     * 编辑历史列表
      */
-    @Schema(description = "编辑历史（保留最近N次修改，可选）")
-    private List<EditHistory> editHistory;
+    @Schema(description = "编辑历史列表（按版本号排序）")
+    private List<EditHistoryForm> editHistory;
 
     /**
      * 创建时间（文档首次存入MongoDB的时间）
      */
     @Schema(description = "创建时间（文档首次存入MongoDB的时间）")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @Field(targetType = FieldType.DATE_TIME)
     private Date createTime;
 
     /**
@@ -92,7 +73,13 @@ public class Article {
      */
     @Schema(description = "更新时间（文档最后修改时间）")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @Field(targetType = FieldType.DATE_TIME)
     private Date updateTime;
+
+    /**
+     * 文章元数据（如标题、摘要、作者、分类、状态等）
+     */
+    @Schema(description = "文章元数据（如标题、摘要、作者、分类、状态等）")
+    private ArticleMetaForm meta;
+
 }
 

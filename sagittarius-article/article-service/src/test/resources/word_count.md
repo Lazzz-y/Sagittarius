@@ -165,7 +165,7 @@ let x = 100;
 
 let y = 200;
 
-console.log(\`x + y = \${x + y}\`); // 输出求和结果
+console.log(`x + y = \${x + y}`); // 输出求和结果
 ```
 
 
