@@ -36,13 +36,20 @@ public class ArticleController {
         return Result.success(articleService.saveNewArticle(form));
     }
 
+    @PutMapping
+    @Operation(summary = "更新文章")
+    @PreventDuplicateResubmit
+    @PreAuthorize("ss.hasAnyPerm('article:update')")
+    public Result<Boolean> updateArticle(@RequestBody ArticleForm form) {
+        return Result.success();
+    }
+
+
     @GetMapping("/{id}")
     @Operation(summary = "根据元数据ID获取文章内容")
     public Result<ArticleVO> getArticleContentById(@PathVariable Serializable id) {
         return Result.success(articleService.getArticleByMetaId(id));
     }
-
-
 
 }
 

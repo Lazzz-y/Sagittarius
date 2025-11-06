@@ -3,7 +3,9 @@ package io.github.lazzz.sagittarius.article.service.impl;
 
 import io.github.lazzz.common.security.util.SecurityUtils;
 import io.github.lazzz.sagittarius.article.model.entity.Article;
+import io.github.lazzz.sagittarius.article.model.entity.ArticleMeta;
 import io.github.lazzz.sagittarius.article.model.request.form.ArticleForm;
+import io.github.lazzz.sagittarius.article.model.request.form.ArticleMetaForm;
 import io.github.lazzz.sagittarius.article.model.vo.ArticleMetaVO;
 import io.github.lazzz.sagittarius.article.model.vo.ArticleVO;
 import io.github.lazzz.sagittarius.article.service.IArticleMetaService;
@@ -14,6 +16,7 @@ import io.github.lazzz.sagittarius.article.utils.MarkdownConvertUtils;
 import io.github.linpeilie.Converter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -65,6 +68,15 @@ public class ArticleServiceImpl implements IArticleService {
             meta.setSubmitAuditTime(date);
         }
         return articleMetaService.saveArticleMeta(meta);
+    }
+
+    @Override
+    public Boolean updateArticle(ArticleForm form) {
+        var article = converter.convert(form, Article.class);
+        article.setUpdateTime(new Date(System.currentTimeMillis()));
+        article.setVersion(article.getVersion() + 1);
+        mongoTemplate.save(article);
+        return true;
     }
 
     @Override

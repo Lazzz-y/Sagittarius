@@ -25,6 +25,12 @@ public interface IArticleMetaService extends IService<ArticleMeta> {
     Boolean saveArticleMeta(ArticleMetaForm form);
 
     /**
+     * 审批文章
+     * @param id 文章元数据ID
+     */
+    Boolean approveArticle(Serializable id);
+
+    /**
      * 根据文章ID获取文章元数据VO
      *
      * @param id 文章元数据ID

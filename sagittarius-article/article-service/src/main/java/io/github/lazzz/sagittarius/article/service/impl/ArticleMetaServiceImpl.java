@@ -34,6 +34,12 @@ public class ArticleMetaServiceImpl extends ServiceImpl<ArticleMetaMapper, Artic
     }
 
     @Override
+    public Boolean approveArticle(Serializable id) {
+        Assert.notNull(id, "文章元数据ID不能为空");
+        return updateChain().set(ArticleMeta::getStatus, 1).where(ArticleMeta::getId).eq(id).update();
+    }
+
+    @Override
     public ArticleMetaVO getArticleMetaByArticleId(Serializable id) {
         Assert.notNull(id, "文章ID不能为空");
         ArticleMeta articleMeta = this.getById(id);

@@ -1,7 +1,10 @@
 package io.github.lazzz.sagittarius.article.controller;
 
+import io.github.lazzz.sagittarius.article.model.request.form.ArticleMetaForm;
+import io.github.lazzz.sagittarius.common.web.annotation.PreventDuplicateResubmit;
 import lombok.RequiredArgsConstructor;
 import com.mybatisflex.core.paginate.Page;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -35,6 +38,14 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 public class ArticleMetaController {
 
     private final IArticleMetaService articleMetaService;
+
+    @PutMapping("/{id}/approve")
+    @Operation(summary = "审批文章")
+    @PreventDuplicateResubmit
+    @PreAuthorize("ss.hasAnyPerm('article:approve')")
+    public Result<Boolean> approveArticle(@PathVariable Serializable id) {
+        return Result.success(articleMetaService.approveArticle(id));
+    }
 
 
 }
