@@ -30,5 +30,13 @@ public class BindingConfig {
                 .with(MQConstants.ROUTING_KEY_USER_INFO);
     }
 
+    // 绑定文章交换机与文章发布队列
+    @Bean
+    public Binding articlePublishQueueBinding() {
+        return BindingBuilder.bind(queueConfig.articlePublishQueue())
+                .to(exchangeConfig.articleExchange())
+                .with(MQConstants.ROUTING_KEY_ARTICLE_PUBLISH);
+    }
+
 }
 

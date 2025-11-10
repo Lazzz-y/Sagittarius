@@ -3,6 +3,7 @@ package io.github.lazzz.sagittarius.article.controller;
 
 import io.github.lazzz.sagittarius.article.model.request.form.ArticleForm;
 import io.github.lazzz.sagittarius.article.model.vo.ArticleVO;
+import io.github.lazzz.sagittarius.article.model.vo.EditHistoryVO;
 import io.github.lazzz.sagittarius.article.service.IArticleService;
 import io.github.lazzz.sagittarius.common.result.Result;
 import io.github.lazzz.sagittarius.common.web.annotation.PreventDuplicateResubmit;
@@ -13,6 +14,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * 文章控制器
@@ -41,7 +43,7 @@ public class ArticleController {
     @PreventDuplicateResubmit
     @PreAuthorize("ss.hasAnyPerm('article:update')")
     public Result<Boolean> updateArticle(@RequestBody ArticleForm form) {
-        return Result.success();
+        return Result.success(articleService.updateArticle(form));
     }
 
 
@@ -51,5 +53,16 @@ public class ArticleController {
         return Result.success(articleService.getArticleByMetaId(id));
     }
 
+    @GetMapping("/content/{mongoDocId}")
+    @Operation(summary = "根据Mongo文档ID获取文章内容")
+    public Result<ArticleVO> getArticleContentByMongoDocId(@PathVariable String mongoDocId) {
+        return Result.success(articleService.getArticleByMongoDocId(mongoDocId));
+    }
+
+    @GetMapping("/{id}/history")
+    @Operation(summary = "获取文章编辑历史")
+    public Result<List<EditHistoryVO>> getEditHistory(@PathVariable Serializable id) {
+        return Result.success(articleService.getEditHistoryByArticleId(id));
+    }
 }
 
