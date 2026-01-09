@@ -35,7 +35,8 @@ import java.util.List;
 @AutoMappers(
         value = {
                 @AutoMapper(target = ArticleVO.class),
-                @AutoMapper(target = ArticleForm.class)
+                @AutoMapper(target = ArticleForm.class),
+                @AutoMapper(target = ArticleEs.class)
         }
 )
 public class Article {

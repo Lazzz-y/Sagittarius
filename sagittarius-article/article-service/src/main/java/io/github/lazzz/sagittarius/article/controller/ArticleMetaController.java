@@ -1,12 +1,15 @@
 package io.github.lazzz.sagittarius.article.controller;
 
 import io.github.lazzz.sagittarius.article.model.request.form.ArticleMetaForm;
+import io.github.lazzz.sagittarius.article.model.request.query.ArticleMatePageQuery;
 import io.github.lazzz.sagittarius.common.web.annotation.PreventDuplicateResubmit;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import com.mybatisflex.core.paginate.Page;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -38,7 +41,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
  */
 @RestController
 @RequestMapping("/api/v1/article/meta")
-@Tag(name = "文章主表（元数据）控制层")
+@Tag(name = "2.文章元数据接口")
 @RequiredArgsConstructor
 public class ArticleMetaController {
 
@@ -46,24 +49,8 @@ public class ArticleMetaController {
 
     @GetMapping("/page")
     @Operation(summary = "分页查询文章列表")
-    public Result<Page<ArticleMetaVO>> getArticleMetaPage(
-            @RequestParam(defaultValue = "1") Integer page,
-            @RequestParam(defaultValue = "10") Integer size,
-            @RequestParam(required = false) String title,
-            @RequestParam(required = false) Integer status,
-            @RequestParam(required = false) Long categoryId,
-            @RequestParam(required = false) Long authorId,
-            @RequestParam(required = false) Integer isRecommended) {
-
-        Page<ArticleMeta> pageRequest = new Page<>(page, size);
-        Map<String, Object> params = Map.of(
-                "title", title,
-                "status", status,
-                "categoryId", categoryId,
-                "authorId", authorId,
-                "isRecommended", isRecommended
-        );
-        return Result.success(articleMetaService.getArticleMetaPage(pageRequest, params));
+    public Result<Page<ArticleMetaVO>> getArticleMetaPage(@ParameterObject @Validated ArticleMatePageQuery queryform) {
+        return Result.success(articleMetaService.getArticleMetaPage(queryform));
     }
 
     @GetMapping("/{id}")
@@ -98,7 +85,7 @@ public class ArticleMetaController {
     @PutMapping("/{id}/approve")
     @Operation(summary = "审批文章")
     @PreventDuplicateResubmit
-    @PreAuthorize("ss.hasAnyPerm('article:approve')")
+    @PreAuthorize("@ss.hasAnyPerm('article:approve')")
     public Result<Boolean> approveArticle(@PathVariable@NotNull(message = "文章ID不能为空") Serializable id) {
         return Result.success(articleMetaService.approveArticle(id));
     }

@@ -33,7 +33,7 @@ public class ArticleController {
     @PostMapping
     @Operation(summary = "创建文章")
     @PreventDuplicateResubmit
-    @PreAuthorize("ss.hasAnyPerm('article:create')")
+    @PreAuthorize("@ss.hasAnyPerm('article:create')")
     public Result<Boolean> createArticle(@RequestBody ArticleForm form) {
         return Result.success(articleService.saveNewArticle(form));
     }
@@ -41,7 +41,7 @@ public class ArticleController {
     @PutMapping
     @Operation(summary = "更新文章")
     @PreventDuplicateResubmit
-    @PreAuthorize("ss.hasAnyPerm('article:update')")
+    @PreAuthorize("@ss.hasAnyPerm('article:update')")
     public Result<Boolean> updateArticle(@RequestBody ArticleForm form) {
         return Result.success(articleService.updateArticle(form));
     }

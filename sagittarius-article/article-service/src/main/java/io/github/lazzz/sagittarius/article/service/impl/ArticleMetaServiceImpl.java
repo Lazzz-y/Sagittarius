@@ -2,6 +2,7 @@ package io.github.lazzz.sagittarius.article.service.impl;
 
 
 import io.github.lazzz.sagittarius.article.model.request.form.ArticleMetaForm;
+import io.github.lazzz.sagittarius.article.model.request.query.ArticleMatePageQuery;
 import io.github.lazzz.sagittarius.article.model.vo.ArticleMetaVO;
 import io.github.linpeilie.Converter;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.Map;
 
 /**
@@ -48,7 +50,7 @@ public class ArticleMetaServiceImpl extends ServiceImpl<ArticleMetaMapper, Artic
         // 更新状态为审核通过（2）
         boolean success = updateChain()
                 .set(ArticleMeta::getStatus, 2)
-                .set(ArticleMeta::getPublishTime, LocalDateTime.now())
+                .set(ArticleMeta::getPublishTime, new Date(System.currentTimeMillis()))
                 .where(ArticleMeta::getId).eq(id)
                 .update();
 
@@ -64,17 +66,17 @@ public class ArticleMetaServiceImpl extends ServiceImpl<ArticleMetaMapper, Artic
     }
 
     @Override
-    public Page<ArticleMetaVO> getArticleMetaPage(Page<ArticleMeta> page, Map<String, Object> params) {
+    public Page<ArticleMetaVO> getArticleMetaPage(ArticleMatePageQuery query) {
         // 构建查询条件
         var queryWrapper = this.queryChain().from(ArticleMeta.class)
-                .like(ArticleMeta::getTitle, params.get("title"), params.containsKey("title"))
-                .eq(ArticleMeta::getStatus, params.get("status"), params.containsKey("status"))
-                .eq(ArticleMeta::getCategoryId, params.get("categoryId"), params.containsKey("categoryId"))
-                .eq(ArticleMeta::getAuthorId, params.get("authorId"), params.containsKey("authorId"))
-                .eq(ArticleMeta::getIsRecommended, params.get("isRecommended"), params.containsKey("isRecommended"))
+                .like(ArticleMeta::getTitle, query.getTitle(), query.getTitle() != null)
+                .eq(ArticleMeta::getStatus, query.getStatus(), query.getStatus() != null)
+                .eq(ArticleMeta::getCategoryId, query.getCategoryId(), query.getCategoryId() != null)
+                .eq(ArticleMeta::getAuthorId, query.getAuthorId(), query.getAuthorId() != null)
+                .eq(ArticleMeta::getIsRecommended, query.getIsRecommended(), query.getIsRecommended() != null)
                 .orderBy(ArticleMeta::getUpdateAt, false);
 
-        Page<ArticleMeta> rs = this.page(page, queryWrapper);
+        Page<ArticleMeta> rs = this.page(query.toPage(), queryWrapper);
         return rs.map(item -> converter.convert(item, ArticleMetaVO.class));
     }
 

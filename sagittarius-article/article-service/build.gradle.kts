@@ -20,5 +20,6 @@ dependencies {
     implementation(project(":sagittarius-common:common-security"))
     implementation(project(":sagittarius-common:common-apidoc"))
     implementation(project(":sagittarius-common:common-rabbitmq"))
+    implementation(project(":sagittarius-common:common-elasticsearch"))
 
 }

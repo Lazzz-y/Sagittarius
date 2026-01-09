@@ -5,6 +5,7 @@ import io.github.lazzz.sagittarius.article.model.entity.ArticleMeta;
 import com.mybatisflex.core.service.IService;
 import com.mybatisflex.core.paginate.Page;
 import io.github.lazzz.sagittarius.article.model.request.form.ArticleMetaForm;
+import io.github.lazzz.sagittarius.article.model.request.query.ArticleMatePageQuery;
 import io.github.lazzz.sagittarius.article.model.vo.ArticleMetaVO;
 
 import java.io.Serializable;
@@ -43,11 +44,10 @@ public interface IArticleMetaService extends IService<ArticleMeta> {
     /**
      * 分页查询文章元数据列表
      *
-     * @param page 分页参数
-     * @param params 查询条件（status, categoryId, authorId等）
+     * @param query 分页参数
      * @return 文章元数据VO分页结果
      */
-    Page<ArticleMetaVO> getArticleMetaPage(Page<ArticleMeta> page, Map<String, Object> params);
+    Page<ArticleMetaVO> getArticleMetaPage(ArticleMatePageQuery query);
 
     /**
      * 更新文章元数据

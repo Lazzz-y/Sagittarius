@@ -1,8 +1,11 @@
 package io.github.lazzz.sagittarius.article.service.impl;
 
 
+import io.github.lazzz.common.rabbitmq.constant.MQConstants;
 import io.github.lazzz.common.security.util.SecurityUtils;
+import io.github.lazzz.sagittarius.article.event.ArticleSubmitEvent;
 import io.github.lazzz.sagittarius.article.model.entity.Article;
+import io.github.lazzz.sagittarius.article.model.entity.ArticleEs;
 import io.github.lazzz.sagittarius.article.model.entity.ArticleMeta;
 import io.github.lazzz.sagittarius.article.model.entity.EditHistory;
 import io.github.lazzz.sagittarius.article.model.request.form.ArticleForm;
@@ -14,8 +17,10 @@ import io.github.lazzz.sagittarius.article.service.IArticleService;
 import io.github.lazzz.sagittarius.article.service.UserCacheService;
 import io.github.lazzz.sagittarius.article.utils.HtmlWordsCountUtil;
 import io.github.lazzz.sagittarius.article.utils.MarkdownConvertUtils;
+import io.github.lazzz.sagittarius.common.utils.TenantContext;
 import io.github.linpeilie.Converter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,6 +29,7 @@ import org.springframework.util.Assert;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 
@@ -39,6 +45,8 @@ import java.util.stream.Collectors;
 public class ArticleServiceImpl implements IArticleService {
 
     private final MongoTemplate mongoTemplate;
+
+    private final RabbitTemplate rabbitTemplate;
 
     private final IArticleMetaService articleMetaService;
 
@@ -69,7 +77,16 @@ public class ArticleServiceImpl implements IArticleService {
         if (meta.getStatus() == 0) {
             meta.setSubmitAuditTime(date);
         }
-        return articleMetaService.saveArticleMeta(meta);
+        var rs = articleMetaService.saveArticleMeta(meta);
+        if (rs) {
+            // 发布文章事件
+            var event = new ArticleSubmitEvent();
+            event.setTenantId(TenantContext.getTenantId());
+            event.setArticleEs(converter.convert(article, ArticleEs.class));
+            event.setEventId(UUID.randomUUID());
+            rabbitTemplate.convertAndSend(MQConstants.QUEUE_ARTICLE_PUBLISH, event);
+        }
+        return rs;
     }
 
     @Override
