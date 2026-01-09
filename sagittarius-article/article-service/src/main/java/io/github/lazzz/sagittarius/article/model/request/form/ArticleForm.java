@@ -1,25 +1,29 @@
-package io.github.lazzz.sagittarius.article.model.vo;
+package io.github.lazzz.sagittarius.article.model.request.form;
 
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import io.github.lazzz.sagittarius.article.model.vo.ArticleMetaVO;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 import java.util.Date;
 import java.util.List;
 
+
 /**
- * 文章视图层
+ * 文章插入表单
  *
  * @author Lazzz
- * @date 2025/10/23 23:09
+ * @date 2025/10/31 20:35
  **/
 @Data
-public class ArticleVO {
+public class ArticleForm {
 
     /**
      * 文档ID（对应MongoDB的_id字段，自动生成或手动指定）
      * 与MySQL的article表中mongo_doc_id字段关联
+     * 如果为null，则自动生成
      */
     @Schema(description = "文章ID")
     private String id;
@@ -36,6 +40,7 @@ public class ArticleVO {
      * 例如：# 标题\n![图片](url)
      */
     @Schema(description = "Markdown原始内容（用于编辑回溯）")
+    @NotBlank(message = "文章正文内容不能为空")
     private String contentMarkdown;
 
     /**
@@ -54,7 +59,7 @@ public class ArticleVO {
      * 编辑历史列表
      */
     @Schema(description = "编辑历史列表（按版本号排序）")
-    private List<EditHistoryVO> editHistory;
+    private List<EditHistoryForm> editHistory;
 
     /**
      * 创建时间（文档首次存入MongoDB的时间）
@@ -74,7 +79,7 @@ public class ArticleVO {
      * 文章元数据（如标题、摘要、作者、分类、状态等）
      */
     @Schema(description = "文章元数据（如标题、摘要、作者、分类、状态等）")
-    private ArticleMetaVO meta;
+    private ArticleMetaForm meta;
 
 }
 

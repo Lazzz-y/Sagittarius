@@ -2,6 +2,7 @@ package io.github.lazzz.sagittarius.article.model.entity;
 
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import io.github.lazzz.sagittarius.article.model.request.form.ArticleForm;
 import io.github.lazzz.sagittarius.article.model.vo.ArticleVO;
 import io.github.linpeilie.annotations.AutoMapper;
 import io.github.linpeilie.annotations.AutoMappers;
@@ -10,7 +11,11 @@ import lombok.*;
 import lombok.experimental.Accessors;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
+import org.springframework.data.mongodb.core.mapping.FieldType;
+import org.springframework.format.annotation.DateTimeFormat;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -29,7 +34,9 @@ import java.util.List;
 @Document(collection = "article")
 @AutoMappers(
         value = {
-                @AutoMapper(target = ArticleVO.class)
+                @AutoMapper(target = ArticleVO.class),
+                @AutoMapper(target = ArticleForm.class),
+                @AutoMapper(target = ArticleEs.class)
         }
 )
 public class Article {
@@ -56,16 +63,16 @@ public class Article {
     private String contentMarkdown;
 
     /**
-     * 正文特征（动态字段，可选）
+     * 文章总字数
      */
-    @Schema(description = "正文特征（动态字段，可选）")
-    private ContentFeatures contentFeatures;
+    @Schema(description = "文章总字数")
+    private Integer wordCount;
 
     /**
      * 编辑版本号（首次发布为1，修改后递增）
      */
     @Schema(description = "编辑版本号（首次发布为1，修改后递增）")
-    private Integer version = 1;
+    private Integer version;
 
     /**
      * 编辑历史（保留最近3次修改，可选）
@@ -78,6 +85,7 @@ public class Article {
      */
     @Schema(description = "创建时间（文档首次存入MongoDB的时间）")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Field(targetType = FieldType.DATE_TIME)
     private Date createTime;
 
     /**
@@ -85,6 +93,7 @@ public class Article {
      */
     @Schema(description = "更新时间（文档最后修改时间）")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Field(targetType = FieldType.DATE_TIME)
     private Date updateTime;
 }
 

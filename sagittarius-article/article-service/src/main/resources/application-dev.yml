@@ -1,4 +1,11 @@
 spring:
+  elasticsearch:
+    uris: ["http://localhost:9200"]
+    username: elastic
+    password: elastic
+    connection-timeout: 5s
+    socket-timeout: 10s
+
   cloud:
     nacos:
       discovery:
@@ -18,7 +25,6 @@ spring:
     import:
       - nacos:sagittarius-common?refreshEnabled=true
       - nacos:sagittarius-article?refreshEnabled=true
-
 jetcache:
   statIntervalMinutes: 15
   areaInCacheName: false

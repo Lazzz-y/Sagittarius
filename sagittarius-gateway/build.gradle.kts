@@ -1,8 +1,17 @@
+import org.springframework.boot.gradle.tasks.bundling.BootBuildImage
+
 plugins {
     id("java")
-    id("org.springframework.boot") apply false
+    id("org.springframework.boot")
     id("io.spring.dependency-management")
 }
+
+//springBoot {
+//    tasks.bootBuildImage {
+//        builder = "paketobuildpacks/builder:tiny"
+//        imageName = "sagittarius-gateway:latest"
+//    }
+//}
 
 dependencies {
 

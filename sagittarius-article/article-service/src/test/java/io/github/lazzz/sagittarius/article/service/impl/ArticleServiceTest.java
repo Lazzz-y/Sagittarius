@@ -23,7 +23,7 @@ public class ArticleServiceTest {
     @Test
     void getArticleById() {
         TenantContext.setTenantId(1L);
-        ArticleVO articleVO = articleService.getArticleContentById(336316065288175717L);
+        ArticleVO articleVO = articleService.getArticleByMetaId(336316065288175717L);
         System.out.println(articleVO);
     }
 

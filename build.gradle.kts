@@ -1,8 +1,10 @@
+import org.springframework.boot.gradle.tasks.bundling.BootBuildImage
+
 plugins {
     // 根项目插件
     id("java-library")
     id("java")
-    id("org.springframework.boot") version "3.2.5" apply false
+    id("org.springframework.boot") version "3.2.5"
     id("io.spring.dependency-management") version "1.1.4"
 }
 
@@ -37,6 +39,10 @@ allprojects {
     tasks.withType<Javadoc> {
         options.encoding = "UTF-8"
     }
+
+//    tasks.withType<BootBuildImage> {
+//        builder = "paketobuildpacks/builder:tiny"
+//    }
 
     // 依赖管理配置
     dependencyManagement {
@@ -83,7 +89,6 @@ subprojects {
     val openFeignClientsProp: String? by project
     val openFeignClients: List<String> = openFeignClientsProp?.split(",")?.map { it.trim() } ?: emptyList()
     if (project.name in openFeignClients){
-        println("${project.name} 开启 OpenFeign 客户端")
         dependencies {
             api("org.springframework.cloud:spring-cloud-starter-openfeign")
             api("io.github.openfeign:feign-okhttp")

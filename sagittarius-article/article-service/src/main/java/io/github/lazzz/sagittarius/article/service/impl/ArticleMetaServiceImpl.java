@@ -1,8 +1,9 @@
 package io.github.lazzz.sagittarius.article.service.impl;
 
 
+import io.github.lazzz.sagittarius.article.model.request.form.ArticleMetaForm;
+import io.github.lazzz.sagittarius.article.model.request.query.ArticleMatePageQuery;
 import io.github.lazzz.sagittarius.article.model.vo.ArticleMetaVO;
-import io.github.lazzz.sagittarius.common.utils.TenantContext;
 import io.github.linpeilie.Converter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -10,9 +11,14 @@ import io.github.lazzz.sagittarius.article.service.IArticleMetaService;
 import io.github.lazzz.sagittarius.article.model.entity.ArticleMeta;
 import io.github.lazzz.sagittarius.article.mapper.ArticleMetaMapper;
 import com.mybatisflex.spring.service.impl.ServiceImpl;
+import com.mybatisflex.core.paginate.Page;
 import org.springframework.util.Assert;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.util.Date;
+import java.util.Map;
 
 /**
  * 文章主表（元数据） 服务层实现。
@@ -27,10 +33,99 @@ public class ArticleMetaServiceImpl extends ServiceImpl<ArticleMetaMapper, Artic
     private final Converter converter;
 
     @Override
+    public Boolean saveArticleMeta(ArticleMetaForm form) {
+        ArticleMeta articleMeta = converter.convert(form, ArticleMeta.class);
+        return this.save(articleMeta);
+    }
+
+    @Override
+    @Transactional
+    public Boolean approveArticle(Serializable id) {
+        Assert.notNull(id, "文章元数据ID不能为空");
+
+        // 获取文章元数据
+        ArticleMeta articleMeta = this.getById(id);
+        Assert.isTrue(articleMeta != null, "文章元数据不存在");
+
+        // 更新状态为审核通过（2）
+        boolean success = updateChain()
+                .set(ArticleMeta::getStatus, 2)
+                .set(ArticleMeta::getPublishTime, new Date(System.currentTimeMillis()))
+                .where(ArticleMeta::getId).eq(id)
+                .update();
+
+        return success;
+    }
+
+    @Override
     public ArticleMetaVO getArticleMetaByArticleId(Serializable id) {
+        Assert.notNull(id, "文章ID不能为空");
         ArticleMeta articleMeta = this.getById(id);
         Assert.isTrue(articleMeta != null, "文章元数据不存在");
         return converter.convert(articleMeta, ArticleMetaVO.class);
+    }
+
+    @Override
+    public Page<ArticleMetaVO> getArticleMetaPage(ArticleMatePageQuery query) {
+        // 构建查询条件
+        var queryWrapper = this.queryChain().from(ArticleMeta.class)
+                .like(ArticleMeta::getTitle, query.getTitle(), query.getTitle() != null)
+                .eq(ArticleMeta::getStatus, query.getStatus(), query.getStatus() != null)
+                .eq(ArticleMeta::getCategoryId, query.getCategoryId(), query.getCategoryId() != null)
+                .eq(ArticleMeta::getAuthorId, query.getAuthorId(), query.getAuthorId() != null)
+                .eq(ArticleMeta::getIsRecommended, query.getIsRecommended(), query.getIsRecommended() != null)
+                .orderBy(ArticleMeta::getUpdateAt, false);
+
+        Page<ArticleMeta> rs = this.page(query.toPage(), queryWrapper);
+        return rs.map(item -> converter.convert(item, ArticleMetaVO.class));
+    }
+
+    @Override
+    public Boolean updateArticleMeta(Serializable id, ArticleMetaForm form) {
+        Assert.notNull(id, "文章ID不能为空");
+        ArticleMeta articleMeta = this.getById(id);
+        Assert.notNull(articleMeta, "文章元数据不存在");
+
+        ArticleMeta updateMeta = converter.convert(form, ArticleMeta.class);
+        updateMeta.setId(articleMeta.getId());
+
+        return this.updateById(updateMeta);
+    }
+
+    @Override
+    public Boolean deleteArticle(Serializable id) {
+        Assert.notNull(id, "文章ID不能为空");
+        return this.removeById(id);
+    }
+
+    @Override
+    public Boolean submitForReview(Serializable id) {
+        Assert.notNull(id, "文章ID不能为空");
+        return updateChain()
+                // 待审核
+                .set(ArticleMeta::getStatus, 1)
+                .set(ArticleMeta::getSubmitAuditTime, LocalDateTime.now())
+                .where(ArticleMeta::getId).eq(id)
+                .update();
+    }
+
+    @Override
+    public Boolean rejectArticle(Serializable id, String reason) {
+        Assert.notNull(id, "文章ID不能为空");
+        // 状态3表示驳回
+        return updateChain()
+                .set(ArticleMeta::getStatus, 3)
+                .where(ArticleMeta::getId).eq(id)
+                .update();
+    }
+
+    @Override
+    public Boolean setRecommended(Serializable id, Integer isRecommended) {
+        Assert.notNull(id, "文章ID不能为空");
+        return updateChain()
+                .set(ArticleMeta::getIsRecommended, isRecommended)
+                .where(ArticleMeta::getId).eq(id)
+                .update();
     }
 
 }

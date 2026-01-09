@@ -1,34 +1,23 @@
-package io.github.lazzz.sagittarius.article.model.entity;
+package io.github.lazzz.sagittarius.article.model.request.form;
+
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import io.github.lazzz.sagittarius.article.model.request.form.EditHistoryForm;
-import io.github.lazzz.sagittarius.article.model.vo.EditHistoryVO;
-import io.github.linpeilie.annotations.AutoMapper;
-import io.github.linpeilie.annotations.AutoMappers;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 import java.util.Date;
 
-
 /**
- * 编辑历史明细（内嵌在ArticleContent中）
- * 用于存储文章的编辑历史，包括版本号、编辑者ID、编辑时间和变更日志
- *
- * @author Lazzz
- * @date 2025/10/23 20:57
- **/
+ * 编辑历史视图层
+ * 
+ * @author Lazzz 
+ * @date 2025/10/25 12:57
+**/
 @Data
-@AutoMappers(
-        value = {
-                @AutoMapper(target = EditHistoryVO.class),
-                @AutoMapper(target = EditHistoryForm.class)
-        }
-)
-public class EditHistory {
+public class EditHistoryForm {
 
     /**
-     * 版本号（与ArticleContent的version对应）
+     * 历史修订版本号
      */
     @Schema(description = "历史修订版本号")
     private Integer version;
@@ -51,4 +40,6 @@ public class EditHistory {
      */
     @Schema(description = "变更日志（如“首次发布”“修改了代码块”）")
     private String changeLog;
+
 }
+

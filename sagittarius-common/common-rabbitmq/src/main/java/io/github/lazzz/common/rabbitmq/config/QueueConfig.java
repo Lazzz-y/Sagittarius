@@ -37,5 +37,23 @@ public class QueueConfig {
                 .ttl(60000)
                 .build();
     }
+
+    // 文章发布队列
+    @Bean
+    public Queue articlePublishQueue() {
+        Map<String, Object> args = Map.of(
+                // 死信路由键
+                "x-dead-letter-exchange", "dlx.exchange",
+                "x-queue-type", "classic"
+        );
+        return QueueBuilder
+                // 持久化队列
+                .durable(MQConstants.QUEUE_ARTICLE_PUBLISH)
+                // 死信交换机
+                .withArguments(args)
+                // 消息过期时间 60s
+                .ttl(60000)
+                .build();
+    }
 }
 

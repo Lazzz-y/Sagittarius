@@ -30,5 +30,26 @@ public interface MQConstants {
      * 用户更新路由键
      */
     String ROUTING_KEY_USER_INFO = "user.info";
+
+    ////////////////////// 文章交换机 //////////////////////
+
+    /**
+     * 文章交换机
+     */
+    String EXCHANGE_ARTICLE = "article.exchange";
+
+    ////////////////////// 文章队列 //////////////////////
+
+    /**
+     * 文章发布队列
+     */
+    String QUEUE_ARTICLE_PUBLISH = "article.publish.queue";
+
+    ////////////////////// 文章路由键 //////////////////////
+
+    /**
+     * 文章发布路由键
+     */
+    String ROUTING_KEY_ARTICLE_PUBLISH = "article.publish";
 }
 

@@ -5,6 +5,8 @@ import org.springframework.batch.core.converter.DateToStringConverter;
 import org.springframework.batch.core.converter.StringToDateConverter;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.data.mapping.model.SnakeCaseFieldNamingStrategy;
+import org.springframework.data.mongodb.MongoDatabaseFactory;
+import org.springframework.data.mongodb.MongoTransactionManager;
 import org.springframework.data.mongodb.core.convert.MongoCustomConversions;
 import org.springframework.data.mongodb.core.mapping.MongoMappingContext;
 import org.springframework.context.annotation.Bean;
@@ -30,14 +32,11 @@ public class MongoConfig {
         return mongoMappingContext;
     }
 
-    @Bean
-    public MongoCustomConversions mongoCustomConversions(){
-        List<Converter<?,?>> converters = new ArrayList<>();
-        // 添加自定义转换器 Date <-> String
-        converters.add(new StringToDateConverter());
-        converters.add(new DateToStringConverter());
-        return new MongoCustomConversions(converters);
-    }
+    // 配置MongoDB事务管理器 FIXME 开启事物支持需要部署副本集
+//    @Bean
+//    MongoTransactionManager transactionManager(MongoDatabaseFactory dbFactory) {
+//        return new MongoTransactionManager(dbFactory);
+//    }
 
 }
 

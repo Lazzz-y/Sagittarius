@@ -25,5 +25,13 @@ public class ExChangeConfig {
                 .build();
     }
 
+    // 文章交换机
+    @Bean
+    public TopicExchange articleExchange() {
+        return ExchangeBuilder.topicExchange(MQConstants.EXCHANGE_ARTICLE)
+                .durable(true)
+                .build();
+    }
+
 }
 
